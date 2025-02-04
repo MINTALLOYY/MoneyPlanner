@@ -1,0 +1,55 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize">
+
+    <EditText
+        android:id="@+id/editTextExpenseAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Expense Amount"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextExpenseName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Expense Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseAmount" />
+
+    <DatePicker
+        android:id="@+id/datePickerExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:datePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseName" />
+
+
+    <Button
+        android:id="@+id/buttonSaveExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Save Expense"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCancelExpense"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePickerExpense" />
+
+    <Button
+        android:id="@+id/buttonCancelExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonSaveExpense"
+        app:layout_constraintTop_toTopOf="@+id/buttonSaveExpense" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
