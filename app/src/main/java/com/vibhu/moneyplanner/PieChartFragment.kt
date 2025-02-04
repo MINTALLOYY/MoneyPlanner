@@ -2,9 +2,11 @@ package com.vibhu.moneyplanner
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.vibhu.moneyplanner.databinding.ActivityCategoryExpensesPieChartBinding
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -12,20 +14,23 @@ import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 
-class CategoryExpensesPieChartActivity : AppCompatActivity() {
+class PieChartFragment : Fragment() {
 
-    private lateinit var binding: ActivityCategoryExpensesPieChartBinding
+    private var _binding: ActivityCategoryExpensesPieChartBinding? = null
+    private val binding get() = _binding!!
     private lateinit var expenseData: ExpenseData
     private lateinit var categoryData: CategoryData
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = ActivityCategoryExpensesPieChartBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        binding = ActivityCategoryExpensesPieChartBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        expenseData = ExpenseData(this)
-        categoryData = CategoryData(this)
+        expenseData = ExpenseData(requireContext())
+        categoryData = CategoryData(requireContext())
 
         val endDate = Date()
         val calendar = Calendar.getInstance()
@@ -42,13 +47,15 @@ class CategoryExpensesPieChartActivity : AppCompatActivity() {
             val category = categoryData.getCategoryById(categoryId)
             if (category != null) {
                 entries.add(PieEntry(totalExpense.toFloat(), category.name))
-                colors.add(generateRandomColor()) // Generate random colors for each category
+                colors.add(generateRandomColor())
             }
         }
         categoryData.close()
 
-        val dataSet = PieDataSet(entries, "Expenses by Category")
+        val dataSet = PieDataSet(entries, "Expenses by Category (Last 30 Days)") // More descriptive label
         dataSet.colors = colors
+        dataSet.valueTextColor = Color.WHITE // Set value text color to white for visibility
+        dataSet.valueTextSize = 14f // Set value text size for better readability
 
         val pieData = PieData(dataSet)
         binding.pieChartExpenses.data = pieData
@@ -57,11 +64,16 @@ class CategoryExpensesPieChartActivity : AppCompatActivity() {
         binding.pieChartExpenses.description.isEnabled = false
         binding.pieChartExpenses.setUsePercentValues(true)
         binding.pieChartExpenses.setDrawHoleEnabled(true)
-        binding.pieChartExpenses.setHoleRadius(70f)
-        binding.pieChartExpenses.setTransparentCircleRadius(80f)
+        binding.pieChartExpenses.setHoleRadius(60f) // Adjust hole radius
+        binding.pieChartExpenses.setTransparentCircleRadius(70f) // Adjust transparent circle radius
+        binding.pieChartExpenses.legend.textColor = Color.BLACK // Set legend text color to white
+        binding.pieChartExpenses.setEntryLabelColor(Color.WHITE) // Set entry label text color
 
         binding.pieChartExpenses.invalidate() // Refresh the chart
+        return view
     }
+
+
 
     private fun aggregateExpensesByCategory(expenses: List<Expense>): Map<UUID, Double> {
         val categoryExpenses = mutableMapOf<UUID, Double>()
@@ -78,8 +90,9 @@ class CategoryExpensesPieChartActivity : AppCompatActivity() {
         return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
         expenseData.close()
     }
 }

@@ -1,16 +1,13 @@
 package com.vibhu.moneyplanner
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.FragmentTransaction
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var categoryAdapter: CategoryAdapter
-    private lateinit var categoryData: CategoryData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,31 +15,34 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        categoryData = CategoryData(this)
+        val homeFragment = HomeFragment()
+        val pieChartFragment = PieChartFragment()
+        val trendFragment = TrendFragment()
 
-        binding.recyclerViewCategories.layoutManager = LinearLayoutManager(this)
+        setCurrentFragment(homeFragment) // Set initial fragment
 
-        categoryAdapter = CategoryAdapter(categoryData.getAllCategories()) { categoryId ->
-            val intent = Intent(this, CategoryExpensesActivity::class.java)
-            intent.putExtra(CategoryExpensesActivity.EXTRA_CATEGORY_ID, categoryId.toString())
-            startActivity(intent)
-        }
-        binding.recyclerViewCategories.adapter = categoryAdapter
-
-
-        binding.buttonAddCategory.setOnClickListener {
-            val intent = Intent(this, AddCategoryActivity::class.java)
-            startActivity(intent)
+        binding.bottomNavView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    setCurrentFragment(homeFragment)
+                    true
+                }
+                R.id.navigation_pie_chart -> {
+                    setCurrentFragment(pieChartFragment)
+                    true
+                }
+                R.id.navigation_trend -> {
+                    setCurrentFragment(trendFragment)
+                    true
+                }
+                else -> false
+            }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        categoryAdapter.updateCategories(categoryData.getAllCategories())
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        categoryData.close()
+    private fun setCurrentFragment(fragment: androidx.fragment.app.Fragment) {
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.commit()
     }
 }

@@ -63,7 +63,7 @@ class ExpenseData(context: Context) {
 
         cursor.use {
             while (cursor.moveToNext()) {
-                val expenseId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("expense_id")))
+                val expenseId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("id")))
                 val expenseName = cursor.getString(cursor.getColumnIndexOrThrow("expense_name"))
                 val expenseAmount = cursor.getDouble(cursor.getColumnIndexOrThrow("expense_amount"))
                 val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("category_id")))
