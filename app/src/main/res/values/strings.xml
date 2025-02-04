@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MoneyPlanner</string>
+    <string name="date_of_expense">Date of Expense</string>
 </resources>
