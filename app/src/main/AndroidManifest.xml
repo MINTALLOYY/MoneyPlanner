@@ -18,8 +18,9 @@
         </activity>
 
         <activity android:name=".AddCategoryActivity" />
-        <activity android:name=".CategoryExpensesActivity" />
         <activity android:name=".AddExpenseActivity" />
+        <activity android:name=".AddIncomeActivity" />
+        <activity android:name=".AddIncomeCategoryActivity" />
 
     </application>
 

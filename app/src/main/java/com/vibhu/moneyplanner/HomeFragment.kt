@@ -26,9 +26,15 @@ class HomeFragment : Fragment() {
         binding.recyclerViewCategories.layoutManager = LinearLayoutManager(requireContext())
 
         categoryAdapter = CategoryAdapter(categoryData.getAllCategories()) { categoryId ->
-            val intent = android.content.Intent(requireContext(), CategoryExpensesActivity::class.java)
-            intent.putExtra(CategoryExpensesActivity.EXTRA_CATEGORY_ID, categoryId.toString())
-            startActivity(intent)
+            val fragment = CategoryExpensesFragment()
+            val bundle = Bundle()
+            bundle.putString(CategoryExpensesFragment.EXTRA_CATEGORY_ID, categoryId.toString()) // Pass categoryId
+            fragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment) // Replace fragment_container
+                .addToBackStack(null) // Optional: Add to back stack for navigation
+                .commit()
         }
         binding.recyclerViewCategories.adapter = categoryAdapter
 

@@ -40,8 +40,8 @@
 
     <DatePicker
         android:id="@+id/datePickerExpense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="316dp"
+        android:layout_height="410dp"
         android:layout_marginTop="16dp"
         android:datePickerMode="calendar"
         app:layout_constraintEnd_toEndOf="parent"

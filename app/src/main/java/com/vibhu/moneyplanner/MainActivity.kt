@@ -35,6 +35,10 @@ class MainActivity : AppCompatActivity() {
                     setCurrentFragment(trendFragment)
                     true
                 }
+                R.id.navigation_income_categories -> {
+                    setCurrentFragment(IncomeCategoryFragment())
+                    true
+                }
                 else -> false
             }
         }
