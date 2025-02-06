@@ -62,7 +62,6 @@ class IncomeData(context: Context) {
     fun addIncome(income: Income) {
         val values = ContentValues().apply {
             put("income_id", income.incomeId.toString())
-            put("source", income.source)
             put("amount", income.amount)
             put("income_category_id", income.incomeCategoryId.toString())
             put("received_date", dateFormat.format(income.receivedDate))
@@ -83,11 +82,10 @@ class IncomeData(context: Context) {
 
     private fun getIncomeFromCursor(cursor: Cursor): Income {
         val id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("income_id")))
-        val source = cursor.getString(cursor.getColumnIndexOrThrow("source"))
         val amount = cursor.getDouble(cursor.getColumnIndexOrThrow("amount"))
         val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("income_category_id")))
         val receivedDate = dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("received_date"))) ?: Date()
-        return Income(id, source, amount, categoryId, receivedDate)
+        return Income(id, amount, categoryId, receivedDate)
     }
 
     fun getIncomesByCategoryId(incomeCategoryId: UUID): List<Income> {

@@ -5,16 +5,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.vibhu.moneyplanner.databinding.ActivityAddIncomeCategoryBinding
-import com.vibhu.moneyplanner.IncomeData
 
-class AddIncomeCategoryActivity : AppCompatActivity() {
+class AddIncomeCategoryActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityAddIncomeCategoryBinding
     private lateinit var incomeData: IncomeData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityAddIncomeCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

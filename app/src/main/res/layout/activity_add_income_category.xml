@@ -1,24 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize"
-    android:paddingHorizontal="8dp">
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/textViewIncomeAmount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/editTextIncomeCategoryName"  android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Income Category Name"
+        android:inputType="text" />
 
-    <TextView
-        android:id="@+id/textViewIncomeCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/textViewIncomeReceivedDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/buttonAddIncomeCategory"  android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Add Income Category" />
 
 </LinearLayout>

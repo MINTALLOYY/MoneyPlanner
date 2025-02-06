@@ -9,12 +9,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 ) {
 
     companion object {
-        const val DATABASE_VERSION = 6 // Increment for database changes
+        const val DATABASE_VERSION = 11 // Increment for database changes
         const val DATABASE_NAME = "moneyplanner_db"
-        const val TABLE_NAME = "categories"
-        const val COLUMN_ID = "id"
-        const val COLUMN_NAME = "name"
-        const val COLUMN_BUDGET = "budget"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -39,10 +35,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
         // Create the income table
         val CREATE_INCOME_TABLE = "CREATE TABLE income (" +
                 "income_id TEXT PRIMARY KEY, " +
-                "source TEXT, " +
                 "amount REAL, " +
                 "income_category_id TEXT, " + // Foreign key
-                "recieved_date TEXT, " +
+                "received_date TEXT, " +
                 "FOREIGN KEY (income_category_id) REFERENCES income_categories(income_category_id))"
         db.execSQL(CREATE_INCOME_TABLE)
     }
@@ -50,7 +45,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Handle database upgrades here (for production app)
         // For simplicity during development, you can drop the tables and recreate them:
-        if (oldVersion < 6) { // Only upgrade if the database is older than version 2.
+        if (oldVersion < 11) { // Only upgrade if the database is older than version 2.
             db.execSQL("DROP TABLE IF EXISTS expenses")
             db.execSQL("DROP TABLE IF EXISTS categories")
             db.execSQL("DROP TABLE IF EXISTS income_categories")

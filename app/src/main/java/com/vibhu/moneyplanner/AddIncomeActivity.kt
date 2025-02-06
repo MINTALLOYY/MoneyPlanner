@@ -14,6 +14,7 @@ class AddIncomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddIncomeBinding
     private lateinit var incomeData: IncomeData
     private lateinit var incomeCategoryId: UUID
+    private lateinit var receivedDateCalendar: Calendar
 
     companion object {
         const val EXTRA_INCOME_CATEGORY_ID = "income_category_id"
@@ -29,7 +30,7 @@ class AddIncomeActivity : AppCompatActivity() {
 
         incomeCategoryId = UUID.fromString(intent.getStringExtra(EXTRA_INCOME_CATEGORY_ID)!!)
 
-        val receivedDateCalendar = Calendar.getInstance()
+        receivedDateCalendar = Calendar.getInstance()
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             receivedDateCalendar.set(Calendar.YEAR, year)
@@ -81,7 +82,7 @@ class AddIncomeActivity : AppCompatActivity() {
     private fun updateReceivedDateLabel() {
         val myFormat = "MM/dd/yyyy"
         val dateFormat = SimpleDateFormat(myFormat, Locale.US)
-        binding.editTextDateReceived.text = dateFormat.format(receivedDateCalendar.time)
+        binding.editTextDateReceived.setText(dateFormat.format(receivedDateCalendar.time))
     }
 
     override fun onDestroy() {

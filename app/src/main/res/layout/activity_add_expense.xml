@@ -1,71 +1,36 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <EditText
         android:id="@+id/editTextExpenseName"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Expense Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:inputType="text"
+        android:paddingTop="?attr/actionBarSize"/>
 
     <EditText
         android:id="@+id/editTextExpenseAmount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Expense Amount"
-        android:inputType="numberDecimal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextExpenseName" />
-
-
-    <TextView
-        android:id="@+id/calendarTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:contextClickable="false"
-        android:gravity="center"
-        android:text="@string/date_of_expense"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextExpenseAmount" />
+        android:hint="Amount"
+        android:inputType="numberDecimal" />
 
     <DatePicker
         android:id="@+id/datePickerExpense"
-        android:layout_width="316dp"
-        android:layout_height="410dp"
-        android:layout_marginTop="16dp"
-        android:datePickerMode="calendar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarTitle" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"/>
 
     <Button
-        android:id="@+id/buttonSaveExpense"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonAddExpense"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Save Expense"
-        app:layout_constraintEnd_toStartOf="@+id/buttonCancelExpense"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePickerExpense" />
+        android:text="Add Expense" />
 
-    <Button
-        android:id="@+id/buttonCancelExpense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonSaveExpense"
-        app:layout_constraintTop_toTopOf="@+id/buttonSaveExpense" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,11 +1,10 @@
-package com.vibhu.moneyplanner
-
+package com.vibhu.moneyplanner.CategoryExpense
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.vibhu.moneyplanner.databinding.ActivityAddCategoryBinding
-import java.lang.NumberFormatException
+import com.vibhu.moneyplanner.models.Category
 
 class AddCategoryActivity : AppCompatActivity() {
 
@@ -18,33 +17,32 @@ class AddCategoryActivity : AppCompatActivity() {
         binding = ActivityAddCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        categoryData = CategoryData(this) // Initialize CategoryData
+        categoryData = CategoryData(this)
+
+        binding.buttonCancel.setOnClickListener {
+            finish() // Close the activity
+        }
 
         binding.buttonSaveCategory.setOnClickListener {
-            val name = binding.editTextCategoryName.text.toString()
+            val categoryName = binding.editTextCategoryName.text.toString()
             val budgetStr = binding.editTextCategoryBudget.text.toString()
 
-            if (name.isNotEmpty() && budgetStr.isNotEmpty()) {
+            if (categoryName.isNotBlank() && budgetStr.isNotBlank()) {
                 try {
                     val budget = budgetStr.toDouble()
-                    val newCategory = Category(name = name, budget = budget)
-                    categoryData.insertCategory(newCategory)
-                    finish() // Go back to MainActivity
+                    val newCategory = Category(categoryName = categoryName, budget = budget)
+                    categoryData.addCategory(newCategory)
+
+                    Toast.makeText(this, "Category added", Toast.LENGTH_SHORT).show()
+                    finish()
                 } catch (e: NumberFormatException) {
-                    Toast.makeText(this, "Invalid budget input", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Invalid budget", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Error adding category: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
-
-        binding.buttonCancel.setOnClickListener {
-            finish() // Call finish() to go back
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        categoryData.close() // Close the database
     }
 }

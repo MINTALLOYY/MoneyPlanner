@@ -3,6 +3,7 @@ package com.vibhu.moneyplanner
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import com.vibhu.moneyplanner.CategoryExpense.HomeFragment
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

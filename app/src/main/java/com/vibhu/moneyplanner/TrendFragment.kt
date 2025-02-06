@@ -12,6 +12,8 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.vibhu.moneyplanner.models.Expense
+import com.vibhu.moneyplanner.CategoryExpense.ExpenseData
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -120,7 +122,7 @@ class TrendFragment : Fragment() {
             calendar.set(Calendar.MILLISECOND, 0)
 
             val month = calendar.time
-            val amount = expense.expenseAmount
+            val amount = expense.amount
             monthlyExpenses[month] = (monthlyExpenses[month] ?: 0.0) + amount
         }
         return monthlyExpenses
