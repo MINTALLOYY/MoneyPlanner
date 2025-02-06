@@ -1,4 +1,4 @@
-package com.vibhu.moneyplanner.CategoryExpense
+package com.vibhu.moneyplanner.categoryexpense
 
 import android.content.ContentValues
 import android.content.Context
@@ -27,6 +27,10 @@ class CategoryData(context: Context) {
             put(COLUMN_BUDGET, category.budget)
         }
         db.insert(TABLE_CATEGORIES, null, values)
+    }
+
+    fun getCategoryById(categoryId: UUID): Category? {
+        return getAllCategories().find { it.categoryId == categoryId }
     }
 
     fun getAllCategories(): List<Category> {

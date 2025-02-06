@@ -1,4 +1,4 @@
-package com.vibhu.moneyplanner.CategoryExpense
+package com.vibhu.moneyplanner.categoryexpense
 
 import android.os.Bundle
 import android.widget.Toast

@@ -6,20 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.vibhu.moneyplanner.databinding.ActivityCategoryExpensesPieChartBinding
+import com.vibhu.moneyplanner.databinding.FragmentCategoryExpensesPieChartBinding
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.vibhu.moneyplanner.CategoryExpense.CategoryData
-import com.vibhu.moneyplanner.models.Expense
-import com.vibhu.moneyplanner.CategoryExpense.ExpenseData
+import com.vibhu.moneyplanner.categoryexpense.CategoryData
+import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 
 class PieChartFragment : Fragment() {
 
-    private var _binding: ActivityCategoryExpensesPieChartBinding? = null
+    private var _binding: FragmentCategoryExpensesPieChartBinding? = null
     private val binding get() = _binding!!
     private lateinit var expenseData: ExpenseData
     private lateinit var categoryData: CategoryData
@@ -29,7 +28,7 @@ class PieChartFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = ActivityCategoryExpensesPieChartBinding.inflate(inflater, container, false)
+        _binding = FragmentCategoryExpensesPieChartBinding.inflate(inflater, container, false)
         val view = binding.root
 
         expenseData = ExpenseData(requireContext())
@@ -49,7 +48,7 @@ class PieChartFragment : Fragment() {
         categoryExpenses.forEach { (categoryId, totalExpense) ->
             val category = categoryData.getCategoryById(categoryId)
             if (category != null) {
-                entries.add(PieEntry(totalExpense.toFloat(), category.name))
+                entries.add(PieEntry(totalExpense.toFloat(), category.categoryName))
                 colors.add(generateRandomColor())
             }
         }
@@ -82,7 +81,7 @@ class PieChartFragment : Fragment() {
         val categoryExpenses = mutableMapOf<UUID, Double>()
         for (expense in expenses) {
             val categoryId = expense.categoryId
-            val amount = expense.expenseAmount
+            val amount = expense.amount
             categoryExpenses[categoryId] = (categoryExpenses[categoryId] ?: 0.0) + amount
         }
         return categoryExpenses

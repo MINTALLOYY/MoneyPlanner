@@ -1,10 +1,9 @@
-package com.vibhu.moneyplanner.CategoryExpense
+package com.vibhu.moneyplanner.categoryexpense
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.vibhu.moneyplanner.Expense
-import com.vibhu.moneyplanner.ExpenseData
 import com.vibhu.moneyplanner.databinding.ActivityAddExpenseBinding
 import java.util.Calendar
 import java.util.UUID
@@ -24,7 +23,7 @@ class AddExpenseActivity : AppCompatActivity() {
         expenseData = ExpenseData(this)
 
         // Get the categoryId from the intent
-        val categoryIdStr = intent.getStringExtra("categoryId")
+        val categoryIdStr = intent.getStringExtra("category_id")
         if (categoryIdStr != null) {
             try {
                 categoryId = UUID.fromString(categoryIdStr)

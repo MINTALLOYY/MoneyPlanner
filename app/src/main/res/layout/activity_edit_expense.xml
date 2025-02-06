@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
+    android:paddingHorizontal="16dp">
+
+    <EditText
+        android:id="@+id/editTextExpenseName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Expense Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editTextExpenseAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Amount"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseName" />
+
+    <EditText
+        android:id="@+id/editTextExpenseDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Date (yyyy-MM-dd)"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseAmount" />
+
+    <Button
+        android:id="@+id/buttonSaveExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCancelExpense"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate" />
+
+    <Button
+        android:id="@+id/buttonCancelExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonSaveExpense"
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

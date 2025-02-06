@@ -17,10 +17,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CategoryExpense.AddCategoryActivity" />
-        <activity android:name=".CategoryExpense.AddExpenseActivity" />
+        <activity android:name=".categoryexpense.AddCategoryActivity" />
+        <activity android:name=".categoryexpense.AddExpenseActivity" />
         <activity android:name=".AddIncomeActivity" />
         <activity android:name=".AddIncomeCategoryActivity" />
+        <activity android:name=".categoryexpense.EditCategoryActivity" />
+        <activity android:name=".categoryexpense.EditExpenseActivity" />
 
     </application>
 

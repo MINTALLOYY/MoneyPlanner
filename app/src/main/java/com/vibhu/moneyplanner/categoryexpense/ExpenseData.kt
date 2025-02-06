@@ -1,4 +1,4 @@
-package com.vibhu.moneyplanner.CategoryExpense
+package com.vibhu.moneyplanner.categoryexpense
 
 import android.content.ContentValues
 import android.content.Context
@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vibhu.moneyplanner.DatabaseHelper
 import com.vibhu.moneyplanner.Expense
+import com.vibhu.moneyplanner.models.Category
 import java.util.Date
 import java.util.UUID
 
@@ -13,15 +14,16 @@ class ExpenseData(context: Context) {
 
     companion object {  // Define constants here
         const val TABLE_EXPENSES = "expenses"
-        const val COLUMN_EXPENSE_ID = "expense_id"
+        const val COLUMN_EXPENSE_ID = "id"
         const val COLUMN_EXPENSE_NAME = "expense_name"
-        const val COLUMN_AMOUNT = "amount"
+        const val COLUMN_AMOUNT = "expense_amount"
         const val COLUMN_CATEGORY_ID = "category_id"
         const val COLUMN_EXPENSE_DATE = "expense_date"
     }
 
     private val dbHelper = DatabaseHelper(context)
     private val db: SQLiteDatabase = dbHelper.writableDatabase
+    private val categoryData: com.vibhu.moneyplanner.categoryexpense.CategoryData = com.vibhu.moneyplanner.categoryexpense.CategoryData(context)
 
     fun addExpense(expense: Expense) {
         val values = ContentValues().apply {
@@ -32,6 +34,27 @@ class ExpenseData(context: Context) {
             put(COLUMN_EXPENSE_DATE, expense.expenseDate.time)
         }
         db.insert(TABLE_EXPENSES, null, values)
+    }
+
+    fun getExpenseById(expenseId: UUID): Expense? {
+        val selection = "${COLUMN_EXPENSE_ID} = ?"
+        val selectionArgs = arrayOf(expenseId.toString())
+        val cursor = db.query(
+            TABLE_EXPENSES,
+            null, // null selects all columns
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+
+        cursor.use {
+            if (it.moveToFirst()) { // Check if a row was returned
+                return getExpenseFromCursor(it) // Use your existing function
+            }
+        }
+        return null // Return null if no matching expense is found
     }
 
     fun getExpensesByCategoryId(categoryId: UUID): List<Expense> {
@@ -66,6 +89,27 @@ class ExpenseData(context: Context) {
         val whereClause = "$COLUMN_EXPENSE_ID =?"
         val whereArgs = arrayOf(expense.expenseId.toString())
         db.update(TABLE_EXPENSES, values, whereClause, whereArgs)
+    }
+
+    fun getExpensesInDateRange(startDate: Date, endDate: Date): List<Expense> {
+        val expenses = mutableListOf<Expense>()
+        val selection = "${COLUMN_EXPENSE_DATE} BETWEEN ? AND ?"
+        val selectionArgs = arrayOf(startDate.time.toString(), endDate.time.toString())
+        val cursor = db.query(
+            TABLE_EXPENSES,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                expenses.add(getExpenseFromCursor(it))
+            }
+        }
+        return expenses
     }
 
     fun deleteExpense(expenseId: UUID) {

@@ -12,8 +12,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.vibhu.moneyplanner.models.Expense
-import com.vibhu.moneyplanner.CategoryExpense.ExpenseData
+import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import java.text.SimpleDateFormat
 import java.util.*
 

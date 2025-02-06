@@ -8,13 +8,13 @@
     <EditText
         android:id="@+id/editTextIncomeCategoryName"  android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Income Category Name"
+        android:hint="Income Name"
         android:inputType="text" />
 
     <Button
         android:id="@+id/buttonAddIncomeCategory"  android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Add Income Category" />
+        android:text="Add Income" />
 
 </LinearLayout>

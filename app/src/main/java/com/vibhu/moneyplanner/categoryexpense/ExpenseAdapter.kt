@@ -1,9 +1,10 @@
-package com.vibhu.moneyplanner.CategoryExpense
+package com.vibhu.moneyplanner.categoryexpense
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vibhu.moneyplanner.Expense
@@ -14,13 +15,16 @@ import java.util.Locale
 class ExpenseAdapter(
     private var expenses: List<Expense>,
     private val context: Context,
-    private val onExpenseUpdated: () -> Unit // Lambda for updates
+    private val onItemEditClick: (Expense) -> Unit,
+    private val onItemDeleteClick: (Expense) -> Unit
 ) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
 
     class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.textViewExpenseName)
         val amountTextView: TextView = itemView.findViewById(R.id.textViewExpenseAmount)
         val dateTextView: TextView = itemView.findViewById(R.id.textViewExpenseDate)
+        val editButton: ImageButton = itemView.findViewById(R.id.buttonEditExpense)
+        val deleteButton: ImageButton = itemView.findViewById(R.id.buttonDeleteExpense)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
@@ -34,14 +38,16 @@ class ExpenseAdapter(
         holder.nameTextView.text = expense.name
         holder.amountTextView.text = expense.amount.toString()
 
-        // Format the date
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val formattedDate = dateFormat.format(expense.expenseDate)
         holder.dateTextView.text = formattedDate
 
-        // Add item click listener if needed
-        holder.itemView.setOnClickListener {
-            // Handle item click here if required
+        holder.editButton.setOnClickListener {
+            onItemEditClick(expense)
+        }
+
+        holder.deleteButton.setOnClickListener {
+            onItemDeleteClick(expense)
         }
     }
 
