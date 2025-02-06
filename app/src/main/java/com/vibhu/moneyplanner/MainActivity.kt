@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import com.vibhu.moneyplanner.categoryexpense.HomeFragment
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
+import com.vibhu.moneyplanner.trends.TrendFragment
 
 class MainActivity : AppCompatActivity() {
 

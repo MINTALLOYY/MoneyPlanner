@@ -37,9 +37,7 @@ class ExpensesFragment: Fragment() {
         if (categoryIdString!= null) {
             categoryId = UUID.fromString(categoryIdString)
         } else {
-            // Handle the case where categoryId is missing
-            // For example, you might show an error message and go back to the previous fragment
-            // or choose a default category
+            // add action if it doesn't exist like toast
         }
 
         binding.recyclerViewExpenses.layoutManager = LinearLayoutManager(requireContext())

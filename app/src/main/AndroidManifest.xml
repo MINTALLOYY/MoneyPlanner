@@ -23,6 +23,8 @@
         <activity android:name=".AddIncomeCategoryActivity" />
         <activity android:name=".categoryexpense.EditCategoryActivity" />
         <activity android:name=".categoryexpense.EditExpenseActivity" />
+        <activity android:name=".EditIncomeActivity" />
+        <activity android:name=".EditIncomeCategoryActivity" />
 
     </application>
 

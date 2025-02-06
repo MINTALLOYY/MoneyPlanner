@@ -1,4 +1,4 @@
-package com.vibhu.moneyplanner
+package com.vibhu.moneyplanner.models
 
 import java.util.Date
 import java.util.UUID

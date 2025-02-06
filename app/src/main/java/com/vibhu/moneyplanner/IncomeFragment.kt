@@ -1,4 +1,4 @@
-package com.vibhu.moneyplanner
+package com.vibhu.moneyplanner // Replace with your package name
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,74 +6,95 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vibhu.moneyplanner.databinding.FragmentIncomeBinding
+import com.vibhu.moneyplanner.categoryexpense.ExpensesFragment
+import com.vibhu.moneyplanner.databinding.FragmentIncomeBinding // Replace with your binding class
 import java.util.UUID
 
-class IncomeFragment: Fragment() {
+class IncomeFragment : Fragment() {
 
     private var _binding: FragmentIncomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var incomeData: IncomeData
     private lateinit var incomeAdapter: IncomeAdapter
-
-    companion object {
-        const val ARG_INCOME_CATEGORY_ID = "income_category_id" // Define the argument key
-    }
+    private lateinit var incomeCategoryId: UUID
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentIncomeBinding.inflate(inflater, container, false)
-        val view = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val incomeCategoryIdStr = arguments?.getString("incomeCategoryId")
+        if (incomeCategoryIdStr!= null) {
+            incomeCategoryId = UUID.fromString(incomeCategoryIdStr)
+        } else {
+            // add action if it doesn't exist like toast
+        }
 
         incomeData = IncomeData(requireContext())
 
-        // Retrieve incomeCategoryId from arguments
-        val incomeCategoryIdString = arguments?.getString(ARG_INCOME_CATEGORY_ID)
-        val incomeCategoryId = incomeCategoryIdString?.let { UUID.fromString(it) }
+        val incomeCategoryIdString = arguments?.getString("incomeCategoryId")
+        if (incomeCategoryIdString != null) {
+            incomeCategoryId = UUID.fromString(incomeCategoryIdString)
+        } else {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
 
-        // Initialize the adapter with filtered incomes (if incomeCategoryId is available)
+            fragmentTransaction.replace(R.id.fragment_container, IncomeCategoryFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+            return
+        }
+
+        binding.recyclerViewIncomes.layoutManager = LinearLayoutManager(requireContext())
+
         incomeAdapter = IncomeAdapter(
-            if (incomeCategoryId!= null) {
-                incomeData.getIncomesByCategoryId(incomeCategoryId)
-            } else {
-                incomeData.getAllIncomes()
+            incomeData.getIncomesByCategoryId(incomeCategoryId), // Filter by category!
+            requireContext(),
+            { income -> // onItemEditClick
+                val intent = Intent(requireContext(), EditIncomeActivity::class.java)
+                intent.putExtra("income_id", income.incomeId.toString())
+                startActivity(intent)
+            },
+            { income -> // onItemDeleteClick
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete Income")
+                    .setMessage("Are you sure you want to delete this income?")
+                    .setPositiveButton("Delete") { _, _ ->
+                        incomeData.deleteIncome(income.incomeId)
+                        incomeAdapter.updateItems(incomeData.getIncomesByCategoryId(incomeCategoryId))
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
             }
         )
-        binding.recyclerViewIncomes.layoutManager = LinearLayoutManager(requireContext())
+
         binding.recyclerViewIncomes.adapter = incomeAdapter
 
         binding.fabAddIncome.setOnClickListener {
-            val incomeCategoryIdString = arguments?.getString(IncomeFragment.ARG_INCOME_CATEGORY_ID)
-
-            if (incomeCategoryIdString != null) {  // Simplified null check
-                val intent = Intent(requireContext(), AddIncomeActivity::class.java)
-                intent.putExtra(AddIncomeActivity.EXTRA_INCOME_CATEGORY_ID, incomeCategoryIdString)
-                startActivity(intent)
-            } else {
-                Toast.makeText(requireContext(), "Please select an income category first", Toast.LENGTH_SHORT).show()
-            }
+            val intent = Intent(requireContext(), AddIncomeActivity::class.java)
+            intent.putExtra("income_category_id", incomeCategoryId.toString())
+            startActivity(intent)
         }
-
-        return view
     }
 
     override fun onResume() {
         super.onResume()
-        // Update the adapter with filtered incomes (if incomeCategoryId is available)
-        val incomeCategoryIdString = arguments?.getString(ARG_INCOME_CATEGORY_ID)
-        val incomeCategoryId = incomeCategoryIdString?.let { UUID.fromString(it) }
-        incomeAdapter.updateIncomes(
-            if (incomeCategoryId!= null) {
-                incomeData.getIncomesByCategoryId(incomeCategoryId)
-            } else {
-                incomeData.getAllIncomes()
-            }
-        )
+        incomeAdapter.updateItems(incomeData.getIncomesByCategoryId(incomeCategoryId))
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

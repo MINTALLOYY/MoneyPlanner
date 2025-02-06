@@ -1,4 +1,4 @@
-package com.vibhu.moneyplanner
+package com.vibhu.moneyplanner.trends
 
 import android.graphics.Color
 import android.os.Bundle
@@ -6,31 +6,46 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.vibhu.moneyplanner.databinding.FragmentTrendBinding
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.vibhu.moneyplanner.Expense
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
+import com.vibhu.moneyplanner.databinding.FragmentExpensesTrendsBinding
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.TreeMap
 
-class TrendFragment : Fragment() {
+class ExpensesTrendsFragment: Fragment() {
 
-    private var _binding: FragmentTrendBinding? = null
+    private var _binding: FragmentExpensesTrendsBinding? = null
     private val binding get() = _binding!!
     private lateinit var expenseData: ExpenseData
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentTrendBinding.inflate(inflater, container, false)
-        val view = binding.root
+    ): View {
+        _binding = FragmentExpensesTrendsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         expenseData = ExpenseData(requireContext())
+        setUpBarChart()
+    }
+
+    private fun setUpBarChart() {
+        val barChart: BarChart = binding.barChartExpenses // Assuming you have a BarChart in your layout
+        val entries = mutableListOf<BarEntry>()
+        val labels = mutableListOf<String>()
 
         val endDate = Date()
         val calendar = Calendar.getInstance()
@@ -40,13 +55,9 @@ class TrendFragment : Fragment() {
         val expenses = expenseData.getExpensesInDateRange(startDate, endDate)
         val monthlyExpenses = aggregateExpensesByMonth(expenses)
 
-        val entries = mutableListOf<BarEntry>()
-        val labels = mutableListOf<String>()
-
         val format = SimpleDateFormat("MMM", Locale.getDefault())
 
         var x = 0f // X-axis counter
-
         monthlyExpenses.forEach { (month, totalExpense) ->
             val monthLabel = format.format(month)
             labels.add(monthLabel)
@@ -60,56 +71,51 @@ class TrendFragment : Fragment() {
         dataSet.valueTextSize = 12f
 
         val barData = BarData(dataSet)
-        binding.barChartExpenses.data = barData
+        barChart.data = barData
 
         // Chart customizations
-        binding.barChartExpenses.description.isEnabled = false
-        binding.barChartExpenses.setDrawGridBackground(false)
-        binding.barChartExpenses.setDrawBarShadow(false)
-        binding.barChartExpenses.setDrawValueAboveBar(true)
-        binding.barChartExpenses.setPinchZoom(false)
-        binding.barChartExpenses.setScaleEnabled(false)
-        binding.barChartExpenses.setDoubleTapToZoomEnabled(false)
+        configureChart(barChart, labels)
+        barChart.invalidate() // Refresh the chart
+    }
+
+    private fun configureChart(chart: BarChart, labels: List<String>) {
+        chart.description.isEnabled = false
+        chart.setDrawGridBackground(false)
+        chart.setDrawBarShadow(false)
+        chart.setDrawValueAboveBar(true)
+        chart.setPinchZoom(false)
+        chart.setScaleEnabled(false)
+        chart.setDoubleTapToZoomEnabled(false)
 
         // X-axis
-        val xAxis = binding.barChartExpenses.xAxis
+        val xAxis = chart.xAxis
         xAxis.setDrawGridLines(false)
         xAxis.position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(labels)
         xAxis.labelCount = labels.size
         xAxis.textColor = Color.BLACK
         xAxis.granularity = 1f
-        xAxis.textSize = 24f // Set x-axis label text size (adjust as needed)
-
+        xAxis.textSize = 12f
 
         // Y-axis
-        val yAxisLeft = binding.barChartExpenses.axisLeft
+        val yAxisLeft = chart.axisLeft
         yAxisLeft.textColor = Color.BLACK
         yAxisLeft.setDrawGridLines(true)
-        yAxisLeft.valueFormatter = object : ValueFormatter() {
+        yAxisLeft.valueFormatter = object: ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 return String.format("%.0f", value)
             }
         }
 
-        val yAxisRight = binding.barChartExpenses.axisRight
-        yAxisRight.textColor = Color.BLACK
-        yAxisRight.setDrawGridLines(true)
-        yAxisRight.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                return String.format("%.0f", value)
-            }
-        }
+        val yAxisRight = chart.axisRight
+        yAxisRight.setDrawGridLines(false) // Only left Y-axis has grid lines
+        yAxisRight.isEnabled = false // Right Y-axis is not needed
 
-        binding.barChartExpenses.legend.textColor = Color.BLACK
-
-        binding.barChartExpenses.invalidate()
-
-        return view
+        chart.legend.textColor = Color.BLACK
     }
 
-    private fun aggregateExpensesByMonth(expenses: List<Expense>): SortedMap<Date, Double> {
-        val monthlyExpenses = sortedMapOf<Date, Double>()
+    private fun aggregateExpensesByMonth(expenses: List<Expense>): TreeMap<Date, Double> {
+        val monthlyExpenses = TreeMap<Date, Double>()
         val calendar = Calendar.getInstance()
 
         for (expense in expenses) {
@@ -122,7 +128,7 @@ class TrendFragment : Fragment() {
 
             val month = calendar.time
             val amount = expense.amount
-            monthlyExpenses[month] = (monthlyExpenses[month] ?: 0.0) + amount
+            monthlyExpenses[month] = (monthlyExpenses[month]?: 0.0) + amount
         }
         return monthlyExpenses
     }

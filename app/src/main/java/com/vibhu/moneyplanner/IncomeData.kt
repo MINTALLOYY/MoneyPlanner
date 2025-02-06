@@ -1,14 +1,25 @@
 package com.vibhu.moneyplanner
 
-import IncomeCategory
+import com.vibhu.moneyplanner.models.IncomeCategory
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_CATEGORY_ID
+import com.vibhu.moneyplanner.IncomeCategoryData.Companion.TABLE_INCOME_CATEGORIES
+import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.*
 
 class IncomeData(context: Context) {
+
+    companion object {
+        const val TABLE_INCOMES = "incomes"
+        const val COLUMN_INCOME_ID = "income_id"
+        const val COLUMN_AMOUNT = "amount"
+        const val COLUMN_INCOME_DATE = "income_date"
+        const val COLUMN_INCOME_CATEGORY_ID = "income_category_id"
+    }
 
     private val dbHelper = DatabaseHelper(context)
     private val db: SQLiteDatabase = dbHelper.writableDatabase
@@ -58,6 +69,12 @@ class IncomeData(context: Context) {
         return null
     }
 
+    fun deleteIncome(incomeId: UUID) {
+        val selection = "$COLUMN_INCOME_ID =?"
+        val selectionArgs = arrayOf(incomeId.toString())
+        db.delete(TABLE_INCOME_CATEGORIES, selection, selectionArgs)
+    }
+
     // Income functions:
     fun addIncome(income: Income) {
         val values = ContentValues().apply {
@@ -67,6 +84,19 @@ class IncomeData(context: Context) {
             put("received_date", dateFormat.format(income.receivedDate))
         }
         db.insert("income", null, values)
+    }
+
+    fun updateIncome(income: Income) {
+        val values = ContentValues().apply {
+            put(COLUMN_AMOUNT, income.amount)
+            put(COLUMN_INCOME_DATE, income.receivedDate.time)
+            put(COLUMN_INCOME_CATEGORY_ID, income.incomeCategoryId.toString())
+        }
+
+        val selection = "${COLUMN_INCOME_ID} = ?"
+        val selectionArgs = arrayOf(income.incomeId.toString())
+
+        db.update(TABLE_INCOMES, values, selection, selectionArgs)
     }
 
     fun getAllIncomes(): List<Income> {
@@ -105,6 +135,28 @@ class IncomeData(context: Context) {
             }
         }
         return incomes
+    }
+
+    fun getIncomeById(incomeId: UUID): Income? {
+        val selection = "${IncomeData.COLUMN_INCOME_ID} = ?"
+        val selectionArgs = arrayOf(incomeId.toString())
+
+        val cursor = db.query(
+            IncomeData.TABLE_INCOMES,
+            null, // Select all columns
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+
+        cursor.use {
+            if (it.moveToFirst()) {
+                return getIncomeFromCursor(it) // Helper function to create Income object from Cursor
+            }
+        }
+        return null // Return null if no income is found
     }
 
 

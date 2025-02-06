@@ -1,6 +1,6 @@
 package com.vibhu.moneyplanner
 
-import IncomeCategory
+import com.vibhu.moneyplanner.models.IncomeCategory
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity

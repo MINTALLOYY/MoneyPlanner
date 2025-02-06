@@ -1,61 +1,87 @@
-package com.vibhu.moneyplanner
+package com.vibhu.moneyplanner // Replace with your package name
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vibhu.moneyplanner.databinding.FragmentIncomeCategoryBinding
+import java.util.UUID
 
 class IncomeCategoryFragment : Fragment() {
 
     private var _binding: FragmentIncomeCategoryBinding? = null
     private val binding get() = _binding!!
-    private lateinit var incomeData: IncomeData
+    private lateinit var incomeCategoryData: IncomeCategoryData
     private lateinit var incomeCategoryAdapter: IncomeCategoryAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentIncomeCategoryBinding.inflate(inflater, container, false)
-        val view = binding.root
+        return binding.root
+    }
 
-        incomeData = IncomeData(requireContext())
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        incomeCategoryData = IncomeCategoryData(requireContext())
 
         binding.recyclerViewIncomeCategories.layoutManager = LinearLayoutManager(requireContext())
-        incomeCategoryAdapter = IncomeCategoryAdapter(
-            incomeData.getAllIncomeCategories()
-        ) { incomeCategory -> // Lambda for item click
-            val fragment = IncomeFragment()
-            val bundle = Bundle()
-            bundle.putString(IncomeFragment.ARG_INCOME_CATEGORY_ID, incomeCategory.incomeCategoryId.toString())
-            fragment.arguments = bundle
 
-            val transaction = requireActivity().supportFragmentManager.beginTransaction() // Use requireActivity()
-            transaction.replace(R.id.fragment_container, fragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+        incomeCategoryAdapter = IncomeCategoryAdapter(
+            incomeCategoryData.getAllIncomeCategories(),
+            requireContext(),
+            { category -> // onItemEditClick
+                val intent = Intent(requireContext(), EditIncomeCategoryActivity::class.java)
+                intent.putExtra("income_category_id", category.incomeCategoryId.toString())
+                startActivity(intent)
+            },
+            { category -> // onItemDeleteClick
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete Income Category")
+                    .setMessage("Are you sure you want to delete this income category?")
+                    .setPositiveButton("Delete") { _, _ ->
+                        incomeCategoryData.deleteIncomeCategory(category.incomeCategoryId)
+                        incomeCategoryAdapter.updateItems(incomeCategoryData.getAllIncomeCategories())
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            },
+            { category -> // onItemClick (to view incomes)
+                val incomesFragment = IncomeFragment()
+                val bundle = Bundle()
+                bundle.putString("incomeCategoryId", category.incomeCategoryId.toString())
+                incomesFragment.arguments = bundle
+
+                val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragment_container, incomesFragment) // Replace the fragment
+                fragmentTransaction.addToBackStack(null) // Add to back stack (optional)
+                fragmentTransaction.commit()
+            }
+        )
+
         binding.recyclerViewIncomeCategories.adapter = incomeCategoryAdapter
 
         binding.fabAddIncomeCategory.setOnClickListener {
             val intent = Intent(requireContext(), AddIncomeCategoryActivity::class.java)
             startActivity(intent)
         }
-
-        return view
     }
 
     override fun onResume() {
         super.onResume()
-        incomeCategoryAdapter.updateIncomeCategories(incomeData.getAllIncomeCategories())
+        incomeCategoryAdapter.updateItems(incomeCategoryData.getAllIncomeCategories())
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        incomeData.close()
+        incomeCategoryData.close()
     }
 }
