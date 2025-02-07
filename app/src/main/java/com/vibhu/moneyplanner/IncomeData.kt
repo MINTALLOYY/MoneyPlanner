@@ -73,7 +73,7 @@ class IncomeData(context: Context) {
     fun deleteIncome(incomeId: UUID) {
         val selection = "$COLUMN_INCOME_ID =?"
         val selectionArgs = arrayOf(incomeId.toString())
-        db.delete(TABLE_INCOME_CATEGORIES, selection, selectionArgs)
+        db.delete(TABLE_INCOMES, selection, selectionArgs)
     }
 
     // Income functions:
@@ -82,7 +82,7 @@ class IncomeData(context: Context) {
             put("income_id", income.incomeId.toString())
             put("amount", income.amount)
             put("income_category_id", income.incomeCategoryId.toString())
-            put("received_date", dateFormat.format(income.receivedDate))
+            put("received_date", income.receivedDate.time)
         }
         db.insert("income", null, values)
     }
