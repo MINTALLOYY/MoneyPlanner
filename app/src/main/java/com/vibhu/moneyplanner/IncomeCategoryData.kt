@@ -66,6 +66,28 @@ class IncomeCategoryData(context: Context) {
         return null
     }
 
+    fun getIncomeCategoryByName(categoryName: String): IncomeCategory? {
+        val selection = "$COLUMN_INCOME_CATEGORY_NAME = ?"
+        val selectionArgs = arrayOf(categoryName)
+        val cursor = db.query(
+            TABLE_INCOME_CATEGORIES,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        cursor.use {
+            if (it.moveToFirst()) {
+                val id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_CATEGORY_ID)))
+                val name = categoryName
+                return IncomeCategory(id, name)
+            }
+        }
+        return null
+    }
+
     fun updateIncomeCategory(category: IncomeCategory) {
         val values = ContentValues().apply {
             put(COLUMN_INCOME_CATEGORY_NAME, category.incomeCategoryName)
