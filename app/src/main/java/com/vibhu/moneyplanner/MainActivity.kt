@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         incomeCategoryData = IncomeCategoryData(this)
         incomeData = IncomeData(this)
 
-        if (isFirstRun()) {
+        if(isFirstRun()){
             showBalanceDialog()
         } else {
             setUpBottomNavigation()

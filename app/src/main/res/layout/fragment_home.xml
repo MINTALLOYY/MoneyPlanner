@@ -5,19 +5,32 @@
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize">
 
+    <TextView
+        android:id="@+id/categoryTitleName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CATEGORIES"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/logo_green"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewCategories"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCategories"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/categoryTitleName" />
 
     <Button
         android:id="@+id/buttonAddCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="128dp"
         android:text="Add Category"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
