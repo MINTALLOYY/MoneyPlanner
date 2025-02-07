@@ -69,55 +69,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBalanceDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Welcome!")
-        builder.setMessage("Please enter your current account balance:")
-
-        val input = EditText(this)
-        builder.setView(input)
-
-        builder.setPositiveButton("OK") { dialog, _ ->
-            val balanceStr = input.text.toString()
-
-            if (balanceStr.isBlank()) {
-                Toast.makeText(this, "Please enter a balance", Toast.LENGTH_SHORT).show()
-                showBalanceDialog() // Show the dialog again
-                return@setPositiveButton
-            }
-
-            try {
-                val balance = balanceStr.toDouble()
-
-                // 1. Add "Initial Balance" Income Category (if it doesn't exist)
-                val initialCategory = incomeCategoryData.getIncomeCategoryByName("Initial Balance")
-                val categoryId = if (initialCategory == null) {
-                    val newCategory = IncomeCategory(UUID.randomUUID(), "Initial Balance")
-                    incomeCategoryData.addIncomeCategory(newCategory)
-                    newCategory.incomeCategoryId
-                } else {
-                    initialCategory.incomeCategoryId
-                }
-
-                // 2. Log the balance as an income entry
-                val currentDate = Date()
-                val newIncome = Income(UUID.randomUUID(), balance, categoryId, currentDate)
-                incomeData.addIncome(newIncome)
-
                 // Set first run to false
                 setFirstRun(false)
 
                 // Resume Main Activity
                 setUpBottomNavigation()
                 setCurrentFragment(HomeFragment())
-
-            } catch (e: NumberFormatException) {
-                Toast.makeText(this, "Invalid balance", Toast.LENGTH_SHORT).show()
-                showBalanceDialog() // Show the dialog again
-            }
-        }
-
-        builder.setCancelable(false) // Make the dialog non-cancelable (optional)
-        builder.show()
     }
 
     private fun isFirstRun(): Boolean {
