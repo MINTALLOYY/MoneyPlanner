@@ -67,7 +67,7 @@ class PieChartFragment : Fragment() {
         binding.pieChartExpenses.setUsePercentValues(true)
         binding.pieChartExpenses.setDrawHoleEnabled(true)
         binding.pieChartExpenses.setHoleRadius(60f) // Adjust hole radius
-        binding.pieChartExpenses.setTransparentCircleRadius(70f) // Adjust transparent circle radius
+        binding.pieChartExpenses.setTransparentCircleColor(Color.BLACK) // Adjust transparent circle radius
         binding.pieChartExpenses.legend.textColor = Color.BLACK // Set legend text color to white
         binding.pieChartExpenses.setEntryLabelColor(Color.WHITE) // Set entry label text color
 

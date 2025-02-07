@@ -1,6 +1,7 @@
 package com.vibhu.moneyplanner
 
 import android.content.Context
+import android.icu.text.NumberFormat
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +34,8 @@ class IncomeAdapter(
     override fun onBindViewHolder(holder: IncomeViewHolder, position: Int) {
         val income = incomes[position]
 
-        holder.amountTextView.text = income.amount.toString()
+        val formattedIncomeAmount = NumberFormat.getCurrencyInstance(Locale.US).format(income.amount)
+        holder.amountTextView.text = formattedIncomeAmount
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val formattedDate = dateFormat.format(income.receivedDate)

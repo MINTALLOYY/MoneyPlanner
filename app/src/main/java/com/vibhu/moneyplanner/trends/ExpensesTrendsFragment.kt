@@ -67,7 +67,7 @@ class ExpensesTrendsFragment: Fragment() {
 
         val dataSet = BarDataSet(entries, "Monthly Expenses")
         dataSet.color = Color.BLUE
-        dataSet.valueTextColor = Color.BLACK
+        dataSet.valueTextColor = Color.WHITE
         dataSet.valueTextSize = 12f
 
         val barData = BarData(dataSet)
@@ -93,13 +93,13 @@ class ExpensesTrendsFragment: Fragment() {
         xAxis.position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(labels)
         xAxis.labelCount = labels.size
-        xAxis.textColor = Color.BLACK
+        xAxis.textColor = Color.WHITE
         xAxis.granularity = 1f
         xAxis.textSize = 12f
 
         // Y-axis
         val yAxisLeft = chart.axisLeft
-        yAxisLeft.textColor = Color.BLACK
+        yAxisLeft.textColor = Color.WHITE
         yAxisLeft.setDrawGridLines(true)
         yAxisLeft.valueFormatter = object: ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
@@ -111,7 +111,7 @@ class ExpensesTrendsFragment: Fragment() {
         yAxisRight.setDrawGridLines(false) // Only left Y-axis has grid lines
         yAxisRight.isEnabled = false // Right Y-axis is not needed
 
-        chart.legend.textColor = Color.BLACK
+        chart.legend.textColor = Color.WHITE
     }
 
     private fun aggregateExpensesByMonth(expenses: List<Expense>): TreeMap<Date, Double> {

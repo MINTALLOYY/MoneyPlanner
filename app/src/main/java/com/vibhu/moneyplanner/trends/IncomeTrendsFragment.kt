@@ -67,7 +67,7 @@ class IncomeTrendsFragment : Fragment() {
 
         val dataSet = BarDataSet(entries, "Monthly Income")
         dataSet.color = Color.GREEN
-        dataSet.valueTextColor = Color.BLACK
+        dataSet.valueTextColor = Color.WHITE
         dataSet.valueTextSize = 12f
 
         val barData = BarData(dataSet)
@@ -91,12 +91,12 @@ class IncomeTrendsFragment : Fragment() {
         xAxis.position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(labels)
         xAxis.labelCount = labels.size
-        xAxis.textColor = Color.BLACK
+        xAxis.textColor = Color.WHITE
         xAxis.granularity = 1f
         xAxis.textSize = 12f
 
         val yAxisLeft = chart.axisLeft
-        yAxisLeft.textColor = Color.BLACK
+        yAxisLeft.textColor = Color.WHITE
         yAxisLeft.setDrawGridLines(true)
         yAxisLeft.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
@@ -108,7 +108,7 @@ class IncomeTrendsFragment : Fragment() {
         yAxisRight.setDrawGridLines(false)
         yAxisRight.isEnabled = false
 
-        chart.legend.textColor = Color.BLACK
+        chart.legend.textColor = Color.WHITE
     }
 
 

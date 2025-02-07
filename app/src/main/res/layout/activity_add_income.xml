@@ -4,14 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize"
-    android:paddingHorizontal="8dp">
+    android:paddingHorizontal="8dp"
+    android:background="@color/very_dark_grey">
 
+    <TextView
+        android:id="@+id/addIncomeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:gravity="center|center_horizontal"
+        android:text="LOG INCOME"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     <EditText
         android:id="@+id/editTextAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Amount"
-        android:inputType="numberDecimal" />
+        android:textColorHint="@color/white"
+        android:inputType="numberDecimal"
+        android:textColor="@color/white"/>
 
 
     <EditText
@@ -20,13 +31,16 @@
         android:layout_height="wrap_content"
         android:hint="Received Date (MM/dd/yyyy)"
         android:focusable="false"
-        android:clickable="true" />
+        android:clickable="true"
+        android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/buttonAddIncome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Add Income" />
+        android:text="Add Income"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/very_dark_grey"/>
 
 </LinearLayout>

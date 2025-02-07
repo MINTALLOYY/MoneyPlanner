@@ -61,7 +61,7 @@ class ExpenseData(context: Context) {
         val expenses = mutableListOf<Expense>()
         val selection = "$COLUMN_CATEGORY_ID =?"
         val selectionArgs = arrayOf(categoryId.toString())
-        val cursor = db.query(TABLE_EXPENSES, null, selection, selectionArgs, null, null, null)
+        val cursor = db.query(TABLE_EXPENSES, null, selection, selectionArgs, null, null, COLUMN_EXPENSE_DATE + " DESC")
         cursor.use {
             while (it.moveToNext()) {
                 expenses.add(getExpenseFromCursor(it))

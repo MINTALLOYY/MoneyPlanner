@@ -3,19 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IncomeCategoryFragment">
+    tools:context=".IncomeCategoryFragment"
+    android:background="@color/very_dark_grey"
+    android:paddingTop="?attr/actionBarSize">
+
+    <TextView
+        android:id="@+id/IncomeSourceTitleName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:text="INCOME SOURCE"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="32dp"
         android:id="@+id/recyclerViewIncomeCategories"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddIncomeCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="128dp"
+        android:backgroundTint="@color/white"
         android:src="@android:drawable/ic_input_add" />
 
 </FrameLayout>

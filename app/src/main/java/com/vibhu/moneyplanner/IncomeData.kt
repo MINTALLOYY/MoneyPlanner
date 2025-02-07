@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_CATEGORY_ID
 import com.vibhu.moneyplanner.IncomeCategoryData.Companion.TABLE_INCOME_CATEGORIES
+import com.vibhu.moneyplanner.categoryexpense.ExpenseData.Companion.COLUMN_EXPENSE_DATE
 import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,10 +15,10 @@ import java.util.*
 class IncomeData(context: Context) {
 
     companion object {
-        const val TABLE_INCOMES = "incomes"
+        const val TABLE_INCOMES = "income"
         const val COLUMN_INCOME_ID = "income_id"
         const val COLUMN_AMOUNT = "amount"
-        const val COLUMN_INCOME_DATE = "income_date"
+        const val COLUMN_INCOME_DATE = "received_date"
         const val COLUMN_INCOME_CATEGORY_ID = "income_category_id"
     }
 
@@ -101,7 +102,7 @@ class IncomeData(context: Context) {
 
     fun getAllIncomes(): List<Income> {
         val incomes = mutableListOf<Income>()
-        val cursor: Cursor = db.query("income", null, null, null, null, null, null)
+        val cursor: Cursor = db.query("income", null, null, null, null, null, COLUMN_INCOME_DATE + " DESC")
         cursor.use {
             while (it.moveToNext()) {
                 incomes.add(getIncomeFromCursor(it))
@@ -114,7 +115,7 @@ class IncomeData(context: Context) {
         val id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("income_id")))
         val amount = cursor.getDouble(cursor.getColumnIndexOrThrow("amount"))
         val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("income_category_id")))
-        val receivedDate = dateFormat.parse(cursor.getString(cursor.getColumnIndexOrThrow("received_date"))) ?: Date()
+        val receivedDate = Date(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_INCOME_DATE)))
         return Income(id, amount, categoryId, receivedDate)
     }
 
@@ -127,7 +128,7 @@ class IncomeData(context: Context) {
             arrayOf(incomeCategoryId.toString()),
             null,
             null,
-            null
+            COLUMN_INCOME_DATE + " DESC"
         )
         cursor.use {
             while (it.moveToNext()) {

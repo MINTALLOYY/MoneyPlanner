@@ -50,10 +50,6 @@ class EditIncomeActivity : AppCompatActivity() {
         }
 
 
-        binding.editTextIncomeDate.setOnClickListener {
-            showDatePicker()
-        }
-
         binding.buttonSaveIncome.setOnClickListener {
             val newAmountStr = binding.editTextIncomeAmount.text.toString()
             val newDateStr = binding.editTextIncomeDate.text.toString()

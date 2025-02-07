@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vibhu.moneyplanner.Expense
 import com.vibhu.moneyplanner.R
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -36,7 +37,8 @@ class ExpenseAdapter(
         val expense = expenses[position]
 
         holder.nameTextView.text = expense.name
-        holder.amountTextView.text = expense.amount.toString()
+        val formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(expense.amount)
+        holder.amountTextView.text = formattedAmount
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val formattedDate = dateFormat.format(expense.expenseDate)

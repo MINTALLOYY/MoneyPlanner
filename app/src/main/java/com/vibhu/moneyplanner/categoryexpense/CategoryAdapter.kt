@@ -9,6 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vibhu.moneyplanner.R // Import your R file
 import com.vibhu.moneyplanner.models.Category
+import java.text.NumberFormat
+import java.util.Locale
 
 class CategoryAdapter(
     private var categories: List<Category>,
@@ -34,7 +36,8 @@ class CategoryAdapter(
         val category = categories[position]
 
         holder.nameTextView.text = category.categoryName
-        holder.budgetTextView.text = category.budget.toString()
+        val formattedBudget = NumberFormat.getCurrencyInstance(Locale.US).format(category.budget)
+        holder.budgetTextView.text = formattedBudget
 
         holder.itemView.setOnClickListener {  // Click listener for the entire item
             onItemClick(category)

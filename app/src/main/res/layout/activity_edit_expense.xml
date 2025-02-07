@@ -4,37 +4,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
-    android:paddingHorizontal="16dp">
+    android:paddingHorizontal="16dp"
+    android:background="@color/very_dark_grey">
+
+    <TextView
+        android:id="@+id/editExpenseTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:gravity="center|center_horizontal"
+        android:text="EDIT EXPENSE"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editTextExpenseName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Expense Name"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:inputType="text" />
+        app:layout_constraintTop_toBottomOf="@+id/editExpenseTitle"
+        android:inputType="text"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/editTextExpenseAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Amount"
+        android:textColorHint="@color/white"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseName"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/editTextExpenseDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Date (yyyy-MM-dd)"
+        android:textColorHint="@color/white"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseAmount" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseAmount"
+        android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/buttonSaveExpense"
@@ -44,7 +63,9 @@
         app:layout_constraintEnd_toStartOf="@+id/buttonCancelExpense"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/very_dark_grey"/>
 
     <Button
         android:id="@+id/buttonCancelExpense"
@@ -54,6 +75,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/buttonSaveExpense"
-        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/very_dark_grey"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
