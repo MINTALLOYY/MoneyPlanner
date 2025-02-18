@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize"
-    android:paddingHorizontal="8dp"
     android:background="@color/very_dark_grey">
 
     <TextView

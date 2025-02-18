@@ -50,9 +50,18 @@ class HomeFragment: Fragment() {
                 fragmentTransaction.commit()
             },
             { category -> // onItemEditClick
-                val intent = Intent(requireContext(), EditCategoryActivity::class.java)
-                intent.putExtra("category_id", category.categoryId.toString())
-                startActivity(intent)
+                val bundle = Bundle()
+                bundle.putString("categoryId", category.categoryId.toString()) // Pass categoryId
+
+                val fragmentManager = requireActivity().supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+
+                val editCategoryFragment = EditCategoryFragment()
+                editCategoryFragment.arguments = bundle // Set the bundle with categoryId
+
+                fragmentTransaction.replace(R.id.fragment_container, editCategoryFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
             },
             { category -> // onItemDeleteClick
                 AlertDialog.Builder(requireContext())
@@ -70,8 +79,14 @@ class HomeFragment: Fragment() {
         binding.recyclerViewCategories.adapter = categoryAdapter
 
         binding.buttonAddCategory.setOnClickListener {
-            val intent = Intent(requireContext(), AddCategoryActivity::class.java)
-            startActivity(intent)
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+
+            val addCategoryFragment = AddCategoryFragment()
+
+            fragmentTransaction.replace(R.id.fragment_container, addCategoryFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
     }
 
