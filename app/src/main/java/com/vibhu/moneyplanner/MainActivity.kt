@@ -1,6 +1,7 @@
 package com.vibhu.moneyplanner
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
@@ -61,6 +62,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.navigation_income_categories -> {
                     setCurrentFragment(IncomeCategoryFragment())
+                    true
+                }
+                R.id.navigation_scanner -> {
+                    val intent = Intent(this, CameraReceiptActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false

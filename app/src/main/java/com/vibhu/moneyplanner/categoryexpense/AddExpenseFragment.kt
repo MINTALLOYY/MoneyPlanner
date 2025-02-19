@@ -88,6 +88,8 @@ class AddExpenseFragment: Fragment() {
         val expensesFragment = ExpensesFragment()
         expensesFragment.arguments = bundle // Set the bundle with categoryId
 
+        expenseData.close()
+
         fragmentTransaction.replace(R.id.fragment_container, expensesFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()

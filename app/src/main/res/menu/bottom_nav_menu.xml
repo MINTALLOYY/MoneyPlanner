@@ -16,5 +16,9 @@
     <item
         android:id="@+id/navigation_trend"
         android:title="Trend"
-            android:icon="@drawable/ic_trend" />
+        android:icon="@drawable/ic_trend" />
+    <item
+        android:id="@+id/navigation_scanner"
+        android:title="Reciept Scanner"
+        android:icon="@drawable/ic_scan" />
 </menu>
