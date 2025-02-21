@@ -20,13 +20,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AddIncomeActivity" />
-        <activity android:name=".AddIncomeCategoryActivity" />
-        <activity android:name=".categoryexpense.EditExpenseActivity" />
-        <activity android:name=".EditIncomeActivity" />
-        <activity android:name=".EditIncomeCategoryActivity" />
         <activity android:name=".CameraReceiptActivity" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.vibhu.moneyplanner.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/provider_paths"/>
+    </provider>
+
+
     </application>
+
 
 </manifest>

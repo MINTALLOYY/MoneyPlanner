@@ -2,15 +2,20 @@ package com.vibhu.moneyplanner
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.vibhu.moneyplanner.categoryexpense.ExpensesFragment
 import com.vibhu.moneyplanner.databinding.ActivityAddIncomeBinding
 import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.UUID
 
-class AddIncomeActivity : AppCompatActivity() {
+class AddIncomeFragment : Fragment() {
 
     private lateinit var binding: ActivityAddIncomeBinding
     private lateinit var incomeData: IncomeData
@@ -21,15 +26,23 @@ class AddIncomeActivity : AppCompatActivity() {
         const val EXTRA_INCOME_CATEGORY_ID = "income_category_id"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
 
         binding = ActivityAddIncomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        return binding.root
+    }
 
-        incomeData = IncomeData(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        incomeCategoryId = UUID.fromString(intent.getStringExtra(EXTRA_INCOME_CATEGORY_ID)!!)
+        incomeData = IncomeData(requireContext())
+
+        incomeCategoryId = UUID.fromString(arguments?.getString(EXTRA_INCOME_CATEGORY_ID)!!)
 
         receivedDateCalendar = Calendar.getInstance()
 
@@ -42,7 +55,7 @@ class AddIncomeActivity : AppCompatActivity() {
 
         binding.editTextDateReceived.setOnClickListener {
             DatePickerDialog(
-                this,
+                requireContext(),
                 dateSetListener,
                 receivedDateCalendar.get(Calendar.YEAR),
                 receivedDateCalendar.get(Calendar.MONTH),
@@ -55,7 +68,7 @@ class AddIncomeActivity : AppCompatActivity() {
             val receivedDateStr = binding.editTextDateReceived.text.toString()
 
             if (amountStr.isBlank() || receivedDateStr.isBlank()) {
-                Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -70,12 +83,12 @@ class AddIncomeActivity : AppCompatActivity() {
                 )
                 incomeData.addIncome(income)
 
-                Toast.makeText(this, "Income added successfully", Toast.LENGTH_SHORT).show()
-                finish()
+                goBackToIncomePage("Income added successfully")
+
             } catch (e: NumberFormatException) {
-                Toast.makeText(this, "Invalid amount format", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Invalid amount format", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
-                Toast.makeText(this, "Error adding income: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error adding income: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -84,6 +97,22 @@ class AddIncomeActivity : AppCompatActivity() {
         val myFormat = "MM/dd/yyyy"
         val dateFormat = SimpleDateFormat(myFormat, Locale.US)
         binding.editTextDateReceived.setText(dateFormat.format(receivedDateCalendar.time))
+    }
+
+    fun goBackToIncomePage(message: String? = null){
+        val bundle = Bundle()
+        bundle.putString("incomeCategoryId", incomeCategoryId.toString()) // Pass categoryId
+        bundle.putString("message", message) //Pass message
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val incomeFragment = IncomeFragment()
+        incomeFragment.arguments = bundle // Set the bundle with categoryId
+
+        fragmentTransaction.replace(R.id.fragment_container, incomeFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     override fun onDestroy() {

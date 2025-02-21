@@ -2,34 +2,47 @@ package com.vibhu.moneyplanner // Replace with your package name
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.vibhu.moneyplanner.databinding.ActivityEditIncomeBinding // Replace with your binding class
 import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
-class EditIncomeActivity : AppCompatActivity() {
+class EditIncomeFragment : Fragment() {
 
     private lateinit var binding: ActivityEditIncomeBinding
     private lateinit var incomeData: IncomeData
     private lateinit var incomeId: UUID
-    private lateinit var incomeCategoryId: UUID // To pass back if needed
+    private lateinit var incomeCategoryId: UUID
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         super.onCreate(savedInstanceState)
 
         binding = ActivityEditIncomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        return binding.root
+    }
 
-        incomeData = IncomeData(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val incomeIdString = intent.getStringExtra("income_id")
-        if (incomeIdString != null) {
+        incomeData = IncomeData(requireContext())
+
+        val incomeIdString = arguments?.getString("income_id")
+        val incomeCategoryIdString = arguments?.getString("income_category_id")
+        if (incomeIdString != null && incomeCategoryIdString != null) {
             incomeId = UUID.fromString(incomeIdString)
+            incomeCategoryId = UUID.fromString(incomeCategoryIdString)
 
             val income = incomeData.getIncomeById(incomeId)
             if (income != null) {
@@ -39,13 +52,11 @@ class EditIncomeActivity : AppCompatActivity() {
                 binding.editTextIncomeDate.setText(dateFormat.format(income.receivedDate))
                 incomeCategoryId = income.incomeCategoryId // Save for potential use later
             } else {
-                Toast.makeText(this, "Income not found", Toast.LENGTH_SHORT).show()
-                finish()
+                goBackToIncomePage("Income not Found")
                 return
             }
         } else {
-            Toast.makeText(this, "Income ID is missing", Toast.LENGTH_SHORT).show()
-            finish()
+            goBackToIncomePage("Income ID is Missing")
             return
         }
 
@@ -55,7 +66,7 @@ class EditIncomeActivity : AppCompatActivity() {
             val newDateStr = binding.editTextIncomeDate.text.toString()
 
             if (newAmountStr.isBlank() || newDateStr.isBlank()) {
-                Toast.makeText(this, "Please fill in required fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please fill in required fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -72,13 +83,12 @@ class EditIncomeActivity : AppCompatActivity() {
                     )
 
                     incomeData.updateIncome(updatedIncome)
-                    Toast.makeText(this, "Income updated", Toast.LENGTH_SHORT).show()
-                    finish()
+                    goBackToIncomePage("Income Updated")
                 } else {
-                    Toast.makeText(this, "Invalid date format", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Invalid date format", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: NumberFormatException) {
-                Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Invalid amount", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -90,7 +100,7 @@ class EditIncomeActivity : AppCompatActivity() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(
-            this,
+            requireContext(),
             { _, selectedYear, selectedMonth, selectedDay ->
                 val selectedDate = Calendar.getInstance().apply {
                     set(Calendar.YEAR, selectedYear)
@@ -107,6 +117,23 @@ class EditIncomeActivity : AppCompatActivity() {
         )
         datePickerDialog.show()
     }
+
+    fun goBackToIncomePage(message: String? = null){
+        val bundle = Bundle()
+        bundle.putString("incomeCategoryId", incomeCategoryId.toString()) // Pass categoryId
+        bundle.putString("message", message) //Pass message
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val incomeFragment = IncomeFragment()
+        incomeFragment.arguments = bundle // Set the bundle with categoryId
+
+        fragmentTransaction.replace(R.id.fragment_container, incomeFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

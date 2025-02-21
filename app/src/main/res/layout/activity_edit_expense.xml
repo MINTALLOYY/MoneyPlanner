@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
@@ -23,13 +24,14 @@
         android:id="@+id/editTextExpenseName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="Expense Name"
+        android:inputType="text"
+        android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editExpenseTitle"
-        android:inputType="text"
-        android:textColor="@color/white"/>
+        app:layout_constraintTop_toBottomOf="@+id/editExpenseTitle" />
 
     <EditText
         android:id="@+id/editTextExpenseAmount"
@@ -43,40 +45,43 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextExpenseName"
         android:textColor="@color/white"/>
 
-    <EditText
+    <DatePicker
         android:id="@+id/editTextExpenseDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@color/white"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
         android:hint="Date (yyyy-MM-dd)"
-        android:textColorHint="@color/white"
         android:inputType="date"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseAmount"
-        android:textColor="@color/white"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseAmount" />
     <Button
         android:id="@+id/buttonSaveExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
-        app:layout_constraintEnd_toStartOf="@+id/buttonCancelExpense"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate"
+        android:layout_marginBottom="32dp"
         android:backgroundTint="@color/white"
-        android:textColor="@color/very_dark_grey"/>
+        android:text="Save"
+        android:textColor="@color/very_dark_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCancel"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/buttonCancelExpense"
+        android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
         android:text="Cancel"
+        android:textColor="@color/very_dark_grey"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonSaveExpense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/buttonSaveExpense"
-        app:layout_constraintTop_toBottomOf="@+id/editTextExpenseDate"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/very_dark_grey"/>
+        app:layout_constraintStart_toEndOf="@+id/buttonSaveExpense" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

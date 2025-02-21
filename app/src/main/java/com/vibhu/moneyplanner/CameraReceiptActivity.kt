@@ -3,29 +3,50 @@ package com.vibhu.moneyplanner
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.ImageDecoder
+import coil.load
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CameraReceiptActivity : AppCompatActivity() {
 
     private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
     private val CAMERA_PERMISSION_REQUEST = 100
+    private lateinit var photoUri: Uri
+    private lateinit var currentPhotoPath: String // Store the path receipt use
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            setContentView(R.layout.activity_camera_reciept_scanner)
             if (result.resultCode == RESULT_OK) {
-                // The camera app successfully captured an image (or video).
-                // You can now access it using the data Uri returned in the intent extras.
-                // However, you are not saving the image in this example.
-                Toast.makeText(this, "Camera opened successfully!", Toast.LENGTH_SHORT).show()
+                try {
+                    val imageView = findViewById<ImageView>(R.id.receipt)
+                    Log.d("CameraActivity", "Photo URI: $photoUri")
+                    imageView?.load(photoUri)
+
+
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, "Camera action cancelled or failed", Toast.LENGTH_SHORT).show()
             }
@@ -37,14 +58,40 @@ class CameraReceiptActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST)
         }
+
     }
 
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(packageManager) != null) {
+        //if (takePictureIntent.resolveActivity(packageManager) != null) {
+        val photoFile: File? = try {
+            createImageFile() // Create a temporary file
+        } catch (ex: IOException) {
+            null
+        }
+        photoFile?.also {
+            photoUri = FileProvider.getUriForFile(this, "com.vibhu.moneyplanner.fileprovider", it)
+            Log.d("PhotoUri",photoUri.toString())
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
             takePictureLauncher.launch(takePictureIntent)
-        } else {
-            Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show()
+        //} else {
+        //    Toast.makeText(this, "No camera app found", Toast.LENGTH_SHORT).show()
+        //}
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        if(storageDir != null)  Log.d("DirectoryLocation", storageDir.path)
+
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            currentPhotoPath = absolutePath
         }
     }
 

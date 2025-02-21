@@ -33,7 +33,6 @@
         android:id="@+id/fabAddExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_marginBottom="32dp"
         android:backgroundTint="@color/white"
         android:textColor="@color/very_dark_grey"
@@ -42,5 +41,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabScanReceipt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/very_dark_grey"
+        android:src="@drawable/ic_scan"
+        app:layout_constraintBottom_toBottomOf="@+id/fabAddExpense"
+        app:layout_constraintStart_toEndOf="@id/fabAddExpense"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

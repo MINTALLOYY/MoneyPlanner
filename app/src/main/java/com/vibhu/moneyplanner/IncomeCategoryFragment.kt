@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vibhu.moneyplanner.categoryexpense.AddCategoryFragment
+import com.vibhu.moneyplanner.categoryexpense.EditCategoryFragment
 import com.vibhu.moneyplanner.databinding.FragmentIncomeCategoryBinding
 import java.util.UUID
 
@@ -32,15 +35,30 @@ class IncomeCategoryFragment : Fragment() {
 
         incomeCategoryData = IncomeCategoryData(requireContext())
 
+
+        val message = arguments?.getString("message")
+        if(message != null) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+        }
+
         binding.recyclerViewIncomeCategories.layoutManager = LinearLayoutManager(requireContext())
 
         incomeCategoryAdapter = IncomeCategoryAdapter(
             incomeCategoryData.getAllIncomeCategories(),
             requireContext(),
             { category -> // onItemEditClick
-                val intent = Intent(requireContext(), EditIncomeCategoryActivity::class.java)
-                intent.putExtra("income_category_id", category.incomeCategoryId.toString())
-                startActivity(intent)
+                val bundle = Bundle()
+                bundle.putString("income_category_id", category.incomeCategoryId.toString()) // Pass categoryId
+
+                val fragmentManager = requireActivity().supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+
+                val editIncomeCategoryFragment = EditIncomeCategoryFragment()
+                editIncomeCategoryFragment.arguments = bundle // Set the bundle with categoryId
+
+                fragmentTransaction.replace(R.id.fragment_container, editIncomeCategoryFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
             },
             { category -> // onItemDeleteClick
                 AlertDialog.Builder(requireContext())
@@ -69,8 +87,14 @@ class IncomeCategoryFragment : Fragment() {
         binding.recyclerViewIncomeCategories.adapter = incomeCategoryAdapter
 
         binding.fabAddIncomeCategory.setOnClickListener {
-            val intent = Intent(requireContext(), AddIncomeCategoryActivity::class.java)
-            startActivity(intent)
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+
+            val addIncomeCategoryFragment = AddIncomeCategoryFragment()
+
+            fragmentTransaction.replace(R.id.fragment_container, addIncomeCategoryFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
     }
 

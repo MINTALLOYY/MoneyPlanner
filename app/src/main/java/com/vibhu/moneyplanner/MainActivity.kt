@@ -64,11 +64,6 @@ class MainActivity : AppCompatActivity() {
                     setCurrentFragment(IncomeCategoryFragment())
                     true
                 }
-                R.id.navigation_scanner -> {
-                    val intent = Intent(this, CameraReceiptActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
                 else -> false
             }
         }

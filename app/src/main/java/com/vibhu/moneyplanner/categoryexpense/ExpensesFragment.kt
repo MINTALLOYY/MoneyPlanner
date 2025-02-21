@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vibhu.moneyplanner.CameraReceiptActivity
+import com.vibhu.moneyplanner.Expense
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.FragmentExpensesBinding
 import java.util.UUID
@@ -50,9 +53,7 @@ class ExpensesFragment: Fragment() {
                 expenseData.getExpensesByCategoryId(categoryId),
                 requireContext(),
                 { expense -> // onItemEditClick
-                    val intent = Intent(requireContext(), EditExpenseActivity::class.java)
-                    intent.putExtra("expense_id", expense.expenseId.toString())
-                    startActivity(intent)
+                    goToEditExpenseFragment(expense)
                 },
                 { expense -> // onItemDeleteClick
                     AlertDialog.Builder(requireContext())
@@ -73,12 +74,32 @@ class ExpensesFragment: Fragment() {
             binding.fabAddExpense.setOnClickListener {
                 goToAddExpenseFragment()
             }
+            binding.fabScanReceipt.setOnClickListener {
+                val intent = Intent(requireContext(), CameraReceiptActivity::class.java)
+                startActivity(intent)
+            }
 
         } else {
             // add action if it doesn't exist like toast
         }
 
 
+    }
+
+    fun goToEditExpenseFragment(expense: Expense){
+        val bundle = Bundle()
+        bundle.putString("expense_id", expense.expenseId.toString()) // Pass expenseId
+        bundle.putString("category_id", categoryId.toString()) // Pass categoryId
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val editExpenseFragment = EditExpenseFragment()
+        editExpenseFragment.arguments = bundle // Set the bundle with expenseId
+
+        fragmentTransaction.replace(R.id.fragment_container, editExpenseFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     fun goToAddExpenseFragment(){
