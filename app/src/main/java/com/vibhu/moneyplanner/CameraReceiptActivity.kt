@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -33,9 +35,13 @@ class CameraReceiptActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            setContentView(R.layout.activity_camera_reciept_scanner)
+            val frameLayout = findViewById<FrameLayout>(R.id.fragment_container)
+            val inflater = LayoutInflater.from(this)
+            val cameraReceiptView = inflater.inflate(R.layout.activity_camera_reciept_scanner, null)
+            frameLayout.addView(cameraReceiptView)
             if (result.resultCode == RESULT_OK) {
                 try {
                     val imageView = findViewById<ImageView>(R.id.receipt)
