@@ -3,6 +3,7 @@ package com.vibhu.moneyplanner
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -13,6 +14,9 @@ import com.vibhu.moneyplanner.databinding.ActivityMainBinding
 import com.vibhu.moneyplanner.models.Income
 import com.vibhu.moneyplanner.models.IncomeCategory
 import com.vibhu.moneyplanner.trends.TrendFragment
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import java.util.Date
 import java.util.UUID
 
@@ -21,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var incomeCategoryData: IncomeCategoryData
     private lateinit var incomeData: IncomeData
+    private lateinit var textractManager: TextractManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         incomeCategoryData = IncomeCategoryData(this)
         incomeData = IncomeData(this)
+
 
         if(isFirstRun()){
             showBalanceDialog()
@@ -93,6 +100,27 @@ class MainActivity : AppCompatActivity() {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
         transaction.commit()
+    }
+
+    private fun testTextractWithLocalFile() {
+
+        val inputStream: InputStream = assets.open("receipt.jpg")
+        val tempFile = File.createTempFile("receipt", ".jpg", cacheDir)
+        FileOutputStream(tempFile).use { outputStream ->
+            inputStream.copyTo(outputStream)
+        }
+
+        textractManager.analyzeDocument(tempFile) { extractedText, error ->
+            if (extractedText != null) {
+                Log.d("Textract Result", extractedText)
+                Log.d("TESTING", "TESTING TESTING TESTING")
+                // Display text in your UI
+            } else if (error != null) {
+                Log.e("Textract Error", error.message.toString())
+                // Handle error
+            }
+            Log.d("Analyzing Over", "ANALYZING IS OVER")
+        }
     }
 
     override fun onDestroy() {

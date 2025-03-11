@@ -1,6 +1,7 @@
 package com.vibhu.moneyplanner.categoryexpense
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,8 +43,14 @@ class AddExpenseFragment: Fragment() {
 
         // Get the categoryId from the intent
         val categoryIdStr = arguments?.getString("categoryId")
+        val totalAutofill = arguments?.getString("total")
         if (categoryIdStr != null) {
             categoryId = UUID.fromString(categoryIdStr)
+
+            if(totalAutofill != null){
+                binding.editTextExpenseAmount.setText(totalAutofill)
+                Log.d("Total", totalAutofill)
+            }
 
             binding.buttonAddExpense.setOnClickListener {
                 val name = binding.editTextExpenseName.text.toString()

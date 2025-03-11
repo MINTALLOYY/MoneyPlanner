@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vibhu.moneyplanner.CameraReceiptActivity
 import com.vibhu.moneyplanner.Expense
 import com.vibhu.moneyplanner.R
+import com.vibhu.moneyplanner.ReceiptScannerFragment
 import com.vibhu.moneyplanner.databinding.FragmentExpensesBinding
 import java.util.UUID
 
@@ -75,8 +76,9 @@ class ExpensesFragment: Fragment() {
                 goToAddExpenseFragment()
             }
             binding.fabScanReceipt.setOnClickListener {
-                val intent = Intent(requireContext(), CameraReceiptActivity::class.java)
-                startActivity(intent)
+                goToReceiptScanner()
+                /*val intent = Intent(requireContext(), CameraReceiptActivity::class.java)
+                startActivity(intent)*/
             }
 
         } else {
@@ -84,6 +86,21 @@ class ExpensesFragment: Fragment() {
         }
 
 
+    }
+
+    fun goToReceiptScanner(){
+        val bundle = Bundle()
+        bundle.putString("category_id", categoryId.toString())
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val receiptScannerFragment = ReceiptScannerFragment()
+        receiptScannerFragment.arguments = bundle
+
+        fragmentTransaction.replace(R.id.fragment_container, receiptScannerFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 
     fun goToEditExpenseFragment(expense: Expense){

@@ -63,6 +63,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("io.coil-kt:coil:2.4.0")
+    implementation("com.amazonaws:aws-android-sdk-textract:2.+")
+    implementation("com.amazonaws:aws-android-sdk-cognito:2.+")
+
+
+
 
 
 }
