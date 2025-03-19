@@ -102,7 +102,7 @@ class IncomeData(context: Context) {
 
     fun getAllIncomes(): List<Income> {
         val incomes = mutableListOf<Income>()
-        val cursor: Cursor = db.query("income", null, null, null, null, null, COLUMN_INCOME_DATE + " DESC")
+        val cursor: Cursor = db.query(TABLE_INCOMES, null, null, null, null, null, COLUMN_INCOME_DATE + " DESC")
         cursor.use {
             while (it.moveToNext()) {
                 incomes.add(getIncomeFromCursor(it))
@@ -112,9 +112,10 @@ class IncomeData(context: Context) {
     }
 
     private fun getIncomeFromCursor(cursor: Cursor): Income {
-        val id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("income_id")))
-        val amount = cursor.getDouble(cursor.getColumnIndexOrThrow("amount"))
-        val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("income_category_id")))
+        val id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_ID)))
+        val amount = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_AMOUNT))
+        val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(
+            COLUMN_INCOME_CATEGORY_ID)))
         val receivedDate = Date(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_INCOME_DATE)))
         return Income(id, amount, categoryId, receivedDate)
     }
@@ -122,7 +123,7 @@ class IncomeData(context: Context) {
     fun getIncomesByCategoryId(incomeCategoryId: UUID): List<Income> {
         val incomes = mutableListOf<Income>()
         val cursor = db.query(
-            "income",
+            TABLE_INCOMES,
             null,
             "income_category_id = ?",
             arrayOf(incomeCategoryId.toString()),
@@ -158,6 +159,16 @@ class IncomeData(context: Context) {
             }
         }
         return null // Return null if no income is found
+    }
+
+    fun getTotalIncomeAmount(): Double{
+        val incomes = getAllIncomes()
+        var incomeAmount = 0.0
+
+        for(income: Income in incomes){
+            incomeAmount += income.amount
+        }
+        return incomeAmount
     }
 
 

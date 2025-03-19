@@ -66,10 +66,10 @@ class AddCategoryFragment : Fragment() {
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val homeFragment = HomeFragment()
-        homeFragment.arguments = bundle // Set the bundle with categoryId
+        val categoriesFragment = CategoriesFragment()
+        categoriesFragment.arguments = bundle // Set the bundle with categoryId
 
-        fragmentTransaction.replace(R.id.fragment_container, homeFragment)
+        fragmentTransaction.replace(R.id.fragment_container, categoriesFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }

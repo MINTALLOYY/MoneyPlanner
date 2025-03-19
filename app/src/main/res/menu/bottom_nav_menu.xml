@@ -6,6 +6,10 @@
         android:title="Home"
         android:icon="@drawable/ic_home" />
     <item
+        android:id="@+id/navigation_categories"
+        android:title="Categories"
+        android:icon="@drawable/ic_expense" />
+    <item
         android:id="@+id/navigation_income_categories"
         android:title="Income"
         android:icon="@drawable/ic_income" />

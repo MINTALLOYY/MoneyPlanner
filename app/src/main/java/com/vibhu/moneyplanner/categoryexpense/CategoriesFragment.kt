@@ -1,6 +1,5 @@
 package com.vibhu.moneyplanner.categoryexpense
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vibhu.moneyplanner.R
-import com.vibhu.moneyplanner.databinding.FragmentHomeBinding
+import com.vibhu.moneyplanner.databinding.FragmentCategoriesBinding
 
-class HomeFragment: Fragment() {
+class CategoriesFragment: Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentCategoriesBinding? = null
     private val binding get() = _binding!!
     private lateinit var categoryData: CategoryData
     private lateinit var categoryAdapter: CategoryAdapter
@@ -22,7 +21,7 @@ class HomeFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         return binding.root
     }
 

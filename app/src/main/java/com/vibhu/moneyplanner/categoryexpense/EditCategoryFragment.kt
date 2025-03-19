@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.ActivityEditCategoryBinding
-import com.vibhu.moneyplanner.databinding.FragmentAddCategoryBinding
 import com.vibhu.moneyplanner.models.Category
 import java.util.UUID
 
@@ -85,10 +83,10 @@ class EditCategoryFragment : Fragment(){
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val homeFragment = HomeFragment()
-        homeFragment.arguments = bundle // Set the bundle with categoryId
+        val categoriesFragment = CategoriesFragment()
+        categoriesFragment.arguments = bundle // Set the bundle with categoryId
 
-        fragmentTransaction.replace(R.id.fragment_container, homeFragment)
+        fragmentTransaction.replace(R.id.fragment_container, categoriesFragment)
         fragmentTransaction.commit()
     }
 

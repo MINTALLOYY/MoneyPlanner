@@ -1,24 +1,16 @@
 package com.vibhu.moneyplanner
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
-import com.vibhu.moneyplanner.categoryexpense.HomeFragment
+import com.vibhu.moneyplanner.categoryexpense.CategoriesFragment
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
-import com.vibhu.moneyplanner.models.Income
-import com.vibhu.moneyplanner.models.IncomeCategory
 import com.vibhu.moneyplanner.trends.TrendFragment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.util.Date
-import java.util.UUID
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,16 +39,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setUpBottomNavigation(){
-        val homeFragment = HomeFragment()
+        val categoriesFragment = CategoriesFragment()
         val pieChartFragment = PieChartFragment()
         val trendFragment = TrendFragment()
 
-        setCurrentFragment(homeFragment) // Set initial fragment
+        setCurrentFragment(categoriesFragment) // Set initial fragment
 
         binding.bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    setCurrentFragment(homeFragment)
+                    setCurrentFragment(HomeFragment())
+                    true
+                }
+                R.id.navigation_categories -> {
+                    setCurrentFragment(categoriesFragment)
                     true
                 }
                 R.id.navigation_pie_chart -> {
@@ -82,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
                 // Resume Main Activity
                 setUpBottomNavigation()
-                setCurrentFragment(HomeFragment())
+                setCurrentFragment(CategoriesFragment())
     }
 
     private fun isFirstRun(): Boolean {
@@ -99,6 +95,7 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentFragment(fragment: androidx.fragment.app.Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 

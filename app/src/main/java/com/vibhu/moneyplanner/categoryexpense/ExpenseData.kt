@@ -91,6 +91,27 @@ class ExpenseData(context: Context) {
         db.update(TABLE_EXPENSES, values, whereClause, whereArgs)
     }
 
+    fun getAllExpenses(): List<Expense> {
+        val expenses = mutableListOf<Expense>()
+        val cursor: Cursor = db.query(TABLE_EXPENSES, null, null, null, null, null, COLUMN_EXPENSE_DATE + " DESC")
+        cursor.use {
+            while (it.moveToNext()) {
+                expenses.add(getExpenseFromCursor(it))
+            }
+        }
+        return expenses
+    }
+
+    fun getTotalExpenseAmount(): Double {
+        val expenses = getAllExpenses()
+        var expenseAmount = 0.0
+
+        for (expense: Expense in expenses){
+            expenseAmount += expense.amount
+        }
+        return expenseAmount
+    }
+
     fun getExpensesInDateRange(startDate: Date, endDate: Date): List<Expense> {
         val expenses = mutableListOf<Expense>()
         val selection = "${COLUMN_EXPENSE_DATE} BETWEEN ? AND ?"
