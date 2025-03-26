@@ -46,7 +46,7 @@ class IncomeCategoryData(context: Context) {
     }
 
     fun getIncomeCategoryById(categoryId: UUID): IncomeCategory? {
-        val selection = "${COLUMN_INCOME_CATEGORY_ID} =?"
+        val selection = COLUMN_INCOME_CATEGORY_ID
         val selectionArgs = arrayOf(categoryId.toString())
         val cursor = db.query(
             TABLE_INCOME_CATEGORIES,

@@ -12,7 +12,7 @@ import com.vibhu.moneyplanner.databinding.ActivityAddIncomeCategoryBinding
 class AddIncomeCategoryFragment: Fragment() {
 
     private lateinit var binding: ActivityAddIncomeCategoryBinding
-    private lateinit var incomeData: IncomeData
+    private lateinit var incomeCategoryData: IncomeCategoryData
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +28,7 @@ class AddIncomeCategoryFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        incomeData = IncomeData(requireContext())
+        incomeCategoryData = IncomeCategoryData(requireContext())
 
         binding.buttonAddIncomeCategory.setOnClickListener {
             val name = binding.editTextIncomeCategoryName.text.toString()
@@ -39,7 +39,7 @@ class AddIncomeCategoryFragment: Fragment() {
             }
 
             val incomeCategory = IncomeCategory(incomeCategoryName = name)
-            incomeData.addIncomeCategory(incomeCategory)
+            incomeCategoryData.addIncomeCategory(incomeCategory)
 
             goBackToIncomePage("Income category added successfully")
         }
@@ -62,6 +62,6 @@ class AddIncomeCategoryFragment: Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        incomeData.close()
+        incomeCategoryData.close()
     }
 }

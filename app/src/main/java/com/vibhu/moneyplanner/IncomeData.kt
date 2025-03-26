@@ -26,25 +26,6 @@ class IncomeData(context: Context) {
     private val db: SQLiteDatabase = dbHelper.writableDatabase
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-    // Income Category functions:
-    fun addIncomeCategory(incomeCategory: IncomeCategory) {
-        val values = ContentValues().apply {
-            put("income_category_id", incomeCategory.incomeCategoryId.toString())
-            put("income_category_name", incomeCategory.incomeCategoryName)
-        }
-        db.insert("income_categories", null, values)
-    }
-
-    fun getAllIncomeCategories(): List<IncomeCategory> {
-        val incomeCategories = mutableListOf<IncomeCategory>()
-        val cursor: Cursor = db.query("income_categories", null, null, null, null, null, null)
-        cursor.use {
-            while (it.moveToNext()) {
-                incomeCategories.add(getIncomeCategoryFromCursor(it))
-            }
-        }
-        return incomeCategories
-    }
 
     private fun getIncomeCategoryFromCursor(cursor: Cursor): IncomeCategory {
         val id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow("income_category_id")))
@@ -52,23 +33,27 @@ class IncomeData(context: Context) {
         return IncomeCategory(id, name)
     }
 
-    fun getIncomeCategoryById(incomeCategoryId: UUID): IncomeCategory? {
+    fun getIncomesInDateRange(startDate: Date, endDate: Date): List<Income> {
+        val incomes = mutableListOf<Income>()
+        val selection = "${COLUMN_INCOME_DATE} BETWEEN ? AND ?"
+        val selectionArgs = arrayOf(startDate.time.toString(), endDate.time.toString())
         val cursor = db.query(
-            "income_categories",
+            TABLE_INCOMES,
             null,
-            "income_category_id = ?",
-            arrayOf(incomeCategoryId.toString()),
+            selection,
+            selectionArgs,
             null,
             null,
             null
         )
         cursor.use {
-            if (it.moveToFirst()) {
-                return getIncomeCategoryFromCursor(it)
+            while (it.moveToNext()) {
+                incomes.add(getIncomeFromCursor(it))
             }
         }
-        return null
+        return incomes
     }
+
 
     fun deleteIncome(incomeId: UUID) {
         val selection = "$COLUMN_INCOME_ID =?"

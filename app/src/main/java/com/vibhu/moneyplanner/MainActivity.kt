@@ -1,24 +1,36 @@
 package com.vibhu.moneyplanner
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.AlertDialog
+import androidx.compose.ui.semantics.dismiss
+import androidx.compose.ui.semantics.text
 import androidx.fragment.app.FragmentTransaction
 import com.vibhu.moneyplanner.categoryexpense.CategoriesFragment
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
+import com.vibhu.moneyplanner.models.InitialBalance
 import com.vibhu.moneyplanner.trends.TrendFragment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.util.Date
+import java.util.UUID
+import kotlin.text.isNotEmpty
+import kotlin.text.toDouble
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var incomeCategoryData: IncomeCategoryData
     private lateinit var incomeData: IncomeData
+    private lateinit var initialBalanceData: InitialBalanceData
     private lateinit var textractManager: TextractManager
-
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         incomeCategoryData = IncomeCategoryData(this)
         incomeData = IncomeData(this)
 
+        sharedPreferences = getSharedPreferences(SharedPreferencesConstants.NAME, Context.MODE_PRIVATE)
 
         if(isFirstRun()){
             showBalanceDialog()
@@ -73,12 +86,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBalanceDialog() {
-                // Set first run to false
-                setFirstRun(false)
+        // Set first run to false
+        setFirstRun(false)
 
-                // Resume Main Activity
-                setUpBottomNavigation()
-                setCurrentFragment(CategoriesFragment())
+        // Get the initial balance of the user
+        val input = EditText(this)
+        input.hint = "100.00"
+
+        AlertDialog.Builder(this)
+            .setTitle("Enter Your Initial Balance")
+            .setMessage("Enter your initial balance to track how much money you have while using the app")
+            .setView(input)
+            .setPositiveButton("Save") { dialog, _ ->
+                val balanceText = input.text.toString()
+                if(balanceText.isNotEmpty()) {
+                    try {
+                        val balance = balanceText.toDouble()
+                        val date = Date()
+                        val initialBalance = InitialBalance(balance, date)
+
+                        addUserId(initialBalance.userId)
+
+                        initialBalanceData.addInitialBalanceData(initialBalance)
+                    } catch (e: NumberFormatException) {
+                        Log.e("showBalanceDialog", "Invalid number format", e)
+                    }
+                }
+                dialog.dismiss()
+            }
+
+        // Resume Main Activity
+        setUpBottomNavigation()
+        setCurrentFragment(CategoriesFragment())
     }
 
     private fun isFirstRun(): Boolean {
@@ -91,6 +130,9 @@ class MainActivity : AppCompatActivity() {
         sharedPrefs.edit().putBoolean("isFirstRun", isFirstRun).apply()
     }
 
+    private fun addUserId(userId: UUID) {
+        sharedPreferences.edit().putString(SharedPreferencesConstants.USER_ID_PREF, userId.toString())
+    }
 
     private fun setCurrentFragment(fragment: androidx.fragment.app.Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
