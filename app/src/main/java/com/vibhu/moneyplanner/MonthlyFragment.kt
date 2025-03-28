@@ -19,9 +19,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
-import com.vibhu.moneyplanner.databinding.FragmentWeeklyGraphBinding
+import com.vibhu.moneyplanner.databinding.FragmentMonthlyGraphBinding
 import java.text.SimpleDateFormat
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -33,19 +32,19 @@ import java.util.UUID
 import kotlin.math.max
 import kotlin.math.min
 
-class WeeklyFragment : Fragment() {
+class MonthlyFragment : Fragment() {
 
     private lateinit var incomeData: IncomeData
     private lateinit var expenseData: ExpenseData
     private lateinit var initialBalanceData: InitialBalanceData
-    private lateinit var binding: FragmentWeeklyGraphBinding
+    private lateinit var binding: FragmentMonthlyGraphBinding
     private var currentBalance: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentWeeklyGraphBinding.inflate(inflater, container, false)
+        binding = FragmentMonthlyGraphBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -61,7 +60,7 @@ class WeeklyFragment : Fragment() {
         currentBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
         currentBalance += incomeData.getTotalIncomeAmount() - expenseData.getTotalExpenseAmount()
 
-        val balanceEntries = calculateBalanceEntries(userId)
+        val balanceEntries = calculateMonthlyBalances(userId)
         setupChart(balanceEntries)
     }
 
@@ -72,10 +71,9 @@ class WeeklyFragment : Fragment() {
         val isIncome: Boolean
     )
 
-    private fun calculateBalanceEntries(userId: UUID): List<Pair<LocalDate, Double>> {
-        val weeklyBalances = mutableListOf<Pair<LocalDate, Double>>()
+    private fun calculateMonthlyBalances(userId: UUID): List<Pair<LocalDate, Double>> {
+        val monthlyBalances = mutableListOf<Pair<LocalDate, Double>>()
         var runningBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
-        Log.d("Initial Balance", runningBalance.toString())
 
         // Get all transactions sorted by date
         val allTransactions = (incomeData.getAllIncomes().map {
@@ -84,38 +82,38 @@ class WeeklyFragment : Fragment() {
             Transaction(it.amount, it.expenseDate.toLocalDate(), false)
         }).sortedBy { it.date }
 
-        // Find the earliest Monday on or before first transaction/initial date
+        // Find the first day of month for initial date
         val firstDate = allTransactions.firstOrNull()?.date
             ?: initialBalanceData.fetchInitialDate(userId)?.toLocalDate()
             ?: LocalDate.now()
 
-        var currentWeekStart = firstDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        var currentMonthStart = firstDate.with(TemporalAdjusters.firstDayOfMonth())
 
-        // Process until current week + 1
-        val endDate = LocalDate.now().plusWeeks(1)
+        // Process until current month + 1
+        val endDate = LocalDate.now().plusMonths(1)
 
         // Add initial balance point
-        weeklyBalances.add(currentWeekStart to runningBalance)
-        Log.d("Balance", "Initial ${currentWeekStart}: $runningBalance")
+        monthlyBalances.add(currentMonthStart to runningBalance)
+        Log.d("Balance", "Initial ${currentMonthStart}: $runningBalance")
 
-        while (currentWeekStart.isBefore(endDate)) {
-            val currentWeekEnd = currentWeekStart.plusDays(6)
+        while (currentMonthStart.isBefore(endDate)) {
+            val currentMonthEnd = currentMonthStart.with(TemporalAdjusters.lastDayOfMonth())
 
-            // Calculate net change for THIS WEEK ONLY
-            val weeklyChange = allTransactions
-                .filter { it.date in currentWeekStart..currentWeekEnd }
+            // Calculate net change for THIS MONTH ONLY
+            val monthlyChange = allTransactions
+                .filter { it.date in currentMonthStart..currentMonthEnd }
                 .sumOf { if(it.isIncome) it.amount else -it.amount }
 
-            runningBalance += weeklyChange
+            runningBalance += monthlyChange
 
-            // Add balance at END of week
-            weeklyBalances.add(currentWeekEnd to runningBalance)
-            Log.d("Balance", "Week ${currentWeekStart} to $currentWeekEnd: Change=$weeklyChange, New Balance=$runningBalance")
+            // Add balance at END of month
+            monthlyBalances.add(currentMonthEnd to runningBalance)
+            Log.d("Balance", "Month ${currentMonthStart} to $currentMonthEnd: Change=$monthlyChange, New Balance=$runningBalance")
 
-            currentWeekStart = currentWeekStart.plusWeeks(1)
+            currentMonthStart = currentMonthStart.plusMonths(1)
         }
 
-        return weeklyBalances
+        return monthlyBalances
     }
 
     private fun setupChart(balanceEntries: List<Pair<LocalDate, Double>>) {
@@ -129,7 +127,7 @@ class WeeklyFragment : Fragment() {
             Entry(index.toFloat(), balance.toFloat())
         }
 
-        val dataSet = LineDataSet(entries, "Weekly Balance").apply {
+        val dataSet = LineDataSet(entries, "Monthly Balance").apply {
             color = Color.BLUE
             lineWidth = 2.5f
             setDrawCircles(true)
@@ -137,7 +135,7 @@ class WeeklyFragment : Fragment() {
             setDrawValues(false)
         }
 
-        binding.balanceWeekly.apply {
+        binding.balanceMonthly.apply {
 
             // 2. Set data and viewport
             data = LineData(dataSet)
@@ -161,7 +159,7 @@ class WeeklyFragment : Fragment() {
     }
 
     private fun customizeChart(balanceEntries: List<Pair<LocalDate, Double>>) {
-        binding.balanceWeekly.apply {
+        binding.balanceMonthly.apply {
 
             val shouldHighlightZero = balanceEntries.any { it.second < 0 } &&
                     balanceEntries.any { it.second > 0 }
@@ -185,11 +183,12 @@ class WeeklyFragment : Fragment() {
                 position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 labelCount = min(5, balanceEntries.size)
-                valueFormatter = object : ValueFormatter() {
-                    private val dateFormat = SimpleDateFormat("MM/dd", Locale.getDefault())
+                xAxis.valueFormatter = object : ValueFormatter() {
+                    private val monthFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
                     override fun getFormattedValue(value: Float): String {
-                        val index = value.toInt().coerceIn(0, balanceEntries.size - 1)
-                        return dateFormat.format(balanceEntries[index].first.toDate())
+                        return balanceEntries.getOrNull(value.toInt())?.let {
+                            monthFormat.format(it.first.toDate())
+                        } ?: ""
                     }
                 }
                 setAvoidFirstLastClipping(true)

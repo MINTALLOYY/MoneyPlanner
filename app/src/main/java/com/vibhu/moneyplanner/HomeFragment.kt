@@ -47,15 +47,50 @@ class HomeFragment: Fragment() {
         var sharedPreferences = (requireActivity() as MainActivity).sharedPreferences
         var userId = UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null))
 
-        currentBalance = incomeData.getTotalIncomeAmount() - expenseData.getTotalExpenseAmount() + initialBalanceData.fetchInitialBalance(userId)!!
-
+        getCurrentBalance()
         binding.currentBalance.text = currentBalance.toString()
 
+        setFragment(WeeklyFragment())
+        binding.weeklyMonthlyChanger.setOnClickListener{
+            changeFragment()
+        }
+
+
+    }
+
+    fun setFragment(graphFragment: Fragment){
         val fragmentManager = requireActivity().supportFragmentManager
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-        transaction.replace(binding.balanceChart.id, WeeklyFragment())
+        transaction.replace(binding.balanceChart.id, graphFragment)
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    fun changeFragment(){
+        if(binding.weeklyMonthlyChanger.text == "Change to Monthly"){
+            setFragment(MonthlyFragment())
+            binding.weeklyMonthlyChanger.text = "Change to Weekly"
+        }
+        else{
+            setFragment(WeeklyFragment())
+            binding.weeklyMonthlyChanger.text = "Change to Monthly"
+        }
+    }
+
+    fun getCurrentBalance(): Double{
+        val incomeBalanceList = incomeData.getIncomesInDateRange(initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!, Date())
+        val expenseBalanceList = expenseData.getExpensesInDateRange(initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!, Date())
+        var incomeBalance = 0.0
+        var expenseBalance = 0.0
+        for(income in incomeBalanceList){
+            incomeBalance += income.amount
+        }
+        for(expense in expenseBalanceList){
+            expenseBalance += expense.amount
+        }
+        currentBalance = incomeBalance - expenseBalance + initialBalanceData.fetchInitialBalance(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
+        return currentBalance
+
     }
 
 }
