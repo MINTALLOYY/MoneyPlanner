@@ -2,6 +2,7 @@ package com.vibhu.moneyplanner
 
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,9 @@ import androidx.fragment.app.add
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import com.vibhu.moneyplanner.databinding.FragmentHomeBinding
 import com.vibhu.moneyplanner.models.InitialBalance
+import com.vibhu.moneyplanner.models.Transaction
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
 import java.util.UUID
 import kotlin.text.format
@@ -27,6 +31,8 @@ class HomeFragment: Fragment() {
     private lateinit var expenseData: ExpenseData
     private lateinit var initialBalanceData: InitialBalanceData
     private var currentBalance: Double = 0.0
+    private lateinit var transactionHistoryList: List<Transaction>
+    private var initialBalance: Double? = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,18 +50,29 @@ class HomeFragment: Fragment() {
         expenseData = ExpenseData(requireContext())
         initialBalanceData = InitialBalanceData(requireContext())
 
+        val userUUIDStr = (requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)
+        Log.d("userUUIDStr", "" + userUUIDStr)
+        val balance = initialBalanceData.fetchInitialBalance(UUID.fromString(userUUIDStr))!!
+        Log.d("balance", "" + balance)
+
+        initialBalance = 0.0 + balance
+
         var sharedPreferences = (requireActivity() as MainActivity).sharedPreferences
         var userId = UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null))
 
         getCurrentBalance()
         binding.currentBalance.text = currentBalance.toString()
+        Log.d("currentBalance", "" + currentBalance)
+
+        getTransactionHistory()
+        // Todo: Add transaction history to recycler view
+        // Todo: Create recycler view adapter for transaction history
+        // Todo: Create layouts for transaction details with date, amount, type, edit, and delete
 
         setFragment(WeeklyFragment())
         binding.weeklyMonthlyChanger.setOnClickListener{
             changeFragment()
         }
-
-
     }
 
     fun setFragment(graphFragment: Fragment){
@@ -82,15 +99,49 @@ class HomeFragment: Fragment() {
         val expenseBalanceList = expenseData.getExpensesInDateRange(initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!, Date())
         var incomeBalance = 0.0
         var expenseBalance = 0.0
-        for(income in incomeBalanceList){
-            incomeBalance += income.amount
+        if(incomeBalanceList.isNotEmpty() && expenseBalanceList.isNotEmpty()){
+            for(income in incomeBalanceList){
+                incomeBalance += income.amount
+            }
+            for(expense in expenseBalanceList){
+                expenseBalance += expense.amount
+            }
+            currentBalance = incomeBalance - expenseBalance + initialBalance!!
         }
-        for(expense in expenseBalanceList){
-            expenseBalance += expense.amount
+        else{
+            currentBalance = 0.0 + initialBalance!!
         }
-        currentBalance = incomeBalance - expenseBalance + initialBalanceData.fetchInitialBalance(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
         return currentBalance
 
+    }
+
+    fun getTransactionHistory(): List<Transaction>{
+
+        val allTransactions = (incomeData.getAllIncomes().map {
+            Transaction(it.amount, it.receivedDate, true, it.incomeLogName, it.incomeId)
+        } + expenseData.getAllExpenses().map {
+            Transaction(it.amount, it.expenseDate, false, it.name, it.expenseId)
+        }).sortedBy { it.date }
+
+        transactionHistoryList = allTransactions
+
+        return allTransactions
+    }
+
+    fun Date.toLocalDate(): LocalDate {
+        return this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    }
+
+    fun LocalDate.toDate(): Date {
+        return Date.from(this.atStartOfDay(ZoneId.systemDefault()).toInstant())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+        expenseData.close()
+        incomeData.close()
+        initialBalanceData.close()
     }
 
 }

@@ -46,6 +46,8 @@ class AddIncomeFragment : Fragment() {
 
         receivedDateCalendar = Calendar.getInstance()
 
+        binding.editTextIncomeName.setHint("Income Log " + (incomeData.getSizeOfIncomesInCategory(incomeCategoryId) + 1))
+
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             receivedDateCalendar.set(Calendar.YEAR, year)
             receivedDateCalendar.set(Calendar.MONTH, monthOfYear)
@@ -66,6 +68,7 @@ class AddIncomeFragment : Fragment() {
         binding.buttonAddIncome.setOnClickListener {
             val amountStr = binding.editTextAmount.text.toString()
             val receivedDateStr = binding.editTextDateReceived.text.toString()
+            val incomeName = binding.editTextIncomeName.text.toString()
 
             if (amountStr.isBlank() || receivedDateStr.isBlank()) {
                 Toast.makeText(requireContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show()
@@ -79,7 +82,8 @@ class AddIncomeFragment : Fragment() {
                 val income = Income(
                     amount = amount,
                     incomeCategoryId = incomeCategoryId,
-                    receivedDate = receivedDate
+                    receivedDate = receivedDate,
+                    incomeLogName = incomeName
                 )
                 incomeData.addIncome(income)
 

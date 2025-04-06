@@ -48,9 +48,12 @@ class EditIncomeFragment : Fragment() {
             if (income != null) {
                 binding.editTextIncomeAmount.setText(income.amount.toString())
 
+                binding.editTextIncomeName.setText(income.incomeLogName)
+
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 binding.editTextIncomeDate.setText(dateFormat.format(income.receivedDate))
-                incomeCategoryId = income.incomeCategoryId // Save for potential use later
+
+                incomeCategoryId = income.incomeCategoryId
             } else {
                 goBackToIncomePage("Income not Found")
                 return
@@ -64,8 +67,9 @@ class EditIncomeFragment : Fragment() {
         binding.buttonSaveIncome.setOnClickListener {
             val newAmountStr = binding.editTextIncomeAmount.text.toString()
             val newDateStr = binding.editTextIncomeDate.text.toString()
+            val incomeName = binding.editTextIncomeName.text.toString()
 
-            if (newAmountStr.isBlank() || newDateStr.isBlank()) {
+            if (newAmountStr.isBlank() || newDateStr.isBlank() || incomeName.isBlank()) {
                 Toast.makeText(requireContext(), "Please fill in required fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -80,6 +84,7 @@ class EditIncomeFragment : Fragment() {
                         newAmount,
                         incomeCategoryId,
                         newDate,
+                        incomeName
                     )
 
                     incomeData.updateIncome(updatedIncome)

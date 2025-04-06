@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
+import com.vibhu.moneyplanner.models.Transaction
 import com.vibhu.moneyplanner.databinding.FragmentMonthlyGraphBinding
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -64,44 +65,60 @@ class MonthlyFragment : Fragment() {
         setupChart(balanceEntries)
     }
 
-    // Helper data class
-    private data class Transaction(
-        val amount: Double,
-        val date: LocalDate,
-        val isIncome: Boolean
-    )
 
-    private fun calculateMonthlyBalances(userId: UUID): List<Pair<LocalDate, Double>> {
-        val monthlyBalances = mutableListOf<Pair<LocalDate, Double>>()
+
+    private fun calculateMonthlyBalances(userId: UUID): List<Pair<Date, Double>> {
+        val monthlyBalances = mutableListOf<Pair<Date, Double>>()
         var runningBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
 
         // Get all transactions sorted by date
         val allTransactions = (incomeData.getAllIncomes().map {
-            Transaction(it.amount, it.receivedDate.toLocalDate(), true)
+            Transaction(it.amount, it.receivedDate, true, it.incomeId)
         } + expenseData.getAllExpenses().map {
-            Transaction(it.amount, it.expenseDate.toLocalDate(), false)
+            Transaction(it.amount, it.expenseDate, false, it.expenseId)
         }).sortedBy { it.date }
 
         // Find the first day of month for initial date
         val firstDate = allTransactions.firstOrNull()?.date
-            ?: initialBalanceData.fetchInitialDate(userId)?.toLocalDate()
-            ?: LocalDate.now()
+            ?: initialBalanceData.fetchInitialDate(userId)
+            ?: Date()
 
-        var currentMonthStart = firstDate.with(TemporalAdjusters.firstDayOfMonth())
+        // Get first day of month using Calendar
+        val calendar = Calendar.getInstance().apply {
+            time = firstDate
+            set(Calendar.DAY_OF_MONTH, 1) // Set to first day of month
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        var currentMonthStart = calendar.time
 
         // Process until current month + 1
-        val endDate = LocalDate.now().plusMonths(1)
+        val endDate = Calendar.getInstance().apply {
+            time = Date()
+            add(Calendar.MONTH, 1)
+            set(Calendar.DAY_OF_MONTH, 1)
+        }.time
 
         // Add initial balance point
         monthlyBalances.add(currentMonthStart to runningBalance)
         Log.d("Balance", "Initial ${currentMonthStart}: $runningBalance")
 
-        while (currentMonthStart.isBefore(endDate)) {
-            val currentMonthEnd = currentMonthStart.with(TemporalAdjusters.lastDayOfMonth())
+        while (currentMonthStart.before(endDate)) {
+            // Get last day of current month
+            calendar.time = currentMonthStart
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+            val currentMonthEnd = calendar.time
 
             // Calculate net change for THIS MONTH ONLY
             val monthlyChange = allTransactions
-                .filter { it.date in currentMonthStart..currentMonthEnd }
+                .filter {
+                    it.date.after(currentMonthStart) &&
+                            it.date.before(currentMonthEnd) ||
+                            it.date == currentMonthStart ||
+                            it.date == currentMonthEnd
+                }
                 .sumOf { if(it.isIncome) it.amount else -it.amount }
 
             runningBalance += monthlyChange
@@ -110,17 +127,20 @@ class MonthlyFragment : Fragment() {
             monthlyBalances.add(currentMonthEnd to runningBalance)
             Log.d("Balance", "Month ${currentMonthStart} to $currentMonthEnd: Change=$monthlyChange, New Balance=$runningBalance")
 
-            currentMonthStart = currentMonthStart.plusMonths(1)
+            // Move to next month
+            calendar.time = currentMonthStart
+            calendar.add(Calendar.MONTH, 1)
+            currentMonthStart = calendar.time
         }
 
         return monthlyBalances
     }
 
-    private fun setupChart(balanceEntries: List<Pair<LocalDate, Double>>) {
+    private fun setupChart(balanceEntries: List<Pair<Date, Double>>) {
         // Sort entries by date and assign proper x-values
         val sortedEntries = balanceEntries.sortedBy { it.first }
         val dateStrings = sortedEntries.map {
-            SimpleDateFormat("MM/dd", Locale.getDefault()).format(it.first.toDate())
+            SimpleDateFormat("MM/dd", Locale.getDefault()).format(it.first)
         }
 
         val entries = sortedEntries.mapIndexed { index, (_, balance) ->
@@ -158,7 +178,7 @@ class MonthlyFragment : Fragment() {
         customizeChart(balanceEntries)
     }
 
-    private fun customizeChart(balanceEntries: List<Pair<LocalDate, Double>>) {
+    private fun customizeChart(balanceEntries: List<Pair<Date, Double>>) {
         binding.balanceMonthly.apply {
 
             val shouldHighlightZero = balanceEntries.any { it.second < 0 } &&
@@ -187,7 +207,7 @@ class MonthlyFragment : Fragment() {
                     private val monthFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
                     override fun getFormattedValue(value: Float): String {
                         return balanceEntries.getOrNull(value.toInt())?.let {
-                            monthFormat.format(it.first.toDate())
+                            monthFormat.format(it.first)
                         } ?: ""
                     }
                 }

@@ -23,9 +23,9 @@ class InitialBalanceData(context: Context) {
 
     fun addInitialBalanceData(initialBalance: InitialBalance){
         val values = ContentValues().apply {
+            put(COLUMN_USER_ID, initialBalance.userId.toString())
             put(COLUMN_AMOUNT, initialBalance.initialAmount)
             put(COLUMN_DATE, dateFormat.format(initialBalance.initialDate))
-            put(COLUMN_USER_ID, initialBalance.userId.toString())
         }
         db.insert(INITIAL_BALANCE_TABLE, null, values)
     }
@@ -68,6 +68,15 @@ class InitialBalanceData(context: Context) {
             }
         }
         return null
+    }
+
+    fun clearAllInitialBalanceData(){
+        db.delete(INITIAL_BALANCE_TABLE, null, null)
+    }
+
+    fun close() {
+        db.close()
+
     }
 
 

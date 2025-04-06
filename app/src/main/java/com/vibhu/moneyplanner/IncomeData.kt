@@ -20,6 +20,7 @@ class IncomeData(context: Context) {
         const val COLUMN_AMOUNT = "amount"
         const val COLUMN_INCOME_DATE = "received_date"
         const val COLUMN_INCOME_CATEGORY_ID = "income_category_id"
+        const val COLUMN_INCOME_NAME = "income_name"
     }
 
     private val dbHelper = DatabaseHelper(context)
@@ -68,6 +69,7 @@ class IncomeData(context: Context) {
             put("amount", income.amount)
             put("income_category_id", income.incomeCategoryId.toString())
             put("received_date", income.receivedDate.time)
+            put("income_name", income.incomeLogName)
         }
         db.insert("income", null, values)
     }
@@ -102,7 +104,8 @@ class IncomeData(context: Context) {
         val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(
             COLUMN_INCOME_CATEGORY_ID)))
         val receivedDate = Date(cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_INCOME_DATE)))
-        return Income(id, amount, categoryId, receivedDate)
+        val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_NAME))
+        return Income(id, amount, categoryId, receivedDate, name)
     }
 
     fun getIncomesByCategoryId(incomeCategoryId: UUID): List<Income> {
@@ -156,6 +159,9 @@ class IncomeData(context: Context) {
         return incomeAmount
     }
 
+    fun getSizeOfIncomesInCategory(incomeCategoryId: UUID): Int {
+        return getIncomesByCategoryId(incomeCategoryId).size
+    }
 
     fun close() {
         dbHelper.close()

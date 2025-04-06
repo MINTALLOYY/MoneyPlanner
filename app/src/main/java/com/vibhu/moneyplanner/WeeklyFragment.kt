@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
+import com.vibhu.moneyplanner.models.Transaction
 import com.vibhu.moneyplanner.databinding.FragmentWeeklyGraphBinding
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
@@ -65,45 +66,66 @@ class WeeklyFragment : Fragment() {
         setupChart(balanceEntries)
     }
 
-    // Helper data class
-    private data class Transaction(
-        val amount: Double,
-        val date: LocalDate,
-        val isIncome: Boolean
-    )
-
-    private fun calculateBalanceEntries(userId: UUID): List<Pair<LocalDate, Double>> {
-        val weeklyBalances = mutableListOf<Pair<LocalDate, Double>>()
+    private fun calculateBalanceEntries(userId: UUID): List<Pair<Date, Double>> {
+        val weeklyBalances = mutableListOf<Pair<Date, Double>>()
         var runningBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
         Log.d("Initial Balance", runningBalance.toString())
 
         // Get all transactions sorted by date
         val allTransactions = (incomeData.getAllIncomes().map {
-            Transaction(it.amount, it.receivedDate.toLocalDate(), true)
+            Transaction(it.amount, it.receivedDate, true, it.incomeId)
         } + expenseData.getAllExpenses().map {
-            Transaction(it.amount, it.expenseDate.toLocalDate(), false)
+            Transaction(it.amount, it.expenseDate, false, it.expenseId)
         }).sortedBy { it.date }
 
-        // Find the earliest Monday on or before first transaction/initial date
+        // Find the earliest date
         val firstDate = allTransactions.firstOrNull()?.date
-            ?: initialBalanceData.fetchInitialDate(userId)?.toLocalDate()
-            ?: LocalDate.now()
+            ?: initialBalanceData.fetchInitialDate(userId)
+            ?: Date()
 
-        var currentWeekStart = firstDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        // Get the previous Monday (or same day if Monday)
+        val calendar = Calendar.getInstance().apply {
+            time = firstDate
+            // Roll back to previous Monday
+            when (get(Calendar.DAY_OF_WEEK)) {
+                Calendar.TUESDAY -> add(Calendar.DAY_OF_MONTH, -1)
+                Calendar.WEDNESDAY -> add(Calendar.DAY_OF_MONTH, -2)
+                Calendar.THURSDAY -> add(Calendar.DAY_OF_MONTH, -3)
+                Calendar.FRIDAY -> add(Calendar.DAY_OF_MONTH, -4)
+                Calendar.SATURDAY -> add(Calendar.DAY_OF_MONTH, -5)
+                Calendar.SUNDAY -> add(Calendar.DAY_OF_MONTH, -6)
+            }
+            // Reset time to midnight
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        var currentWeekStart = calendar.time
 
         // Process until current week + 1
-        val endDate = LocalDate.now().plusWeeks(1)
+        val endCalendar = Calendar.getInstance().apply {
+            time = Date()
+            add(Calendar.WEEK_OF_YEAR, 1)
+        }
+        val endDate = endCalendar.time
 
         // Add initial balance point
         weeklyBalances.add(currentWeekStart to runningBalance)
         Log.d("Balance", "Initial ${currentWeekStart}: $runningBalance")
 
-        while (currentWeekStart.isBefore(endDate)) {
-            val currentWeekEnd = currentWeekStart.plusDays(6)
+        while (currentWeekStart.before(endDate)) {
+            // Calculate end of week (Sunday)
+            calendar.time = currentWeekStart
+            calendar.add(Calendar.DAY_OF_MONTH, 6)
+            val currentWeekEnd = calendar.time
 
             // Calculate net change for THIS WEEK ONLY
             val weeklyChange = allTransactions
-                .filter { it.date in currentWeekStart..currentWeekEnd }
+                .filter {
+                    (it.date.after(currentWeekStart) || it.date == currentWeekStart) &&
+                            (it.date.before(currentWeekEnd) || it.date == currentWeekEnd)
+                }
                 .sumOf { if(it.isIncome) it.amount else -it.amount }
 
             runningBalance += weeklyChange
@@ -112,17 +134,24 @@ class WeeklyFragment : Fragment() {
             weeklyBalances.add(currentWeekEnd to runningBalance)
             Log.d("Balance", "Week ${currentWeekStart} to $currentWeekEnd: Change=$weeklyChange, New Balance=$runningBalance")
 
-            currentWeekStart = currentWeekStart.plusWeeks(1)
+            // Move to next Monday
+            calendar.time = currentWeekStart
+            calendar.add(Calendar.WEEK_OF_YEAR, 1)
+            currentWeekStart = calendar.time
         }
 
         return weeklyBalances
     }
 
-    private fun setupChart(balanceEntries: List<Pair<LocalDate, Double>>) {
+
+    // Helper data class
+
+
+    private fun setupChart(balanceEntries: List<Pair<Date, Double>>) {
         // Sort entries by date and assign proper x-values
         val sortedEntries = balanceEntries.sortedBy { it.first }
         val dateStrings = sortedEntries.map {
-            SimpleDateFormat("MM/dd", Locale.getDefault()).format(it.first.toDate())
+            SimpleDateFormat("MM/dd", Locale.getDefault()).format(it.first)
         }
 
         val entries = sortedEntries.mapIndexed { index, (_, balance) ->
@@ -160,7 +189,7 @@ class WeeklyFragment : Fragment() {
         customizeChart(balanceEntries)
     }
 
-    private fun customizeChart(balanceEntries: List<Pair<LocalDate, Double>>) {
+    private fun customizeChart(balanceEntries: List<Pair<Date, Double>>) {
         binding.balanceWeekly.apply {
 
             val shouldHighlightZero = balanceEntries.any { it.second < 0 } &&
@@ -189,7 +218,7 @@ class WeeklyFragment : Fragment() {
                     private val dateFormat = SimpleDateFormat("MM/dd", Locale.getDefault())
                     override fun getFormattedValue(value: Float): String {
                         val index = value.toInt().coerceIn(0, balanceEntries.size - 1)
-                        return dateFormat.format(balanceEntries[index].first.toDate())
+                        return dateFormat.format(balanceEntries[index].first)
                     }
                 }
                 setAvoidFirstLastClipping(true)

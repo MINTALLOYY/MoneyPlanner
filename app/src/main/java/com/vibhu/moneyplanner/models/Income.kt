@@ -7,5 +7,6 @@ data class Income(
     val incomeId: UUID = UUID.randomUUID(),
     val amount: Double,
     val incomeCategoryId: UUID,
-    val receivedDate: Date
+    val receivedDate: Date,
+    val incomeLogName: String
 )

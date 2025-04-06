@@ -40,15 +40,19 @@ class MainActivity : AppCompatActivity() {
 
         incomeCategoryData = IncomeCategoryData(this)
         incomeData = IncomeData(this)
+        initialBalanceData = InitialBalanceData(this)
 
         sharedPreferences = getSharedPreferences(SharedPreferencesConstants.NAME, Context.MODE_PRIVATE)
 
+        /*
         if(isFirstRun()){
             showBalanceDialog()
         } else {
             setUpBottomNavigation()
             setCurrentFragment(HomeFragment())
         }
+        */
+        showBalanceDialog()
     }
 
     fun setUpBottomNavigation(){
@@ -93,6 +97,8 @@ class MainActivity : AppCompatActivity() {
         val input = EditText(this)
         input.hint = "100.00"
 
+        initialBalanceData.clearAllInitialBalanceData()
+
         AlertDialog.Builder(this)
             .setTitle("Enter Your Initial Balance")
             .setMessage("Enter your initial balance to track how much money you have while using the app")
@@ -108,12 +114,15 @@ class MainActivity : AppCompatActivity() {
                         addUserId(initialBalance.userId)
 
                         initialBalanceData.addInitialBalanceData(initialBalance)
+                        Log.d("Initial Balance", "Initial balance saved: $balance")
+                        Log.d("User ID Saved", "User ID saved: ${initialBalance.userId}")
                     } catch (e: NumberFormatException) {
                         Log.e("showBalanceDialog", "Invalid number format", e)
                     }
                 }
                 dialog.dismiss()
             }
+            .show()
 
         // Resume Main Activity
         setUpBottomNavigation()
@@ -131,7 +140,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addUserId(userId: UUID) {
-        sharedPreferences.edit().putString(SharedPreferencesConstants.USER_ID_PREF, userId.toString())
+        sharedPreferences.edit().remove(SharedPreferencesConstants.USER_ID_PREF).apply()
+        sharedPreferences.edit().putString(SharedPreferencesConstants.USER_ID_PREF, userId.toString()).apply()
     }
 
     private fun setCurrentFragment(fragment: androidx.fragment.app.Fragment) {
