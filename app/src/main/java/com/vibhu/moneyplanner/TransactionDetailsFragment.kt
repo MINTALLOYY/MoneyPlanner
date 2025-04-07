@@ -64,7 +64,7 @@ class TransactionDetailsFragment: Fragment() {
                     binding.editTransactionButton.text = "Edit Income"
                     binding.deleteTransactionButton.text = "Delete Income"
 
-                    binding.transactionAmount.text = "$amountTextView + $"
+                    binding.transactionAmount.text = "$amountTextView + $${transaction.amount}"
 
                     val incomeCategory = incomeCategoryData.getIncomeCategoryById(transaction.categoryId)
                     if(incomeCategory != null){
@@ -77,7 +77,7 @@ class TransactionDetailsFragment: Fragment() {
                     binding.editTransactionButton.text = "Edit Expense"
                     binding.deleteTransactionButton.text = "Delete Expense"
 
-                    binding.transactionAmount.text = "$amountTextView - $"
+                    binding.transactionAmount.text = "$amountTextView - $${transaction.amount}"
 
                     val expenseCategory = expenseCategoryData.getCategoryById(transaction.categoryId)
                     if(expenseCategory != null){
@@ -85,12 +85,14 @@ class TransactionDetailsFragment: Fragment() {
                     }
                 }
 
-                binding.transactionName.text = transaction.transactionName
-                binding.transactionAmount.text = transaction.amount.toString()
+                val transactionNameTextView = binding.transactionName.text
+                val transactionDateTextView = binding.transactionDate.text
+
+                binding.transactionName.text = "$transactionNameTextView ${transaction.transactionName}"
 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val formattedDate = dateFormat.format(transaction.date)
-                binding.transactionDate.text = formattedDate
+                binding.transactionDate.text = "$transactionDateTextView $formattedDate"
 
                 binding.editTransactionButton.setOnClickListener{
                     editTransaction(transaction)
