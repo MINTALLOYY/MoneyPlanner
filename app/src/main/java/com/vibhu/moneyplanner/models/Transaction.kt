@@ -8,5 +8,6 @@ data class Transaction(
     val date: Date,
     val isIncome: Boolean,
     val transactionName: String,
-    val id: UUID
+    val id: UUID,
+    val categoryId: UUID
 )

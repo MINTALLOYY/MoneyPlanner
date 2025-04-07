@@ -19,6 +19,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.Date
+import java.util.Calendar
 import java.util.UUID
 import kotlin.text.isNotEmpty
 import kotlin.text.toDouble
@@ -44,15 +45,16 @@ class MainActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences(SharedPreferencesConstants.NAME, Context.MODE_PRIVATE)
 
-        /*
+
         if(isFirstRun()){
             showBalanceDialog()
         } else {
             setUpBottomNavigation()
             setCurrentFragment(HomeFragment())
+            val initialBalance = initialBalanceData.fetchInitialBalanceObject(UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
+            Log.d("Initial Date", initialBalance.initialDate.toString())
+
         }
-        */
-        showBalanceDialog()
     }
 
     fun setUpBottomNavigation(){
@@ -92,6 +94,7 @@ class MainActivity : AppCompatActivity() {
     private fun showBalanceDialog() {
         // Set first run to false
         setFirstRun(false)
+        Log.d("First Run", isFirstRun().toString())
 
         // Get the initial balance of the user
         val input = EditText(this)
@@ -108,7 +111,12 @@ class MainActivity : AppCompatActivity() {
                 if(balanceText.isNotEmpty()) {
                     try {
                         val balance = balanceText.toDouble()
-                        val date = Date()
+
+                        val calendar = Calendar.getInstance()
+                        calendar.set(2024, Calendar.MARCH, 31)
+                        val date = calendar.time
+                        Log.d("date", date.toString())
+
                         val initialBalance = InitialBalance(balance, date)
 
                         addUserId(initialBalance.userId)
@@ -130,13 +138,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isFirstRun(): Boolean {
-        val sharedPrefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        return sharedPrefs.getBoolean("isFirstRun", true)
+        val sharedPrefs = getSharedPreferences(SharedPreferencesConstants.NAME, Context.MODE_PRIVATE)
+        return (sharedPrefs.getBoolean(SharedPreferencesConstants.FIRST_RUN, true))
     }
 
     private fun setFirstRun(isFirstRun: Boolean) {
-        val sharedPrefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        sharedPrefs.edit().putBoolean("isFirstRun", isFirstRun).apply()
+        val sharedPrefs = getSharedPreferences(SharedPreferencesConstants.NAME, Context.MODE_PRIVATE)
+        sharedPrefs.edit().putBoolean(SharedPreferencesConstants.FIRST_RUN, isFirstRun).apply()
     }
 
     private fun addUserId(userId: UUID) {
@@ -176,5 +184,6 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         incomeCategoryData.close()
         incomeData.close()
+        initialBalanceData.close()
     }
 }

@@ -35,11 +35,9 @@ import kotlin.math.min
 
 class MonthlyFragment : Fragment() {
 
-    private lateinit var incomeData: IncomeData
-    private lateinit var expenseData: ExpenseData
+    private lateinit var transactionData: TransactionData
     private lateinit var initialBalanceData: InitialBalanceData
     private lateinit var binding: FragmentMonthlyGraphBinding
-    private var currentBalance: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,14 +50,11 @@ class MonthlyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        incomeData = IncomeData(requireContext())
-        expenseData = ExpenseData(requireContext())
+        transactionData = TransactionData(requireContext())
         initialBalanceData = InitialBalanceData(requireContext())
 
         val sharedPreferences = (requireActivity() as MainActivity).sharedPreferences
         val userId = UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null))
-        currentBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
-        currentBalance += incomeData.getTotalIncomeAmount() - expenseData.getTotalExpenseAmount()
 
         val balanceEntries = calculateMonthlyBalances(userId)
         setupChart(balanceEntries)
@@ -72,11 +67,7 @@ class MonthlyFragment : Fragment() {
         var runningBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
 
         // Get all transactions sorted by date
-        val allTransactions = (incomeData.getAllIncomes().map {
-            Transaction(it.amount, it.receivedDate, true, it.incomeId)
-        } + expenseData.getAllExpenses().map {
-            Transaction(it.amount, it.expenseDate, false, it.expenseId)
-        }).sortedBy { it.date }
+        val allTransactions = transactionData.getAllTransaction()
 
         // Find the first day of month for initial date
         val firstDate = allTransactions.firstOrNull()?.date

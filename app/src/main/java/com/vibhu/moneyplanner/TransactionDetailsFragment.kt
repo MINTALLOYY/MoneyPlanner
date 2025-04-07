@@ -7,10 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.replace
+import com.vibhu.moneyplanner.categoryexpense.CategoryData
 import com.vibhu.moneyplanner.categoryexpense.EditExpenseFragment
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import com.vibhu.moneyplanner.databinding.FragmentTransactionsDetailsBinding
+import com.vibhu.moneyplanner.models.IncomeCategory
 import com.vibhu.moneyplanner.models.Transaction
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.UUID
 
 class TransactionDetailsFragment: Fragment() {
@@ -20,6 +24,8 @@ class TransactionDetailsFragment: Fragment() {
     private lateinit var transactionData: TransactionData
     private lateinit var incomeData: IncomeData
     private lateinit var expenseData: ExpenseData
+    private lateinit var incomeCategoryData: IncomeCategoryData
+    private lateinit var expenseCategoryData: CategoryData
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,9 +41,11 @@ class TransactionDetailsFragment: Fragment() {
 
         transactionData = TransactionData(requireContext())
         incomeData = IncomeData(requireContext())
+        incomeCategoryData = IncomeCategoryData(requireContext())
+        expenseCategoryData = CategoryData(requireContext())
         expenseData = ExpenseData(requireContext())
 
-        val transactionIdStr = arguments?.getString("transactionId")
+        val transactionIdStr = arguments?.getString("transaction_id")
         val message = arguments?.getString("message")
         if(transactionIdStr != null){
             if(message != null){
@@ -46,16 +54,43 @@ class TransactionDetailsFragment: Fragment() {
             val transactionId = UUID.fromString(transactionIdStr)
             val transaction = transactionData.getTransactionByID(transactionId)
             if(transaction != null){
+
+                val typeTextView = binding.transactionType.text
+                val amountTextView = binding.transactionAmount.text
+
                 if(transaction.isIncome){
-                    binding.transactionType.text = "Income"
+                    binding.transactionType.text = "$typeTextView Income"
+
+                    binding.editTransactionButton.text = "Edit Income"
+                    binding.deleteTransactionButton.text = "Delete Income"
+
+                    binding.transactionAmount.text = "$amountTextView + $"
+
+                    val incomeCategory = incomeCategoryData.getIncomeCategoryById(transaction.categoryId)
+                    if(incomeCategory != null){
+                        binding.transactionCategoryName.text = "Transaction Category Name: ${incomeCategory.incomeCategoryName}"
+                    }
                 }
                 else{
-                    binding.transactionType.text = "Expense"
+                    binding.transactionType.text = "$typeTextView Expense"
+
+                    binding.editTransactionButton.text = "Edit Expense"
+                    binding.deleteTransactionButton.text = "Delete Expense"
+
+                    binding.transactionAmount.text = "$amountTextView - $"
+
+                    val expenseCategory = expenseCategoryData.getCategoryById(transaction.categoryId)
+                    if(expenseCategory != null){
+                        binding.transactionCategoryName.text = "Transaction Category Name: ${expenseCategory.categoryName}"
+                    }
                 }
 
                 binding.transactionName.text = transaction.transactionName
                 binding.transactionAmount.text = transaction.amount.toString()
-                binding.transactionDate.text = transaction.date.toString()
+
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val formattedDate = dateFormat.format(transaction.date)
+                binding.transactionDate.text = formattedDate
 
                 binding.editTransactionButton.setOnClickListener{
                     editTransaction(transaction)
@@ -65,6 +100,9 @@ class TransactionDetailsFragment: Fragment() {
                 }
 
             }
+        }
+        else{
+            goBackToHomePage("Transaction not found")
         }
     }
 
@@ -77,6 +115,7 @@ class TransactionDetailsFragment: Fragment() {
 
         if(transaction.isIncome){
             bundle.putString("income_id", transaction.id.toString())
+            bundle.putString("income_category_id", transaction.categoryId.toString())
 
             val editIncomeFragment = EditIncomeFragment()
             editIncomeFragment.arguments = bundle
@@ -87,6 +126,7 @@ class TransactionDetailsFragment: Fragment() {
         }
         else{
             bundle.putString("expense_id", transaction.id.toString())
+            bundle.putString("category_id", transaction.categoryId.toString())
 
             val editExpenseFragment = EditExpenseFragment()
             editExpenseFragment.arguments = bundle

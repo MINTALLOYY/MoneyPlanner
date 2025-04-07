@@ -36,11 +36,9 @@ import kotlin.math.min
 
 class WeeklyFragment : Fragment() {
 
-    private lateinit var incomeData: IncomeData
-    private lateinit var expenseData: ExpenseData
+    private lateinit var transactionData: TransactionData
     private lateinit var initialBalanceData: InitialBalanceData
     private lateinit var binding: FragmentWeeklyGraphBinding
-    private var currentBalance: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,14 +51,11 @@ class WeeklyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        incomeData = IncomeData(requireContext())
-        expenseData = ExpenseData(requireContext())
+        transactionData = TransactionData(requireContext())
         initialBalanceData = InitialBalanceData(requireContext())
 
         val sharedPreferences = (requireActivity() as MainActivity).sharedPreferences
         val userId = UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null))
-        currentBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
-        currentBalance += incomeData.getTotalIncomeAmount() - expenseData.getTotalExpenseAmount()
 
         val balanceEntries = calculateBalanceEntries(userId)
         setupChart(balanceEntries)
@@ -69,33 +64,26 @@ class WeeklyFragment : Fragment() {
     private fun calculateBalanceEntries(userId: UUID): List<Pair<Date, Double>> {
         val weeklyBalances = mutableListOf<Pair<Date, Double>>()
         var runningBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
-        Log.d("Initial Balance", runningBalance.toString())
 
-        // Get all transactions sorted by date
-        val allTransactions = (incomeData.getAllIncomes().map {
-            Transaction(it.amount, it.receivedDate, true, it.incomeId)
-        } + expenseData.getAllExpenses().map {
-            Transaction(it.amount, it.expenseDate, false, it.expenseId)
-        }).sortedBy { it.date }
+        // Get all transactions sorted by date (with normalized times)
+        val allTransactions = transactionData.getAllTransaction()
+            .sortedBy { it.date }
+            .map {
+                it.copy(date = normalizeDate(it.date)) // Normalize all dates to midnight
+            }
 
-        // Find the earliest date
+        // Find the earliest date (normalized)
         val firstDate = allTransactions.firstOrNull()?.date
-            ?: initialBalanceData.fetchInitialDate(userId)
-            ?: Date()
+            ?: normalizeDate(initialBalanceData.fetchInitialDate(userId) ?: Date())
 
         // Get the previous Monday (or same day if Monday)
         val calendar = Calendar.getInstance().apply {
             time = firstDate
             // Roll back to previous Monday
-            when (get(Calendar.DAY_OF_WEEK)) {
-                Calendar.TUESDAY -> add(Calendar.DAY_OF_MONTH, -1)
-                Calendar.WEDNESDAY -> add(Calendar.DAY_OF_MONTH, -2)
-                Calendar.THURSDAY -> add(Calendar.DAY_OF_MONTH, -3)
-                Calendar.FRIDAY -> add(Calendar.DAY_OF_MONTH, -4)
-                Calendar.SATURDAY -> add(Calendar.DAY_OF_MONTH, -5)
-                Calendar.SUNDAY -> add(Calendar.DAY_OF_MONTH, -6)
+            while (get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+                add(Calendar.DAY_OF_MONTH, -1)
             }
-            // Reset time to midnight
+            // Ensure we're at midnight
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
@@ -103,28 +91,37 @@ class WeeklyFragment : Fragment() {
         }
         var currentWeekStart = calendar.time
 
-        // Process until current week + 1
-        val endCalendar = Calendar.getInstance().apply {
-            time = Date()
-            add(Calendar.WEEK_OF_YEAR, 1)
+        // Process until current week + 1 (normalized)
+        val endDate = normalizeDate(Date()).let { today ->
+            Calendar.getInstance().apply {
+                time = today
+                add(Calendar.WEEK_OF_YEAR, 1)
+                set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+                // Normalize to end of day
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 59)
+                set(Calendar.SECOND, 59)
+            }.time
         }
-        val endDate = endCalendar.time
 
         // Add initial balance point
         weeklyBalances.add(currentWeekStart to runningBalance)
-        Log.d("Balance", "Initial ${currentWeekStart}: $runningBalance")
+        Log.d("Balance", "Initial ${formatDateFull(currentWeekStart)}: $runningBalance")
 
-        while (currentWeekStart.before(endDate)) {
-            // Calculate end of week (Sunday)
-            calendar.time = currentWeekStart
-            calendar.add(Calendar.DAY_OF_MONTH, 6)
-            val currentWeekEnd = calendar.time
+        while (currentWeekStart <= endDate) {
+            // Calculate end of week (Sunday at 23:59:59)
+            val currentWeekEnd = Calendar.getInstance().apply {
+                time = currentWeekStart
+                add(Calendar.DAY_OF_MONTH, 6)
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 59)
+                set(Calendar.SECOND, 59)
+            }.time
 
-            // Calculate net change for THIS WEEK ONLY
+            // Calculate net change for THIS WEEK ONLY (inclusive range)
             val weeklyChange = allTransactions
-                .filter {
-                    (it.date.after(currentWeekStart) || it.date == currentWeekStart) &&
-                            (it.date.before(currentWeekEnd) || it.date == currentWeekEnd)
+                .filter { transaction ->
+                    transaction.date in currentWeekStart..currentWeekEnd
                 }
                 .sumOf { if(it.isIncome) it.amount else -it.amount }
 
@@ -132,19 +129,38 @@ class WeeklyFragment : Fragment() {
 
             // Add balance at END of week
             weeklyBalances.add(currentWeekEnd to runningBalance)
-            Log.d("Balance", "Week ${currentWeekStart} to $currentWeekEnd: Change=$weeklyChange, New Balance=$runningBalance")
+            Log.d("Balance", "Week ${formatDateFull(currentWeekStart)} to ${formatDateFull(currentWeekEnd)}: " +
+                    "${allTransactions.count { it.date in currentWeekStart..currentWeekEnd }} transactions, " +
+                    "Change=$weeklyChange, New Balance=$runningBalance")
 
-            // Move to next Monday
-            calendar.time = currentWeekStart
-            calendar.add(Calendar.WEEK_OF_YEAR, 1)
-            currentWeekStart = calendar.time
+            // Move to next Monday at 00:00:00
+            currentWeekStart = Calendar.getInstance().apply {
+                time = currentWeekStart
+                add(Calendar.WEEK_OF_YEAR, 1)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+            }.time
         }
 
-        return weeklyBalances
+        return weeklyBalances.distinctBy { it.first }
     }
 
+    // Helper function to normalize dates to midnight
+    private fun normalizeDate(date: Date): Date {
+        return Calendar.getInstance().apply {
+            time = date
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.time
+    }
 
-    // Helper data class
+    // Helper function for full date logging
+    private fun formatDateFull(date: Date): String {
+        return SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault()).format(date)
+    }
 
 
     private fun setupChart(balanceEntries: List<Pair<Date, Double>>) {

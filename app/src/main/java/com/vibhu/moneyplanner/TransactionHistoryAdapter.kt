@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vibhu.moneyplanner.models.Transaction
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TransactionHistoryAdapter(
     private var transactions: List<Transaction>,
@@ -21,7 +23,7 @@ class TransactionHistoryAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.item_transaction, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_transaction, parent, false)
         return TransactionViewHolder(itemView)
     }
 
@@ -29,6 +31,17 @@ class TransactionHistoryAdapter(
         val transaction = transactions[position]
 
         holder.nameTextView.text = transaction.transactionName
+
+        if(transaction.isIncome){
+            holder.amountTextView.text = "+ $" + transaction.amount
+        }
+        else{
+            holder.amountTextView.text = "- $" + transaction.amount
+        }
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formattedDate = dateFormat.format(transaction.date)
+        holder.dateTextView.text = formattedDate
 
         holder.itemView.setOnClickListener{
             onItemClick(transaction)

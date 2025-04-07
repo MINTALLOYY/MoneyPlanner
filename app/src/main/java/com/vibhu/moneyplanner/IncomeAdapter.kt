@@ -22,6 +22,7 @@ class IncomeAdapter(
     class IncomeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val amountTextView: TextView = itemView.findViewById(R.id.textViewIncomeAmount)
         val dateTextView: TextView = itemView.findViewById(R.id.textViewIncomeDate)
+        val nameTextView: TextView = itemView.findViewById(R.id.textViewIncomeName)
         val editButton: ImageButton = itemView.findViewById(R.id.buttonEditIncome)
         val deleteButton: ImageButton = itemView.findViewById(R.id.buttonDeleteIncome)
     }
@@ -33,6 +34,9 @@ class IncomeAdapter(
 
     override fun onBindViewHolder(holder: IncomeViewHolder, position: Int) {
         val income = incomes[position]
+
+        val incomeName = income.incomeLogName
+        holder.nameTextView.text = incomeName
 
         val formattedIncomeAmount = NumberFormat.getCurrencyInstance(Locale.US).format(income.amount)
         holder.amountTextView.text = formattedIncomeAmount

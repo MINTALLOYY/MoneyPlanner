@@ -1,6 +1,6 @@
 package com.vibhu.moneyplanner
 
-import android.icu.util.Calendar
+import java.util.Calendar
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.data.position
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.add
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import com.vibhu.moneyplanner.databinding.FragmentHomeBinding
 import com.vibhu.moneyplanner.models.InitialBalance
@@ -33,6 +34,8 @@ class HomeFragment: Fragment() {
     private var currentBalance: Double = 0.0
     private lateinit var transactionHistoryList: List<Transaction>
     private var initialBalance: Double? = 0.0
+    private lateinit var transactionAdapter: TransactionHistoryAdapter
+    private lateinit var transactionData: TransactionData
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +52,8 @@ class HomeFragment: Fragment() {
         incomeData = IncomeData(requireContext())
         expenseData = ExpenseData(requireContext())
         initialBalanceData = InitialBalanceData(requireContext())
+        transactionData = TransactionData(requireContext())
+        binding.transactionHistory.layoutManager = LinearLayoutManager(requireContext())
 
         val userUUIDStr = (requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)
         Log.d("userUUIDStr", "" + userUUIDStr)
@@ -65,9 +70,28 @@ class HomeFragment: Fragment() {
         Log.d("currentBalance", "" + currentBalance)
 
         getTransactionHistory()
-        // Todo: Add transaction history to recycler view
-        // Todo: Create recycler view adapter for transaction history
-        // Todo: Create layouts for transaction details with date, amount, type, edit, and delete
+
+        transactionAdapter = TransactionHistoryAdapter(
+            transactionHistoryList,
+            requireContext(),
+            { transaction ->
+                val bundle = Bundle()
+                bundle.putString("transaction_id", transaction.id.toString())
+
+                val fragmentManager = requireActivity().supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+
+                val transactionDetailsFragment = TransactionDetailsFragment()
+                transactionDetailsFragment.arguments = bundle
+
+                fragmentTransaction.replace(R.id.fragment_container, transactionDetailsFragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+            }
+        )
+
+        binding.transactionHistory.adapter = transactionAdapter
+        transactionAdapter.updateItems(transactionData.getAllTransaction())
 
         setFragment(WeeklyFragment())
         binding.weeklyMonthlyChanger.setOnClickListener{
@@ -95,8 +119,15 @@ class HomeFragment: Fragment() {
     }
 
     fun getCurrentBalance(): Double{
-        val incomeBalanceList = incomeData.getIncomesInDateRange(initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!, Date())
-        val expenseBalanceList = expenseData.getExpensesInDateRange(initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!, Date())
+        val cal = Calendar.getInstance()
+        cal.add(Calendar.DAY_OF_WEEK, -7)
+        val lastWeek = cal.time
+
+        // val initial = initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
+
+        val incomeBalanceList = incomeData.getIncomesInDateRange(lastWeek, Date())
+        val expenseBalanceList = expenseData.getExpensesInDateRange(lastWeek, Date())
+
         var incomeBalance = 0.0
         var expenseBalance = 0.0
         if(incomeBalanceList.isNotEmpty() && expenseBalanceList.isNotEmpty()){
@@ -106,6 +137,8 @@ class HomeFragment: Fragment() {
             for(expense in expenseBalanceList){
                 expenseBalance += expense.amount
             }
+            Log.d("expenseBalance", expenseBalance.toString())
+            Log.d("incomeBalance", incomeBalance.toString())
             currentBalance = incomeBalance - expenseBalance + initialBalance!!
         }
         else{
@@ -117,11 +150,7 @@ class HomeFragment: Fragment() {
 
     fun getTransactionHistory(): List<Transaction>{
 
-        val allTransactions = (incomeData.getAllIncomes().map {
-            Transaction(it.amount, it.receivedDate, true, it.incomeLogName, it.incomeId)
-        } + expenseData.getAllExpenses().map {
-            Transaction(it.amount, it.expenseDate, false, it.name, it.expenseId)
-        }).sortedBy { it.date }
+        val allTransactions = transactionData.getAllTransaction()
 
         transactionHistoryList = allTransactions
 

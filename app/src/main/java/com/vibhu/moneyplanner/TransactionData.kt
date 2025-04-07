@@ -16,16 +16,16 @@ class TransactionData(context: Context) {
 
     fun getAllTransaction(): List<Transaction> {
         val transactions: MutableList<Transaction> = mutableListOf()
-        transactions.addAll(incomeData.getAllIncomes().map { Transaction(it.amount, it.receivedDate, true, it.incomeLogName, it.incomeId) })
-        transactions.addAll(expenseData.getAllExpenses().map { Transaction(it.amount, it.expenseDate, false, it.name, it.expenseId) })
+        transactions.addAll(incomeData.getAllIncomes().map { Transaction(it.amount, it.receivedDate, true, it.incomeLogName, it.incomeId, it.incomeCategoryId) })
+        transactions.addAll(expenseData.getAllExpenses().map { Transaction(it.amount, it.expenseDate, false, it.name, it.expenseId, it.categoryId) })
         transactions.sortByDescending { it.date }
         return transactions
     }
 
     fun getTransactionByID(id: UUID): Transaction? {
         val transactions: MutableList<Transaction> = mutableListOf()
-        transactions.addAll(incomeData.getAllIncomes().map { Transaction(it.amount, it.receivedDate, true, it.incomeLogName, it.incomeId) })
-        transactions.addAll(expenseData.getAllExpenses().map { Transaction(it.amount, it.expenseDate, false, it.name, it.expenseId) })
+        transactions.addAll(incomeData.getAllIncomes().map { Transaction(it.amount, it.receivedDate, true, it.incomeLogName, it.incomeId, it.incomeCategoryId) })
+        transactions.addAll(expenseData.getAllExpenses().map { Transaction(it.amount, it.expenseDate, false, it.name, it.expenseId, it.categoryId) })
 
         for(transaction in transactions){
             if(transaction.id == id){

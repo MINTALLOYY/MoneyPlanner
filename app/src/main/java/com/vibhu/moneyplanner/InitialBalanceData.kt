@@ -30,6 +30,37 @@ class InitialBalanceData(context: Context) {
         db.insert(INITIAL_BALANCE_TABLE, null, values)
     }
 
+    fun fetchInitialBalanceObject(userId: UUID): InitialBalance?{
+        val selection = "$COLUMN_USER_ID = ?"
+        val selectionArgs = arrayOf(userId.toString())
+        val cursor = db.query(
+            INITIAL_BALANCE_TABLE,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        cursor.use {
+            if (it.moveToFirst()) {
+                val amount = it.getDouble(it.getColumnIndexOrThrow(COLUMN_AMOUNT))
+                val date = Date(it.getLong(it.getColumnIndexOrThrow(COLUMN_DATE)))
+                return InitialBalance(amount, date, userId)
+            }
+        }
+        return null
+    }
+
+    fun replaceInitialBalanceObject(userId: UUID, newInitialBalance: InitialBalance) {
+        removeInitialBalanceObject(userId)
+        addInitialBalanceData(newInitialBalance)
+    }
+
+    fun removeInitialBalanceObject(userId: UUID) {
+        db.delete(INITIAL_BALANCE_TABLE, "$COLUMN_USER_ID = ?", arrayOf(userId.toString()))
+    }
+
     fun fetchInitialBalance(userId: UUID): Double?{
         val selection = "$COLUMN_USER_ID = ?"
         val selectionArgs = arrayOf(userId.toString())

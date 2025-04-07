@@ -81,12 +81,9 @@ class EditExpenseFragment: Fragment() {
             try {
                 val newAmount = newAmountStr.toDouble()
 
-                val newDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(newDateInfo.toString())
-
-                if (newDate == null) {
-                    Toast.makeText(requireContext(), "Invalid date format", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener // Stop further execution
-                }
+                val calendar = Calendar.getInstance()
+                calendar.set(newDateInfo.year, newDateInfo.month, newDateInfo.dayOfMonth)
+                val newDate = calendar.time
 
                 // *** FETCH THE EXPENSE OBJECT HERE ***
                 val expense = expenseData.getExpenseById(expenseId) // Implement this function in ExpenseData
