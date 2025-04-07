@@ -9,7 +9,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
 ) {
 
     companion object {
-        const val DATABASE_VERSION = 14 // Increment for database changes
+        const val DATABASE_VERSION = 15 // Increment for database changes
         const val DATABASE_NAME = "moneyplanner_db"
     }
 
@@ -52,7 +52,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Handle database upgrades here (for production app)
         // For simplicity during development, you can drop the tables and recreate them:
-        if (oldVersion < 14) { // Only upgrade if the database is older than version 2.
+        if (oldVersion < 15) { // Only upgrade if the database is older than version 2.
             db.execSQL("DROP TABLE IF EXISTS expenses")
             db.execSQL("DROP TABLE IF EXISTS categories")
             db.execSQL("DROP TABLE IF EXISTS income_categories")

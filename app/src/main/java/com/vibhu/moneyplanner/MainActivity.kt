@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun isFirstRun(): Boolean {
         val sharedPrefs = getSharedPreferences(SharedPreferencesConstants.NAME, Context.MODE_PRIVATE)
-        return (sharedPrefs.getBoolean(SharedPreferencesConstants.FIRST_RUN, true))
+        return sharedPrefs.getBoolean(SharedPreferencesConstants.FIRST_RUN, true)
     }
 
     private fun setFirstRun(isFirstRun: Boolean) {

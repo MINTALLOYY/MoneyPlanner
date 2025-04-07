@@ -6,4 +6,9 @@
     <style name="Theme.MoneyPlanner.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.MoneyPlanner.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="WhiteSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+    </style>
+
 </resources>

@@ -12,6 +12,21 @@
         android:background="@color/very_dark_grey"
         android:paddingTop="?attr/actionBarSize">
 
+        <SearchView
+            android:theme="@style/WhiteSearchView"
+            android:id="@+id/searchTransaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/search_border"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search Here ..."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/currentBalance"
@@ -20,9 +35,10 @@
             android:text="Current Balance"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/white"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/searchTransaction" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -55,6 +71,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weeklyMonthlyChanger"
             tools:layout_editor_absoluteY="500dp" />
+
+        <!-- Add this as the LAST child in your ConstraintLayout -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchResultsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:elevation="8dp"
+            android:visibility="gone"
+            android:backgroundTint="@color/very_dark_grey"
+            android:maxHeight="500dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchTransaction"
+            app:layout_constraintHeight_max="500dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
