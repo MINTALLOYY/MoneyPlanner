@@ -1,5 +1,6 @@
 package com.vibhu.moneyplanner
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -12,9 +13,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.SearchView
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.layout.add
 import androidx.compose.ui.tooling.data.position
 import androidx.fragment.app.Fragment
@@ -25,14 +28,17 @@ import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import com.vibhu.moneyplanner.databinding.FragmentHomeBinding
 import com.vibhu.moneyplanner.models.InitialBalance
 import com.vibhu.moneyplanner.models.Transaction
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.UUID
 import kotlin.text.format
 import kotlin.text.toFloat
 import kotlin.text.withIndex
+import androidx.core.view.isVisible
 
 class HomeFragment: Fragment() {
 
@@ -46,7 +52,26 @@ class HomeFragment: Fragment() {
     private var initialBalance: Double? = 0.0
     private lateinit var transactionAdapter: TransactionHistoryAdapter
     private lateinit var transactionData: TransactionData
+
     private lateinit var searchListAdapter: SearchListAdapter
+    private var currentFilterType = FilterType.ALL
+    private var startDate: Date? = null
+    private var endDate: Date? = null
+    enum class FilterType { ALL, INCOME, EXPENSE }
+
+    private val searchTextListener = object : SearchView.OnQueryTextListener {
+        override fun onQueryTextSubmit(query: String?) = true
+
+        override fun onQueryTextChange(newText: String?): Boolean {
+            if (newText.isNullOrEmpty()) {
+                hideSearchResults()
+            } else {
+                showSearchResults()
+                applyFilters()
+            }
+            return true
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,6 +133,7 @@ class HomeFragment: Fragment() {
 
         }
         setupSearch()
+        setupFiltering()
 
         setFragment(WeeklyFragment())
         binding.weeklyMonthlyChanger.setOnClickListener{
@@ -122,51 +148,135 @@ class HomeFragment: Fragment() {
         }
 
         // Handle search queries
-        binding.searchTransaction.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?) = true
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText.isNullOrEmpty()) {
-                    hideSearchResults()
-                } else {
-                    filterTransactions(newText)
-                }
-                return true
-            }
-        })
+        binding.searchTransaction.setOnQueryTextListener(searchTextListener)
 
         // Handle click outside
-        binding.root.setOnClickListener {
-            if (binding.searchResultsRecyclerView.visibility == View.VISIBLE) {
+        binding.rootLayout.setOnClickListener {
+            Log.e("Root Click", "Root has been clicked")
+            if (binding.searchResultsRecyclerView.isVisible || binding.filterDropdown.isVisible) {
                 hideSearchResults()
+                hideFilters()
+                Log.e("Root Click", "Search Results RecyclerView and Filters are Hidden")
             }
         }
     }
 
-    private fun filterTransactions(query: String) {
-        val normalizedQuery = query.lowercase(Locale.getDefault()).trim()
+    private fun setupFiltering() {
+        // Show/hide filter button based on search focus
+        binding.searchTransaction.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            binding.filterButton.visibility = if (hasFocus) View.VISIBLE else View.GONE
+        }
 
-        val filtered = transactionHistoryList
-            .filter { transaction ->
-                transaction.transactionName.lowercase(Locale.getDefault()).contains(normalizedQuery)
-            }
-            .sortedWith(
-                compareByDescending<Transaction> {
-                    // Exact matches first
-                    it.transactionName.lowercase(Locale.getDefault()) == normalizedQuery
-                }.thenByDescending {
-                    // Then by date (newest first)
-                    it.date
+        // Toggle filter dropdown
+        binding.filterButton.setOnClickListener {
+            if (binding.filterDropdown.visibility == View.VISIBLE) {
+                binding.filterDropdown.visibility = View.GONE
+            } else {
+                binding.filterDropdown.visibility = View.VISIBLE
+                // Set current selection
+                when (currentFilterType) {
+                    FilterType.ALL -> binding.filterAll.isChecked = true
+                    FilterType.INCOME -> binding.filterIncome.isChecked = true
+                    FilterType.EXPENSE -> binding.filterExpense.isChecked = true
                 }
-            )
+            }
+        }
+
+        // Handle filter type selection
+        binding.filterTypeGroup.setOnCheckedChangeListener { _, checkedId ->
+            currentFilterType = when (checkedId) {
+                R.id.filterIncome -> FilterType.INCOME
+                R.id.filterExpense -> FilterType.EXPENSE
+                else -> FilterType.ALL
+            }
+        }
+
+        // Date range picker
+        binding.btnDateRange.setOnClickListener {
+            showDateRangePicker()
+        }
+
+        // Apply filters
+        binding.btnApplyFilters.setOnClickListener {
+            applyFilters()
+            binding.filterDropdown.visibility = View.GONE
+        }
+    }
+
+    private fun showDateRangePicker() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.date_range_dialog, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        val btnStartDate = dialogView.findViewById<Button>(R.id.btnStartDate)
+        val btnEndDate = dialogView.findViewById<Button>(R.id.btnEndDate)
+        val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirmDates)
+
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).apply {
+            timeZone = TimeZone.getDefault() // Add this for consistency
+        }
+
+        btnStartDate.text = startDate?.let { dateFormat.format(it) } ?: "Select start date"
+        btnEndDate.text = endDate?.let { dateFormat.format(it) } ?: "Select end date"
+
+        btnStartDate.setOnClickListener {
+            val datePicker = DatePickerDialog(requireContext(), { _, year, month, day ->
+                val cal = Calendar.getInstance().apply {
+                    set(year, month, day)
+                }
+                startDate = cal.time
+                btnStartDate.text = dateFormat.format(cal.time)
+            }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+            datePicker.show()
+        }
+
+        btnEndDate.setOnClickListener {
+            val datePicker = DatePickerDialog(requireContext(), { _, year, month, day ->
+                val cal = Calendar.getInstance().apply {
+                    set(year, month, day)
+                }
+                endDate = cal.time
+                btnEndDate.text = dateFormat.format(cal.time)
+            }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+            datePicker.show()
+        }
+
+        btnConfirm.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun applyFilters() {
+        val query = binding.searchTransaction.query.toString()
+        val filtered = transactionData.getAllTransaction().filter { transaction ->
+            // Apply search query filter
+            val matchesQuery = query.isEmpty() ||
+                    transaction.transactionName.contains(query, ignoreCase = true)
+
+            // Apply type filter
+            val matchesType = when (currentFilterType) {
+                FilterType.ALL -> true
+                FilterType.INCOME -> transaction.isIncome
+                FilterType.EXPENSE -> !transaction.isIncome
+            }
+
+            // Apply date filter
+            val matchesDate = when {
+                startDate == null && endDate == null -> true
+                startDate != null && endDate != null -> transaction.date in startDate!!..endDate!!
+                startDate != null -> transaction.date >= startDate
+                else -> transaction.date <= endDate!!
+            }
+
+            matchesQuery && matchesType && matchesDate
+        }
 
         searchListAdapter.updateItems(filtered)
-
-        if (filtered.isNotEmpty()) {
-            showSearchResults()
-        } else {
-            hideSearchResults()
-        }
     }
 
     private fun showSearchResults() {
@@ -190,6 +300,11 @@ class HomeFragment: Fragment() {
     private fun hideSearchResults() {
         binding.searchResultsRecyclerView.visibility = View.GONE
         binding.searchTransaction.clearFocus()
+        binding.searchTransaction.setOnQueryTextListener(null) // Temporarily remove listener
+        binding.searchTransaction.setQuery("", false)
+        binding.searchTransaction.setOnQueryTextListener(searchTextListener) // Restore listener
+
+
         hideKeyboard()
         Log.e("hideSearchResults", "hideSearchResults called")
 
@@ -242,6 +357,10 @@ class HomeFragment: Fragment() {
         }
         return currentBalance
 
+    }
+
+    private fun hideFilters() {
+        binding.filterDropdown.visibility = View.GONE
     }
 
     private fun getTransactionHistory(): List<Transaction>{
