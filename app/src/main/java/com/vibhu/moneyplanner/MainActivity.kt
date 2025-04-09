@@ -88,8 +88,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_camera_testing -> {
-                    val intent = Intent(this, CameraReceiptActivity::class.java)
-                    startActivity(intent)
+                    setCurrentFragment(CameraReceiptFragment())
                     true
                 }
                 else -> false
@@ -161,6 +160,7 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentFragment(fragment: androidx.fragment.app.Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 

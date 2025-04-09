@@ -48,6 +48,9 @@ class CameraReceiptActivity : AppCompatActivity() {
                     Log.d("CameraActivity", "Photo URI: $photoUri")
                     imageView?.load(photoUri)
 
+                    Log.d("CameraActivity", "Photo URI: $photoUri")
+                    sendPhotoUriToReceiptScannerFragment(photoUri) // Send photoUri to ReceiptScannerFragment
+
 
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -111,5 +114,20 @@ class CameraReceiptActivity : AppCompatActivity() {
                 finish() // Or handle the denial appropriately
             }
         }
+    }
+
+    fun sendPhotoUriToReceiptScannerFragment(photoUri: Uri) {
+        val bundle = Bundle()
+        bundle.putParcelable("photoUri", photoUri)
+
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val receiptScannerFragment = ReceiptScannerFragment()
+        receiptScannerFragment.arguments = bundle
+
+        fragmentTransaction.replace(R.id.fragment_container, receiptScannerFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 }
