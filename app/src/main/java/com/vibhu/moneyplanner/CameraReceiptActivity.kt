@@ -1,6 +1,7 @@
 package com.vibhu.moneyplanner
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
@@ -120,14 +121,15 @@ class CameraReceiptActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putParcelable("photoUri", photoUri)
 
-        val fragmentManager = supportFragmentManager
+        val fragmentManager = MainActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
         val receiptScannerFragment = ReceiptScannerFragment()
         receiptScannerFragment.arguments = bundle
 
         fragmentTransaction.replace(R.id.fragment_container, receiptScannerFragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
+
+        finish()
     }
 }

@@ -20,29 +20,51 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.vibhu.moneyplanner.databinding.FragmentCameraReceiptBinding
 import okio.IOException
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
 class CameraReceiptFragment : Fragment(){
 
     private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
     private lateinit var requestCameraPermissionLauncher: ActivityResultLauncher<String>
+    private var _binding: FragmentCameraReceiptBinding? = null
+    private val binding get() = _binding!!
     private val CAMERA_PERMISSION_REQUEST = 100
     private lateinit var photoUri: Uri
     private lateinit var currentPhotoPath: String // Where the picture is going to be stored
+    private lateinit var expenseCategoryID: UUID
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentCameraReceiptBinding.inflate(inflater, container, false)
+        return binding.root
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("CameraFragment", "onViewCreated")
+
+        val expenseCategoryIDStr = arguments?.getString("category_id")
+        if(expenseCategoryIDStr != null) {
+            expenseCategoryID = UUID.fromString(expenseCategoryIDStr)
+        }
 
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if(result.resultCode == RESULT_OK){
                 try {
                     Log.d("PhotoUri", photoUri.toString())
                     Log.d("PhotoPath", currentPhotoPath)
-                    sendPicture(photoUri)
+                    sendPicture()
                 } catch(e: IOException) {
                     e.printStackTrace()
                     Toast.makeText(requireContext(), "Error processing image", Toast.LENGTH_SHORT).show()
@@ -84,34 +106,32 @@ class CameraReceiptFragment : Fragment(){
 
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        Log.d("CameraIntent", takePictureIntent.toString())
 
-        // Check if there's a camera app available
-        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-            val photoFile: File? = try {
-                createImageFile() // Create a temporary file
-            } catch (ex: IOException) {
-                Log.e("CameraFragment", "Error creating image file", ex)
-                Toast.makeText(requireContext(), "Could not create image file", Toast.LENGTH_SHORT).show()
-                null
-            }
+        val photoFile: File? = try {
+            createImageFile() // Create a temporary file
+        } catch (ex: IOException) {
+            Log.e("CameraFragment", "Error creating image file", ex)
+            Toast.makeText(requireContext(), "Could not create image file", Toast.LENGTH_SHORT).show()
+            null
+        }
 
-            photoFile?.also {
-                try {
-                    photoUri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "com.vibhu.moneyplanner.fileprovider",
-                        it
-                    )
-                    Log.d("PhotoUri", photoUri.toString())
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                    takePictureLauncher.launch(takePictureIntent)
-                } catch (e: Exception) {
-                    Log.e("CameraFragment", "Error launching camera", e)
-                    Toast.makeText(requireContext(), "Error launching camera: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+        photoFile?.also {
+            try {
+                photoUri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "com.vibhu.moneyplanner.fileprovider",
+                    it
+                )
+                Log.d("PhotoUri", photoUri.toString())
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+
+                Log.d("CameraLaunch", "Launching camera with URI: $photoUri")
+                takePictureLauncher.launch(takePictureIntent)
+            } catch (e: Exception) {
+                Log.e("CameraFragment", "Error launching camera", e)
+                Toast.makeText(requireContext(), "Error launching camera: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(requireContext(), "No camera app found", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -130,9 +150,10 @@ class CameraReceiptFragment : Fragment(){
         }
     }
 
-    private fun sendPicture(photoUri: Uri) {
+    private fun sendPicture() {
         val bundle = Bundle()
-        bundle.putParcelable("photoUri", photoUri)
+        bundle.putString("filePath", currentPhotoPath)
+        bundle.putString("category_id", expenseCategoryID.toString())
 
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()

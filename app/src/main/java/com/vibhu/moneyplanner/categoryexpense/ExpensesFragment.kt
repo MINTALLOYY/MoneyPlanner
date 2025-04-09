@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.replace
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vibhu.moneyplanner.CameraReceiptActivity
+import com.vibhu.moneyplanner.CameraReceiptFragment
 import com.vibhu.moneyplanner.Expense
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.ReceiptScannerFragment
@@ -95,10 +96,10 @@ class ExpensesFragment: Fragment() {
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val receiptScannerFragment = ReceiptScannerFragment()
-        receiptScannerFragment.arguments = bundle
+        val cameraReceiptFragment = CameraReceiptFragment()
+        cameraReceiptFragment.arguments = bundle
 
-        fragmentTransaction.replace(R.id.fragment_container, receiptScannerFragment)
+        fragmentTransaction.replace(R.id.fragment_container, cameraReceiptFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }

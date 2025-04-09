@@ -88,7 +88,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
         Log.d("lines", lines.toString())
 
 
-        val totalKeywords = listOf("Total", "Amount Due", "Balance", "Grand Total")
+        val totalKeywords = listOf("Total", "Amount Due", "Balance", "Grand Total", "Amount")
 
         // Check if Total is in a different block than the amount due
         for (i in 0 until lines.size - 1) {

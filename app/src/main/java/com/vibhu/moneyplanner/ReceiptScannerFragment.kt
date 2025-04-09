@@ -1,5 +1,7 @@
 package com.vibhu.moneyplanner
 
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.replace
 import com.amazonaws.auth.CognitoCachingCredentialsProvider
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.textract.AmazonTextract
@@ -16,6 +19,7 @@ import com.vibhu.moneyplanner.databinding.FragmentReceiptScannerBinding
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.net.URI
 import java.util.UUID
 
 
@@ -27,6 +31,7 @@ class ReceiptScannerFragment : Fragment() {
     private lateinit var textractManager: TextractManager
     private lateinit var categoryId: UUID
     private var total: Float = 0.0F
+    private lateinit var filePath: String
 
     private val textractClient: AmazonTextract by lazy {
         val credentialsProvider = CognitoCachingCredentialsProvider(
@@ -52,15 +57,19 @@ class ReceiptScannerFragment : Fragment() {
         textractManager = TextractManager(textractClient)
 
         val categoryIdString = arguments?.getString("category_id")
+        val filePathTest = arguments?.getString("filePath")
+        if (filePathTest != null) {
+            filePath = filePathTest
+        } else{
+            goToHomePage("No File Found")
+        }
         if (categoryIdString!= null) {
             categoryId = UUID.fromString(categoryIdString)
         }
 
-        val inputStream: InputStream = requireContext().assets.open("receipt.jpg")
-        val tempFile = File.createTempFile("receipt", ".jpg", requireContext().cacheDir)
-        FileOutputStream(tempFile).use { outputStream ->
-            inputStream.copyTo(outputStream)
-        }
+
+        val tempFile = File(filePath)
+
         textractManager.analyzeDocument(tempFile) { extractedText, error ->
             if (extractedText != null) {
                 requireActivity().runOnUiThread { // Switch to main thread
@@ -101,6 +110,21 @@ class ReceiptScannerFragment : Fragment() {
         addExpenseFragment.arguments = bundle // Set the bundle with categoryId
 
         fragmentTransaction.replace(R.id.fragment_container, addExpenseFragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+
+    fun goToHomePage(message: String){
+        val bundle = Bundle()
+        bundle.putString("message", message)
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        val homeFragment = HomeFragment()
+        homeFragment.arguments = bundle
+
+        fragmentTransaction.replace(R.id.fragment_container, homeFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }

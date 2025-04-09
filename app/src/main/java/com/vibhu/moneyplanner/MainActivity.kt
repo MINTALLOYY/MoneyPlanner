@@ -87,10 +87,6 @@ class MainActivity : AppCompatActivity() {
                     setCurrentFragment(IncomeCategoryFragment())
                     true
                 }
-                R.id.navigation_camera_testing -> {
-                    setCurrentFragment(CameraReceiptFragment())
-                    true
-                }
                 else -> false
             }
         }
