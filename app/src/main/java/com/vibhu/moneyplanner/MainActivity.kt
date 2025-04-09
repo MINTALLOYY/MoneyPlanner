@@ -1,6 +1,7 @@
 package com.vibhu.moneyplanner
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -74,16 +75,21 @@ class MainActivity : AppCompatActivity() {
                     setCurrentFragment(categoriesFragment)
                     true
                 }
-                R.id.navigation_pie_chart -> {
-                    setCurrentFragment(pieChartFragment)
-                    true
-                }
+//                R.id.navigation_pie_chart -> {
+//                    setCurrentFragment(pieChartFragment)
+//                    true
+//                }
                 R.id.navigation_trend -> {
                     setCurrentFragment(trendFragment)
                     true
                 }
                 R.id.navigation_income_categories -> {
                     setCurrentFragment(IncomeCategoryFragment())
+                    true
+                }
+                R.id.navigation_camera_testing -> {
+                    val intent = Intent(this, CameraReceiptActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false
@@ -155,7 +161,6 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentFragment(fragment: androidx.fragment.app.Fragment) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
-        transaction.addToBackStack(null)
         transaction.commit()
     }
 

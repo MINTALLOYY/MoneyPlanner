@@ -82,6 +82,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
         for (block in blocks) {
             if (!block.text.isNullOrEmpty()) {
                 lines.add(block.text!!)
+                Log.d("block", block.text!! + " || ")
             }
         }
         Log.d("lines", lines.toString())
@@ -89,6 +90,23 @@ class TextractManager(private val textractClient: AmazonTextract) {
 
         val totalKeywords = listOf("Total", "Amount Due", "Balance", "Grand Total")
 
+        // Check if Total is in a different block than the amount due
+        for (i in 0 until lines.size - 1) {
+            val line = lines[i]
+            for (keyword in totalKeywords) {
+                if (line.trim().equals(keyword, ignoreCase = true)) {
+                    // Check if the next line is a currency amount
+                    val nextLine = lines[i + 1]
+                    val amountPattern = Pattern.compile("^\\s*([\\$£€]?\\s*[\\d,.]+(?:\\.\\d{2})?)\\s*$")
+                    val matcher = amountPattern.matcher(nextLine)
+                    if (matcher.find()) {
+                        return matcher.group(1)
+                    }
+                }
+            }
+        }
+
+        // Checks if the total and the amount due is in the same amount
         for (line in lines) {
             for(keyword in totalKeywords) {
                 val pattern =
@@ -99,7 +117,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
                 }
             }
         }
-        return null;
+        return null
     }
 
     private fun extractDocumentFromAnalysis(result: com.amazonaws.services.textract.model.DetectDocumentTextResult): String {

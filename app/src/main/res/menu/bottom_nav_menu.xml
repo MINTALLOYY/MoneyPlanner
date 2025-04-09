@@ -13,12 +13,16 @@
         android:id="@+id/navigation_income_categories"
         android:title="Income"
         android:icon="@drawable/ic_income" />
-    <item
-        android:id="@+id/navigation_pie_chart"
-        android:title="Pie Chart"
-        android:icon="@drawable/ic_pie_chart" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_pie_chart"-->
+<!--        android:title="Pie Chart"-->
+<!--        android:icon="@drawable/ic_pie_chart" />-->
     <item
         android:id="@+id/navigation_trend"
         android:title="Trend"
         android:icon="@drawable/ic_trend" />
+    <item
+        android:id="@+id/navigation_camera_testing"
+        android:title="Camera"
+        android:icon="@drawable/ic_camera" />
 </menu>
