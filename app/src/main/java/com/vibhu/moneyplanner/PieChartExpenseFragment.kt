@@ -6,19 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.vibhu.moneyplanner.databinding.FragmentCategoryExpensesPieChartBinding
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.vibhu.moneyplanner.categoryexpense.CategoryData
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
+import com.vibhu.moneyplanner.databinding.FragmentPieChartBinding
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 
 class PieChartExpenseFragment : Fragment() {
 
-    private var _binding: FragmentCategoryExpensesPieChartBinding? = null
+    private var _binding: FragmentPieChartBinding? = null
     private val binding get() = _binding!!
     private lateinit var expenseData: ExpenseData
     private lateinit var categoryData: CategoryData
@@ -28,7 +28,7 @@ class PieChartExpenseFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCategoryExpensesPieChartBinding.inflate(inflater, container, false)
+        _binding = FragmentPieChartBinding.inflate(inflater, container, false)
         val view = binding.root
 
         expenseData = ExpenseData(requireContext())
@@ -60,18 +60,18 @@ class PieChartExpenseFragment : Fragment() {
         dataSet.valueTextSize = 14f // Set value text size for better readability
 
         val pieData = PieData(dataSet)
-        binding.pieChartExpenses.data = pieData
+        binding.pieChart.data = pieData
 
         // Customize the chart (optional)
-        binding.pieChartExpenses.description.isEnabled = false
-        binding.pieChartExpenses.setUsePercentValues(true)
-        binding.pieChartExpenses.setDrawHoleEnabled(true)
-        binding.pieChartExpenses.setHoleRadius(60f) // Adjust hole radius
-        binding.pieChartExpenses.setTransparentCircleColor(Color.BLACK) // Adjust transparent circle radius
-        binding.pieChartExpenses.legend.textColor = Color.BLACK // Set legend text color to white
-        binding.pieChartExpenses.setEntryLabelColor(Color.WHITE) // Set entry label text color
+        binding.pieChart.description.isEnabled = false
+        binding.pieChart.setUsePercentValues(true)
+        binding.pieChart.setDrawHoleEnabled(true)
+        binding.pieChart.setHoleRadius(60f) // Adjust hole radius
+        binding.pieChart.setTransparentCircleColor(Color.BLACK) // Adjust transparent circle radius
+        binding.pieChart.legend.textColor = Color.BLACK // Set legend text color to white
+        binding.pieChart.setEntryLabelColor(Color.WHITE) // Set entry label text color
 
-        binding.pieChartExpenses.invalidate() // Refresh the chart
+        binding.pieChart.invalidate() // Refresh the chart
         return view
     }
 

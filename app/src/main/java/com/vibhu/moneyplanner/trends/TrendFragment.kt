@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
+import com.vibhu.moneyplanner.PieChartExpenseFragment
+import com.vibhu.moneyplanner.PieChartIncomeFragment
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.FragmentTrendBinding // Your binding class
 
@@ -54,12 +56,14 @@ class TrendFragment : Fragment() {
     private fun showExpensesFragment() {
         val fragmentTransaction = childFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.trends_fragment_container, ExpensesTrendsFragment())
+        fragmentTransaction.replace(R.id.trends_pie_chart, PieChartExpenseFragment())
         fragmentTransaction.commit()
     }
 
     private fun showIncomeFragment() {
         val fragmentTransaction = childFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.trends_fragment_container, IncomeTrendsFragment())
+        fragmentTransaction.replace(R.id.trends_pie_chart, PieChartIncomeFragment())
         fragmentTransaction.commit()
     }
 

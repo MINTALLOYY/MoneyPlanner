@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
@@ -13,6 +14,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.vibhu.moneyplanner.IncomeData
+import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.FragmentIncomeTrendsBinding
 import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
@@ -67,7 +69,7 @@ class IncomeTrendsFragment : Fragment() {
         }
 
         val dataSet = BarDataSet(entries, "Monthly Income")
-        dataSet.color = Color.GREEN
+        dataSet.color = ContextCompat.getColor(requireContext(), R.color.green)
         dataSet.valueTextColor = Color.WHITE
         dataSet.valueTextSize = 12f
 
