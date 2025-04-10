@@ -1,16 +1,12 @@
 package com.vibhu.moneyplanner
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.AlertDialog
-import androidx.compose.ui.semantics.dismiss
-import androidx.compose.ui.semantics.text
 import androidx.fragment.app.FragmentTransaction
 import com.vibhu.moneyplanner.categoryexpense.CategoriesFragment
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
@@ -19,7 +15,6 @@ import com.vibhu.moneyplanner.trends.TrendFragment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.util.Date
 import java.util.Calendar
 import java.util.UUID
 import kotlin.text.isNotEmpty
@@ -60,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setUpBottomNavigation(){
         val categoriesFragment = CategoriesFragment()
-        val pieChartFragment = PieChartFragment()
+        val pieChartExpenseFragment = PieChartExpenseFragment()
         val trendFragment = TrendFragment()
 
         setCurrentFragment(categoriesFragment) // Set initial fragment

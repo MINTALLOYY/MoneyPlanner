@@ -16,7 +16,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 
-class PieChartFragment : Fragment() {
+class PieChartIncomeFragment : Fragment() {
 
     private var _binding: FragmentCategoryExpensesPieChartBinding? = null
     private val binding get() = _binding!!
