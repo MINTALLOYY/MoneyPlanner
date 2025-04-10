@@ -44,6 +44,34 @@ class CameraReceiptFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if(result.resultCode == RESULT_OK){
+            try {
+                Log.d("PhotoUri", photoUri.toString())
+                Log.d("PhotoPath", currentPhotoPath)
+                sendPicture()
+            } catch(e: IOException) {
+                e.printStackTrace()
+                Toast.makeText(requireContext(), "Error processing image", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(requireContext(), "Camera action cancelled or failed", Toast.LENGTH_SHORT).show()
+        }
+        }
+
+        // Initialize the permission launcher - this replaces onRequestPermissionsResult
+        requestCameraPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            if (isGranted) {
+                openCamera()
+            } else {
+                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
+                // You may want to navigate back or show additional UI here
+            }
+        }
+
         _binding = FragmentCameraReceiptBinding.inflate(inflater, container, false)
         return binding.root
 
@@ -59,35 +87,11 @@ class CameraReceiptFragment : Fragment(){
             expenseCategoryID = UUID.fromString(expenseCategoryIDStr)
         }
 
-        takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if(result.resultCode == RESULT_OK){
-                try {
-                    Log.d("PhotoUri", photoUri.toString())
-                    Log.d("PhotoPath", currentPhotoPath)
-                    sendPicture()
-                } catch(e: IOException) {
-                    e.printStackTrace()
-                    Toast.makeText(requireContext(), "Error processing image", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(requireContext(), "Camera action cancelled or failed", Toast.LENGTH_SHORT).show()
-            }
+        binding.startCameraIntent.setOnClickListener {
+            // Check for camera permission and request if needed
+            checkCameraPermissionAndOpen()
         }
 
-        // Initialize the permission launcher - this replaces onRequestPermissionsResult
-        requestCameraPermissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-            if (isGranted) {
-                openCamera()
-            } else {
-                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
-                // You may want to navigate back or show additional UI here
-            }
-        }
-
-        // Check for camera permission and request if needed
-        checkCameraPermissionAndOpen()
     }
 
     private fun checkCameraPermissionAndOpen() {
