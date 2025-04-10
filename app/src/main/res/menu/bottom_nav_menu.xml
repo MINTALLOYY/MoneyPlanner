@@ -21,4 +21,8 @@
         android:id="@+id/navigation_trend"
         android:title="Trend"
         android:icon="@drawable/ic_trend" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_camera_test"-->
+<!--        android:title="Camera Test"-->
+<!--        android:icon="@drawable/ic_camera" />-->
 </menu>

@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.layout.add
 import androidx.compose.ui.tooling.data.position
@@ -138,6 +139,11 @@ class HomeFragment: Fragment() {
         setFragment(WeeklyFragment())
         binding.weeklyMonthlyChanger.setOnClickListener{
             changeFragment()
+        }
+
+        val message = arguments?.getString("message")
+        if (message != null) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
     }
 

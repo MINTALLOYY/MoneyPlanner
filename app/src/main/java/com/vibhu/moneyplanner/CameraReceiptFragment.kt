@@ -153,6 +153,7 @@ class CameraReceiptFragment : Fragment(){
     private fun sendPicture() {
         val bundle = Bundle()
         bundle.putString("filePath", currentPhotoPath)
+        bundle.putString("photoUri", photoUri.toString())
         bundle.putString("category_id", expenseCategoryID.toString())
 
         val fragmentManager = requireActivity().supportFragmentManager

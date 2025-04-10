@@ -3,18 +3,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/receiptTotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Loading... (might take a minute)"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/receipt"
+        android:layout_width="378dp"
+        android:layout_height="342dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/receiptTotalBox"
+        app:srcCompat="@android:drawable/ic_menu_upload" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:flow_verticalAlign="center"
+        android:id="@+id/receiptTotalBox"
+        app:layout_constraintBottom_toBottomOf="@id/addTotalButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/receipt"
+        android:padding="8dp" >
+        <!-- put background for border -->
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:id="@+id/receiptTotalLabel"
+            android:text="TOTAL OF RECEIPT"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+
+        <TextView
+            android:id="@+id/receiptTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading... (might take a minute)"
+            android:layout_gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+
+    </LinearLayout>
+
+
 
     <Button
         android:id="@+id/addTotalButton"
@@ -24,5 +63,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/receiptTotal" />
+        app:layout_constraintTop_toBottomOf="@+id/receiptTotalBox" />
 </androidx.constraintlayout.widget.ConstraintLayout>

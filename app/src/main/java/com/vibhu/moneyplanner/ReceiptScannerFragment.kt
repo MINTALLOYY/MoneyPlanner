@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.replace
+import coil.load
 import com.amazonaws.auth.CognitoCachingCredentialsProvider
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.textract.AmazonTextract
@@ -21,6 +23,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.URI
 import java.util.UUID
+import androidx.core.net.toUri
 
 
 class ReceiptScannerFragment : Fragment() {
@@ -32,6 +35,7 @@ class ReceiptScannerFragment : Fragment() {
     private lateinit var categoryId: UUID
     private var total: Float = 0.0F
     private lateinit var filePath: String
+    private lateinit var photoUri: Uri
 
     private val textractClient: AmazonTextract by lazy {
         val credentialsProvider = CognitoCachingCredentialsProvider(
@@ -58,8 +62,14 @@ class ReceiptScannerFragment : Fragment() {
 
         val categoryIdString = arguments?.getString("category_id")
         val filePathTest = arguments?.getString("filePath")
-        if (filePathTest != null) {
+        val photoUriString = arguments?.getString("photoUri")
+
+        if (filePathTest != null && photoUriString != null) {
             filePath = filePathTest
+            photoUri = photoUriString.toUri()
+            val imageView = binding.receipt
+            Log.d("CameraActivity", "Photo URI: $photoUri")
+            imageView.load(photoUri)
         } else{
             goToHomePage("No File Found")
         }
@@ -81,6 +91,9 @@ class ReceiptScannerFragment : Fragment() {
             } else if (error != null) {
                 Log.e("Textract Error", error.message.toString())
                 // Handle error
+            } else {
+                Log.e("Textract Error", "Cannot find total or receipt is invalid")
+                goToHomePage("Cannot Find Total of Receipt")
             }
             Log.d("Analyzing Over", "ANALYZING IS OVER")
         }
