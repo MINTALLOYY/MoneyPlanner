@@ -25,7 +25,7 @@ class PieChartIncomeFragment : Fragment() {
     private lateinit var incomeData: IncomeData
     private lateinit var incomeCategoryData: IncomeCategoryData
     private var entireIncome: Double = 0.0
-    var numberOfDays: Int = 30
+    private var numberOfDays: Int = 30
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,10 +56,7 @@ class PieChartIncomeFragment : Fragment() {
 
         val entries = mutableListOf<PieEntry>()
         val colorsAvailable = mutableListOf<Int>(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.dark_grey
-            ),  // Convert color resource to color integer
+            ContextCompat.getColor(requireContext(), R.color.dark_grey),  // Convert color resource to color integer
             ContextCompat.getColor(requireContext(), R.color.green),
             ContextCompat.getColor(requireContext(), R.color.light_grey),
             ContextCompat.getColor(requireContext(), R.color.metallic_gold),
