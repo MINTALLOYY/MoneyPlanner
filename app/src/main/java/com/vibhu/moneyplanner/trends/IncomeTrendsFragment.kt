@@ -15,7 +15,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.vibhu.moneyplanner.IncomeData
 import com.vibhu.moneyplanner.R
-import com.vibhu.moneyplanner.databinding.FragmentIncomeTrendsBinding
+import com.vibhu.moneyplanner.databinding.FragmentBarChartTrendsBinding
 import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -26,7 +26,7 @@ import kotlin.math.ceil
 
 class IncomeTrendsFragment : Fragment() {
 
-    private var _binding: FragmentIncomeTrendsBinding? = null
+    private var _binding: FragmentBarChartTrendsBinding? = null
     private val binding get() = _binding!!
     private lateinit var incomeData: IncomeData
 
@@ -34,7 +34,7 @@ class IncomeTrendsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentIncomeTrendsBinding.inflate(inflater, container, false)
+        _binding = FragmentBarChartTrendsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -46,7 +46,7 @@ class IncomeTrendsFragment : Fragment() {
     }
 
     private fun setUpBarChart() {
-        val barChart: BarChart = binding.barChartIncome
+        val barChart: BarChart = binding.barChart
         val entries = mutableListOf<BarEntry>()
         val labels = mutableListOf<String>()
 

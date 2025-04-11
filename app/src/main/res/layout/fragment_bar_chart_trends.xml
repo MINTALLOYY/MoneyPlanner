@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".trends.ExpensesTrendsFragment"
+    tools:context=".trends.IncomeTrendsFragment"
     android:background="@color/very_dark_grey">
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChartExpenses"
+        android:id="@+id/barChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="124dp"/>
+        android:layout_marginBottom="64dp"/>
 
 </FrameLayout>
