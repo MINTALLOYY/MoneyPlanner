@@ -65,9 +65,7 @@ dependencies {
     implementation("io.coil-kt:coil:2.4.0")
     implementation("com.amazonaws:aws-android-sdk-textract:2.+")
     implementation("com.amazonaws:aws-android-sdk-cognito:2.+")
-
-
-
-
+    implementation(libs.generativeai)
+    implementation(libs.gson)
 
 }
