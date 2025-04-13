@@ -126,7 +126,8 @@ class PieChartExpenseFragment : Fragment() {
 
             description.isEnabled = true
             description.textColor = Color.WHITE
-            description.text = "Last ${numberOfDays} Days"
+            if (numberOfDays != Int.MAX_VALUE) description.text = "Last ${numberOfDays} Days"
+            else description.text = "All Time"
 
             // 1. Set sufficient offsets for labels
             setExtraOffsets(32f, 32f, 32f, 32f) // Left, Top, Right, Bottom

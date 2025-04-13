@@ -50,25 +50,43 @@ class IncomeTrendsFragment : Fragment() {
         val entries = mutableListOf<BarEntry>()
         val labels = mutableListOf<String>()
 
+        val timePeriod = arguments?.getString("timePeriod") ?: "Monthly"
         val endDate = Date()
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MONTH, -12)
+        val calendar = Calendar.getInstance().apply {
+            when(arguments?.getString("timePeriod")) {
+                "Monthly" -> add(Calendar.MONTH, -12)
+                "Yearly" -> add(Calendar.YEAR, -5)
+                else -> add(Calendar.MONTH, -12) // Default case
+            }
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
         val startDate = calendar.time
 
         val incomes = incomeData.getAllIncomes().filter { it.receivedDate in startDate..endDate }
-        val monthlyIncomes = aggregateIncomesByMonth(incomes)
+        val aggregatedIncomes = if (timePeriod == "Yearly") {
+            aggregateIncomesByYear(incomes)
+        } else {
+            aggregateIncomesByMonth(incomes)
+        }
 
-        val format = SimpleDateFormat("MMM", Locale.getDefault())
+        val format = if (timePeriod == "Yearly") {
+            SimpleDateFormat("yyyy", Locale.getDefault())
+        } else {
+            SimpleDateFormat("MMM", Locale.getDefault())
+        }
 
         var x = 0f
-        monthlyIncomes.forEach { (month, totalIncome) ->
-            val monthLabel = format.format(month)
+        aggregatedIncomes.forEach { (date, totalIncome) ->
+            val monthLabel = format.format(date)
             labels.add(monthLabel)
             entries.add(BarEntry(x, totalIncome.toFloat()))
             x++
         }
 
-        val dataSet = BarDataSet(entries, "Monthly Income")
+        val dataSetLabel = if (timePeriod == "Yearly") "Yearly Income" else "Monthly Income"
+        val dataSet = BarDataSet(entries, dataSetLabel)
         dataSet.color = ContextCompat.getColor(requireContext(), R.color.green)
         dataSet.valueTextColor = Color.WHITE
         dataSet.valueTextSize = 12f
@@ -156,6 +174,26 @@ class IncomeTrendsFragment : Fragment() {
             max <= 2000 -> 100f
             else -> 200f
         }
+    }
+
+    private fun aggregateIncomesByYear(incomes: List<Income>): TreeMap<Date, Double> {
+        val yearlyIncomes = TreeMap<Date, Double>()
+        val calendar = Calendar.getInstance()
+
+        for (income in incomes) {
+            calendar.time = income.receivedDate
+            calendar.set(Calendar.MONTH, Calendar.JANUARY)
+            calendar.set(Calendar.DAY_OF_MONTH, 1)
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+
+            val year = calendar.time
+            val amount = income.amount
+            yearlyIncomes[year] = (yearlyIncomes[year] ?: 0.0) + amount
+        }
+        return yearlyIncomes
     }
 
 

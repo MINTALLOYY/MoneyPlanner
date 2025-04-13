@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
@@ -13,8 +14,10 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.vibhu.moneyplanner.Expense
+import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import com.vibhu.moneyplanner.databinding.FragmentBarChartTrendsBinding
+import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -49,26 +52,43 @@ class ExpensesTrendsFragment: Fragment() {
         val entries = mutableListOf<BarEntry>()
         val labels = mutableListOf<String>()
 
+        val timePeriod = arguments?.getString("timePeriod") ?: "Monthly"
         val endDate = Date()
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MONTH, -12)
+        val calendar = Calendar.getInstance().apply {
+            when(arguments?.getString("timePeriod")) {
+                "Monthly" -> add(Calendar.MONTH, -12)
+                "Yearly" -> add(Calendar.YEAR, -5)
+                else -> add(Calendar.MONTH, -12) // Default case
+            }
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
         val startDate = calendar.time
 
         val expenses = expenseData.getExpensesInDateRange(startDate, endDate)
-        val monthlyExpenses = aggregateExpensesByMonth(expenses)
+        val aggregatedExpenses = if (timePeriod == "Yearly") {
+            aggregateExpensesByYear(expenses)
+        } else {
+            aggregateExpensesByMonth(expenses)
+        }
 
-        val format = SimpleDateFormat("MMM", Locale.getDefault())
-
+        val format = if (timePeriod == "Yearly") {
+            SimpleDateFormat("yyyy", Locale.getDefault())
+        } else {
+            SimpleDateFormat("MMM", Locale.getDefault())
+        }
         var x = 0f // X-axis counter
-        monthlyExpenses.forEach { (month, totalExpense) ->
-            val monthLabel = format.format(month)
+        aggregatedExpenses.forEach { (date, totalExpense) ->
+            val monthLabel = format.format(date)
             labels.add(monthLabel)
             entries.add(BarEntry(x, totalExpense.toFloat()))
             x++
         }
 
-        val dataSet = BarDataSet(entries, "Monthly Expenses")
-        dataSet.color = Color.BLUE
+        val dataSetLabel = if (timePeriod == "Yearly") "Yearly Expenses" else "Monthly Expenses"
+        val dataSet = BarDataSet(entries, dataSetLabel)
+        dataSet.color = ContextCompat.getColor(requireContext(), R.color.red)
         dataSet.valueTextColor = Color.WHITE
         dataSet.valueTextSize = 12f
 
@@ -159,6 +179,27 @@ class ExpensesTrendsFragment: Fragment() {
             else -> 200f
         }
     }
+
+    private fun aggregateExpensesByYear(expenses: List<Expense>): TreeMap<Date, Double> {
+        val yearlyIncomes = TreeMap<Date, Double>()
+        val calendar = Calendar.getInstance()
+
+        for (expenses in expenses) {
+            calendar.time = expenses.expenseDate
+            calendar.set(Calendar.MONTH, Calendar.JANUARY)
+            calendar.set(Calendar.DAY_OF_MONTH, 1)
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+
+            val year = calendar.time
+            val amount = expenses.amount
+            yearlyIncomes[year] = (yearlyIncomes[year] ?: 0.0) + amount
+        }
+        return yearlyIncomes
+    }
+
 
     private fun aggregateExpensesByMonth(expenses: List<Expense>): TreeMap<Date, Double> {
         val monthlyExpenses = TreeMap<Date, Double>()
