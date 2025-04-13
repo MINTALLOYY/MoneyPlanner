@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vibhu.moneyplanner.models.IncomeCategory
+import java.util.Date
 import java.util.UUID
 
 class IncomeCategoryData(context: Context) {
@@ -14,6 +15,12 @@ class IncomeCategoryData(context: Context) {
         const val TABLE_INCOME_CATEGORIES = "income_categories"
         const val COLUMN_INCOME_CATEGORY_ID = "income_category_id"
         const val COLUMN_INCOME_CATEGORY_NAME = "income_category_name"
+
+
+        const val TABLE_INCOMES = "income"
+        const val COLUMN_INCOME_AMOUNT = "amount"
+        const val COLUMN_INCOME_DATE = "received_date"
+
     }
 
     fun addIncomeCategory(category: IncomeCategory) {
@@ -64,6 +71,36 @@ class IncomeCategoryData(context: Context) {
             }
         }
         return null
+    }
+
+    fun getBiggestIncomeCategory(startDate: Date? = null, endDate: Date? = null): IncomeCategory? {
+
+        // Construct the SQL query with optional date range filtering with protection against SQL injections
+        val sql = """
+        SELECT 
+            ic.${COLUMN_INCOME_CATEGORY_ID}, 
+            ic.${COLUMN_INCOME_CATEGORY_NAME}, 
+            SUM(i.${COLUMN_INCOME_AMOUNT}) AS total_amount 
+        FROM ${TABLE_INCOME_CATEGORIES} ic 
+        LEFT JOIN ${TABLE_INCOMES} i 
+            ON ic.${COLUMN_INCOME_CATEGORY_ID} = i.${COLUMN_INCOME_CATEGORY_ID}
+            ${if (startDate != null && endDate != null)
+            "AND i.${COLUMN_INCOME_DATE} BETWEEN ? AND ?" else ""}
+        GROUP BY ic.${COLUMN_INCOME_CATEGORY_ID}, ic.${COLUMN_INCOME_CATEGORY_NAME}
+        HAVING total_amount IS NOT NULL
+        ORDER BY total_amount DESC
+        LIMIT 1
+    """.trimIndent()
+
+        return db.rawQuery(sql, null).use { cursor ->
+            if (cursor.moveToFirst()) {
+                val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_CATEGORY_ID)))
+                val categoryName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_CATEGORY_NAME))
+                IncomeCategory(categoryId, categoryName)
+            } else {
+                null
+            }
+        }
     }
 
     fun getIncomeCategoryByName(categoryName: String): IncomeCategory? {

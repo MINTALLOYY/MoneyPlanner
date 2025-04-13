@@ -40,13 +40,16 @@ import kotlin.text.format
 import kotlin.text.toFloat
 import kotlin.text.withIndex
 import androidx.core.view.isVisible
+import com.vibhu.moneyplanner.categoryexpense.CategoryData
 
 class HomeFragment: Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var incomeData: IncomeData
+    private lateinit var incomeCategoryData: IncomeCategoryData
     private lateinit var expenseData: ExpenseData
+    private lateinit var expenseCategoryData: CategoryData
     private lateinit var initialBalanceData: InitialBalanceData
     private var currentBalance: Double = 0.0
     private lateinit var transactionHistoryList: List<Transaction>
@@ -87,7 +90,9 @@ class HomeFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         incomeData = IncomeData(requireContext())
+        incomeCategoryData = IncomeCategoryData(requireContext())
         expenseData = ExpenseData(requireContext())
+        expenseCategoryData = CategoryData(requireContext())
         initialBalanceData = InitialBalanceData(requireContext())
         transactionData = TransactionData(requireContext())
 
@@ -145,6 +150,12 @@ class HomeFragment: Fragment() {
         if (message != null) {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
+
+        val bigIncomeCategory = incomeCategoryData.getBiggestIncomeCategory(Date(2025, Calendar.JANUARY, 1))
+        Log.d("Biggest Income Source", bigIncomeCategory?.incomeCategoryName ?: "No income category found")
+
+        val bigExpenseCategory = expenseCategoryData.getBiggestExpenseCategory()
+        Log.d("Biggest Expense Category", bigExpenseCategory?.categoryName ?: "No expense category found")
     }
 
     private fun setupSearch() {
