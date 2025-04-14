@@ -106,6 +106,10 @@ class EditIncomeFragment : Fragment() {
                 }
             }
         }
+
+        binding.buttonCancelIncome.setOnClickListener {
+            goBackToIncomePage()
+        }
     }
 
     fun goBackToIncomePage(message: String? = null){

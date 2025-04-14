@@ -43,6 +43,10 @@ class AddIncomeCategoryFragment: Fragment() {
 
             goBackToIncomePage("Income category added successfully")
         }
+
+        binding.buttonCancel.setOnClickListener {
+            goBackToIncomePage()
+        }
     }
 
     fun goBackToIncomePage(message: String? = null){

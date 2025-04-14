@@ -61,6 +61,10 @@ class EditIncomeCategoryFragment : Fragment() {
             goBackToIncomePage("Income Category updated")
         }
 
+        binding.buttonCancelIncomeCategory.setOnClickListener {
+            goBackToIncomePage()
+        }
+
     }
 
     fun goBackToIncomePage(message: String? = null){

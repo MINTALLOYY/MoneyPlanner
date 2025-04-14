@@ -80,6 +80,10 @@ class AddIncomeFragment : Fragment() {
                 }
             }
         }
+
+        binding.buttonCancel.setOnClickListener {
+            goBackToIncomePage()
+        }
     }
 
     fun goBackToIncomePage(message: String? = null){
