@@ -5,16 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
-    android:background="@color/very_dark_grey">
+    android:background="@color/light_grey">
 
     <TextView
         android:id="@+id/addCategoryTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center|center_horizontal"
         android:text="ADD CATEGORY"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
+        style="@style/pageHeaders"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,8 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Category Name"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        style="@style/editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addCategoryTitle" />
@@ -36,20 +33,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Budget"
-        android:textColorHint="@color/white"
-        android:inputType="numberDecimal"  app:layout_constraintEnd_toEndOf="parent"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextCategoryName"
-        android:textColor="@color/white"/>
+        style="@style/editText"/>
 
     <Button
         android:id="@+id/buttonSaveCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/white"
+        style="@style/buttons"
         android:text="Save"
-        android:textColor="@color/very_dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonCancel"
         app:layout_constraintStart_toStartOf="parent" />
@@ -58,9 +54,8 @@
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
         android:text="Cancel"
-        android:textColor="@color/very_dark_grey"
+        style="@style/buttons"
         app:layout_constraintBottom_toBottomOf="@+id/buttonSaveCategory"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonSaveCategory" />

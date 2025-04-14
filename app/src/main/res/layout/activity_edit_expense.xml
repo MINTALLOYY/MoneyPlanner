@@ -6,16 +6,15 @@
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
     android:paddingHorizontal="16dp"
-    android:background="@color/very_dark_grey">
+    android:background="@color/light_grey">
 
     <TextView
         android:id="@+id/editExpenseTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:gravity="center|center_horizontal"
+        android:gravity="center"
         android:text="EDIT EXPENSE"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        style="@style/pageHeaders"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -27,8 +26,7 @@
         android:layout_marginTop="16dp"
         android:hint="Expense Name"
         android:inputType="text"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
+        style="@style/editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editExpenseTitle" />
@@ -38,12 +36,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Amount"
-        android:textColorHint="@color/white"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextExpenseName"
-        android:textColor="@color/white"/>
+        style="@style/editText"/>
 
     <DatePicker
         android:id="@+id/editTextExpenseDate"
@@ -54,7 +51,6 @@
         android:datePickerMode="spinner"
         android:hint="Date (yyyy-MM-dd)"
         android:inputType="date"
-        android:theme="@style/Theme.Material3.Dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextExpenseAmount" />
@@ -63,9 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/white"
+        style="@style/buttons"
         android:text="Save"
-        android:textColor="@color/very_dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonCancel"
         app:layout_constraintHorizontal_bias="0.5"
@@ -75,9 +70,8 @@
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        style="@style/buttons"
         android:text="Cancel"
-        android:textColor="@color/very_dark_grey"
         app:layout_constraintBottom_toBottomOf="@+id/buttonSaveExpense"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

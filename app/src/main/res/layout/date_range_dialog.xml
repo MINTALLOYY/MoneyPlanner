@@ -2,7 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/white">
 
     <TextView
         android:layout_width="match_parent"
@@ -14,18 +15,21 @@
         android:id="@+id/btnStartDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        style="@style/secondaryButtons"/>
 
     <Button
         android:id="@+id/btnEndDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        style="@style/secondaryButtons"/>
 
     <Button
         android:id="@+id/btnConfirmDates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Done"/>
+        android:text="Done"
+        style="@style/secondaryButtons"/>
 </LinearLayout>

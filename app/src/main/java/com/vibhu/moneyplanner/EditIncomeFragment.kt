@@ -50,8 +50,13 @@ class EditIncomeFragment : Fragment() {
 
                 binding.editTextIncomeName.setText(income.incomeLogName)
 
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                binding.editTextIncomeDate.setText(dateFormat.format(income.receivedDate))
+                val calendar = Calendar.getInstance()
+                calendar.time = income.receivedDate
+
+                val year = calendar.get(Calendar.YEAR)
+                val month = calendar.get(Calendar.MONTH)
+                val day = calendar.get(Calendar.DAY_OF_MONTH)
+                binding.editTextIncomeDate.updateDate(year, month, day)
 
                 incomeCategoryId = income.incomeCategoryId
             } else {
@@ -66,61 +71,41 @@ class EditIncomeFragment : Fragment() {
 
         binding.buttonSaveIncome.setOnClickListener {
             val newAmountStr = binding.editTextIncomeAmount.text.toString()
-            val newDateStr = binding.editTextIncomeDate.text.toString()
+            val newDateInfo = binding.editTextIncomeDate
             val incomeName = binding.editTextIncomeName.text.toString()
 
-            if (newAmountStr.isBlank() || newDateStr.isBlank() || incomeName.isBlank()) {
+            if (newAmountStr.isBlank() || incomeName.isBlank()) {
                 Toast.makeText(requireContext(), "Please fill in required fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            else{
+                try {
+                    val newAmount = newAmountStr.toDouble()
 
-            try {
-                val newAmount = newAmountStr.toDouble()
-                val newDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(newDateStr)
+                    // Extracting date from DatePicker
+                    val calendar = Calendar.getInstance()
+                    calendar.set(newDateInfo.year, newDateInfo.month, newDateInfo.dayOfMonth)
+                    val newDate = calendar.time
 
-                if (newDate != null) {
-                    val updatedIncome = Income(
-                        incomeId, // Keep the original incomeId
-                        newAmount,
-                        incomeCategoryId,
-                        newDate,
-                        incomeName
-                    )
+                    if (newDate != null) {
+                        val updatedIncome = Income(
+                            incomeId, // Keep the original incomeId
+                            newAmount,
+                            incomeCategoryId,
+                            newDate,
+                            incomeName
+                        )
 
-                    incomeData.updateIncome(updatedIncome)
-                    goBackToIncomePage("Income Updated")
-                } else {
-                    Toast.makeText(requireContext(), "Invalid date format", Toast.LENGTH_SHORT).show()
+                        incomeData.updateIncome(updatedIncome)
+                        goBackToIncomePage("Income Updated")
+                    } else {
+                        Toast.makeText(requireContext(), "Invalid date format", Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(requireContext(), "Invalid amount", Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: NumberFormatException) {
-                Toast.makeText(requireContext(), "Invalid amount", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun showDatePicker() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = Calendar.getInstance().apply {
-                    set(Calendar.YEAR, selectedYear)
-                    set(Calendar.MONTH, selectedMonth)
-                    set(Calendar.DAY_OF_MONTH, selectedDay)
-                }.time
-
-                val formattedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(selectedDate)
-                binding.editTextIncomeDate.setText(formattedDate)
-            },
-            year,
-            month,
-            day
-        )
-        datePickerDialog.show()
     }
 
     fun goBackToIncomePage(message: String? = null){

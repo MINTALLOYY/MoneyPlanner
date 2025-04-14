@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.ui.tooling.data.position
 import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis

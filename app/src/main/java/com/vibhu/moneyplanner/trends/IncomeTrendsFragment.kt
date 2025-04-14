@@ -87,7 +87,7 @@ class IncomeTrendsFragment : Fragment() {
 
         val dataSetLabel = if (timePeriod == "Yearly") "Yearly Income" else "Monthly Income"
         val dataSet = BarDataSet(entries, dataSetLabel)
-        dataSet.color = ContextCompat.getColor(requireContext(), R.color.green)
+        dataSet.color = ContextCompat.getColor(requireContext(), R.color.green_text)
         dataSet.valueTextColor = Color.WHITE
         dataSet.valueTextSize = 12f
 

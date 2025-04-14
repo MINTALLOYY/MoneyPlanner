@@ -5,17 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".IncomeCategoryFragment"
-    android:background="@color/very_dark_grey"
+    android:background="@color/light_grey"
     android:paddingTop="?attr/actionBarSize">
 
     <TextView
         android:id="@+id/IncomeSourceTitleName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:text="INCOME SOURCE"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
+        style="@style/pageHeaders"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,11 +21,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewIncomeCategories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        style="@style/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IncomeSourceTitleName" />
+        app:layout_constraintTop_toBottomOf="@+id/IncomeSourceTitleName"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/fabAddIncomeCategory"
@@ -35,9 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/white"
         android:text="Add Income Source"
-        android:textColor="@color/very_dark_grey"
+        style="@style/buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -5,17 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize"
-    android:background="@color/very_dark_grey">
+    android:background="@color/light_grey">
 
     <TextView
         android:id="@+id/categoryTitleName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CATEGORIES"
-        android:gravity="center_horizontal"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
-        android:textStyle="bold"
+        style="@style/pageHeaders"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewCategories"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,21 +21,22 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCategories"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/categoryTitleName" />
+        app:layout_constraintTop_toBottomOf="@id/categoryTitleName"
+        style="@style/recyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
         android:id="@+id/buttonAddCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="#FFFFFF"
+        style="@style/buttons"
         android:text="Add Category"
-        android:textColor="@color/very_dark_grey"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

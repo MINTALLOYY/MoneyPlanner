@@ -23,16 +23,7 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_brand" />
 
-        <TextView
-            android:id="@+id/toolbar_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:paddingHorizontal="16dp"
-            android:text=""
-            android:textColor="@color/dark_grey"
-            android:textSize="16sp" />
-        </androidx.appcompat.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/fragment_container"

@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize"
-    android:background="@color/very_dark_grey">
+    android:paddingHorizontal="16dp"
+    android:background="@color/light_grey">
 
     <TextView
         android:id="@+id/addIncomeTitle"
@@ -15,8 +16,7 @@
         android:layout_height="wrap_content"
         android:gravity="center|center_horizontal"
         android:text="LOG INCOME"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
+        style="@style/pageHeaders"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,9 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Income Log Name"
-        android:textColorHint="@color/light_grey"
-        android:textColor="@color/white"
         android:layout_marginTop="16dp"
+        style="@style/editText"
         app:layout_constraintTop_toBottomOf="@id/addIncomeTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -39,23 +38,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Amount"
+        style="@style/editText"
         android:inputType="numberDecimal"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDateReceived" />
-
-    <EditText
-        android:id="@+id/editTextDateReceived"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Received Date (MM/dd/yyyy)"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextIncomeName" />
+
+    <DatePicker
+        android:id="@+id/editTextDateReceived"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
+        app:layout_constraintTop_toBottomOf="@+id/editTextAmount" />
 
     <Button
         android:id="@+id/buttonAddIncome"
@@ -63,9 +60,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/white"
         android:text="Save"
-        android:textColor="@color/very_dark_grey"
+        style="@style/buttons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonCancel"
         app:layout_constraintStart_toStartOf="parent" />
@@ -74,9 +70,8 @@
         android:id="@+id/buttonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
         android:text="Cancel"
-        android:textColor="@color/very_dark_grey"
+        style="@style/buttons"
         app:layout_constraintBottom_toBottomOf="@+id/buttonAddIncome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonAddIncome" />

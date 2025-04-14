@@ -44,63 +44,42 @@ class AddIncomeFragment : Fragment() {
 
         incomeCategoryId = UUID.fromString(arguments?.getString(EXTRA_INCOME_CATEGORY_ID)!!)
 
-        receivedDateCalendar = Calendar.getInstance()
-
         binding.editTextIncomeName.setHint("Income Log " + (incomeData.getSizeOfIncomesInCategory(incomeCategoryId) + 1))
-
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-            receivedDateCalendar.set(Calendar.YEAR, year)
-            receivedDateCalendar.set(Calendar.MONTH, monthOfYear)
-            receivedDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            updateReceivedDateLabel()
-        }
-
-        binding.editTextDateReceived.setOnClickListener {
-            DatePickerDialog(
-                requireContext(),
-                dateSetListener,
-                receivedDateCalendar.get(Calendar.YEAR),
-                receivedDateCalendar.get(Calendar.MONTH),
-                receivedDateCalendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
 
         binding.buttonAddIncome.setOnClickListener {
             val amountStr = binding.editTextAmount.text.toString()
-            val receivedDateStr = binding.editTextDateReceived.text.toString()
+            val datePicker = binding.editTextDateReceived
             val incomeName = binding.editTextIncomeName.text.toString()
 
-            if (amountStr.isBlank() || receivedDateStr.isBlank()) {
+            if (amountStr.isBlank() || incomeName.isBlank()) {
                 Toast.makeText(requireContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            else{
+                try {
+                    val amount = amountStr.toDouble()
 
-            try {
-                val amount = amountStr.toDouble()
-                val receivedDate = receivedDateCalendar.time // Get Date from Calendar
+                    receivedDateCalendar = Calendar.getInstance()
+                    receivedDateCalendar.set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
+                    val receivedDate = receivedDateCalendar.time // Get Date from the DatePicker
 
-                val income = Income(
-                    amount = amount,
-                    incomeCategoryId = incomeCategoryId,
-                    receivedDate = receivedDate,
-                    incomeLogName = incomeName
-                )
-                incomeData.addIncome(income)
+                    val income = Income(
+                        amount = amount,
+                        incomeCategoryId = incomeCategoryId,
+                        receivedDate = receivedDate,
+                        incomeLogName = incomeName
+                    )
+                    incomeData.addIncome(income)
 
-                goBackToIncomePage("Income added successfully")
+                    goBackToIncomePage("Income Added")
 
-            } catch (e: NumberFormatException) {
-                Toast.makeText(requireContext(), "Invalid amount format", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error adding income: ${e.message}", Toast.LENGTH_SHORT).show()
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(requireContext(), "Invalid amount format", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Error adding income: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
-    }
-
-    private fun updateReceivedDateLabel() {
-        val myFormat = "MM/dd/yyyy"
-        val dateFormat = SimpleDateFormat(myFormat, Locale.US)
-        binding.editTextDateReceived.setText(dateFormat.format(receivedDateCalendar.time))
     }
 
     fun goBackToIncomePage(message: String? = null){

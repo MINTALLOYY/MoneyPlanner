@@ -64,7 +64,11 @@ class AddExpenseFragment: Fragment() {
                         calendar.set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
                         val date = calendar.time // Get the Date object from the DatePicker
 
-                        val newExpense = Expense(name = name, amount = amount, categoryId = categoryId, expenseDate = date)
+                        val newExpense = Expense(
+                            name = name,
+                            amount = amount,
+                            categoryId = categoryId,
+                            expenseDate = date)
                         expenseData.addExpense(newExpense)
 
                         goBackToExpensesPage("Expense Added")

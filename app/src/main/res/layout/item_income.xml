@@ -3,9 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:background="@drawable/list_border">
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/topListDivider"
+        style="@style/horizontalDividerSetUp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <View
+        android:id="@+id/representationOfExpenseIncomeTop"
+        style="@style/horizontalDividerSetUp"
+        android:background="@color/green_text"
+        app:layout_constraintTop_toBottomOf="@id/topListDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/textViewIncomeName"
@@ -13,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textViewIncomeDate"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,8 +35,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/grey"
         app:layout_constraintEnd_toEndOf="@+id/textViewIncomeName"
         app:layout_constraintStart_toStartOf="@id/textViewIncomeName"
         app:layout_constraintTop_toBottomOf="@+id/textViewIncomeName" />
@@ -35,18 +46,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayoutIncomeButtons"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/textViewIncomeDate"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayoutIncomeButtons" />
 
     <LinearLayout
         android:id="@+id/linearLayoutIncomeButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_margin="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -63,5 +73,20 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_delete" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/representationOfExpenseIncomeBottom"
+        style="@style/horizontalDividerSetUp"
+        android:background="@color/green_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomListDivider"/>
+
+    <View
+        android:id="@+id/bottomListDivider"
+        style="@style/horizontalDividerSetUp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,85 +4,126 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
+    android:paddingTop="?attr/actionBarSize">
 
     <TextView
         android:id="@+id/transactionDetailsTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Transaction Details"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:gravity="center"
+        style="@style/pageHeaders"
+        android:text="TRANSACTION DETAILS"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/transactionType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:text="Transaction Type: "
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactionDetailsTitle" />
 
-    <TextView
-        android:id="@+id/transactionCategoryName"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Transaction Category Name: "
-        app:layout_constraintStart_toStartOf="@+id/transactionName"
-        app:layout_constraintTop_toBottomOf="@+id/transactionName" />
-
-    <TextView
-        android:id="@+id/transactionName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Transaction Name: "
-        app:layout_constraintStart_toStartOf="@id/transactionType"
-        app:layout_constraintTop_toBottomOf="@+id/transactionType" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/transactionAmount"
-        android:layout_marginTop="32dp"
-        android:text="Transaction Amount: "
-        app:layout_constraintTop_toBottomOf="@+id/transactionCategoryName"
-        app:layout_constraintStart_toStartOf="@id/transactionCategoryName" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/transactionDate"
-        android:layout_marginTop="32dp"
-        android:text="Transaction Date: "
-        app:layout_constraintStart_toStartOf="@+id/transactionAmount"
-        app:layout_constraintTop_toBottomOf="@+id/transactionAmount"/>
-
-    <Button
-        android:id="@+id/editTransactionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit: Income/Expense"
-        app:layout_constraintBottom_toBottomOf="@+id/deleteTransactionButton"
-        app:layout_constraintEnd_toStartOf="@+id/deleteTransactionButton"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/deleteTransactionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="128dp"
-        android:text="Delete: Income/Expense"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/white_container"
+        android:padding="16dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="64dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTransactionButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionDetailsTitle">
 
+
+        <TextView
+            android:id="@+id/transactionType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:text="Transaction Type: "
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/transactionCategoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Transaction Category Name: "
+            app:layout_constraintStart_toStartOf="@id/transactionType"
+            app:layout_constraintTop_toBottomOf="@+id/transactionType" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_container"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transactionCategoryName" >
+
+            <TextView
+                android:id="@+id/transactionName"
+                style="@style/darkCardText"
+                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transaction Name: " />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@color/light_grey"/>
+
+            <TextView
+                android:id="@+id/transactionAmount"
+                style="@style/darkCardText"
+                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transaction Amount: " />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@color/light_grey"/>
+
+            <TextView
+                android:id="@+id/transactionDate"
+                style="@style/darkCardText"
+                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transaction Date: " />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+            android:id="@+id/editTransactionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit: Income/Expense"
+        style="@style/buttons"
+            app:layout_constraintBottom_toBottomOf="@+id/deleteTransactionButton"
+            app:layout_constraintEnd_toStartOf="@+id/deleteTransactionButton"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/deleteTransactionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            style="@style/buttons"
+            android:text="Delete: Income/Expense"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/editTransactionButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

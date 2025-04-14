@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black">
+    android:background="@color/light_grey">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="fixed"
+        app:tabTextColor="@color/dark_grey"
+        app:tabIndicatorAnimationMode="linear"
+        android:background="@color/light_grey"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -40,6 +43,7 @@
         android:id="@+id/pieTimeChanger"
         android:text="Last 30 days"
         android:layout_margin="16dp"
+        style="@style/buttons"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -50,6 +54,7 @@
         android:id="@+id/trendsTimeChanger"
         android:text="Monthly"
         android:layout_margin="16dp"
+        style="@style/buttons"
         app:layout_constraintBottom_toBottomOf="@+id/trends_pie_chart"
         app:layout_constraintEnd_toEndOf="parent" />
 

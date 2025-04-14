@@ -5,62 +5,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
-    >
+    android:paddingHorizontal="8dp"
+    android:paddingTop="?attr/actionBarSize"
+    android:background="@color/light_grey">
 
-    <LinearLayout
-        android:id="@+id/instructions"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:accessibilityLiveRegion="none"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/startCameraIntent"
+        style="@style/pageHeaders"
+        android:id="@+id/instructionTitle"
+        android:text="SCANNING INSTRUCTIONS"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/startCameraIntent"
+        style="@style/buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="128dp"
+        android:text="Scan Receipt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructionCards" />
+
+    <LinearLayout
+        android:id="@+id/instructionCards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:background="@drawable/gray_container"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginTop="128dp"
+        app:layout_constraintTop_toBottomOf="@+id/instructionTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="32dp"
-            android:textStyle="bold"
-            android:text="Take Your Reciept"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:text="Get Your Receipt Ready For Scanning"
+            style="@style/darkCardText" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="16dp"
+            android:background="@color/light_grey"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="32dp"
-            android:textStyle="bold"
-            android:text="Scan Your Reciept"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="32dp"
-            android:textStyle="bold"
-            android:text="Receipt Total will be added to Expenses"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:text="Scan Your Receipt to Add Expense"
+            style="@style/darkCardText" />
 
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/startCameraIntent"
-        android:text="Scan Receipt"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instructions" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

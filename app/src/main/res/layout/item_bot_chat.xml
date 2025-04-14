@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
     android:padding="16dp">
 
     <TextView
@@ -13,9 +14,8 @@
         android:paddingVertical="8dp"
         android:id="@+id/message"
         android:maxWidth="280dp"
-        android:text="sdfljfdljfdslkfjdlfjslkfjdlskjfldkjflkksjfkdjkfjdskfjksdjfdklsfjdlkfjdlsjfsldjfdslkfdkfljdlksjflkdfj"
         android:lineSpacingExtra="4dp"
-        android:textColor="@color/white"
+        android:textColor="@color/dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
