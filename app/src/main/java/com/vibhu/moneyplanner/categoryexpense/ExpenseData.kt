@@ -102,14 +102,10 @@ class ExpenseData(context: Context) {
         return expenses
     }
 
-    fun getTotalExpenseAmount(): Double {
+    fun getTotalExpenseAmount(dateFromToday: Date? = null): Double {
         val expenses = getAllExpenses()
-        var expenseAmount = 0.0
-
-        for (expense: Expense in expenses){
-            expenseAmount += expense.amount
-        }
-        return expenseAmount
+        if (dateFromToday == null) return expenses.sumOf { it.expense_amount }
+        return expenses.filter{ it.expenseDate >= dateFromToday }.sumOf{ it.expense_amount}
     }
 
     fun getExpensesInDateRange(startDate: Date, endDate: Date): List<Expense> {

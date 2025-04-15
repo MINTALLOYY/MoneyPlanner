@@ -108,6 +108,11 @@ class IncomeData(context: Context) {
         return Income(id, amount, categoryId, receivedDate, name)
     }
 
+    private fun getBiggestIncomeSourcesOutOfSources(incomeCategories: List<IncomeCategory>, dateFromToday: Date? = null){
+        listOfEarningsPerCategory = listOf<Double>()
+        for(incomeIncomeCategory)
+    }
+
     fun getIncomesByCategoryId(incomeCategoryId: UUID): List<Income> {
         val incomes = mutableListOf<Income>()
         val cursor = db.query(
@@ -149,14 +154,10 @@ class IncomeData(context: Context) {
         return null // Return null if no income is found
     }
 
-    fun getTotalIncomeAmount(): Double{
-        val incomes = getAllIncomes()
-        var incomeAmount = 0.0
-
-        for(income: Income in incomes){
-            incomeAmount += income.amount
-        }
-        return incomeAmount
+    fun getTotalIncomeAmount(dateFromToday: Date? = null): Double{
+        incomes = getAllIncomes
+        if(dateFromToday == null) return incomes.sumOf{ it.amount }
+        return incomes.filter{ it.received_date >= dateFromToday }.sumOf{ it.amount}
     }
 
     fun getSizeOfIncomesInCategory(incomeCategoryId: UUID): Int {

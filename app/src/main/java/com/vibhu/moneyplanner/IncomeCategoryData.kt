@@ -73,36 +73,6 @@ class IncomeCategoryData(context: Context) {
         return null
     }
 
-    fun getBiggestIncomeCategory(startDate: Date? = null, endDate: Date? = null): IncomeCategory? {
-
-        // Construct the SQL query with optional date range filtering with protection against SQL injections
-        val sql = """
-        SELECT 
-            ic.${COLUMN_INCOME_CATEGORY_ID}, 
-            ic.${COLUMN_INCOME_CATEGORY_NAME}, 
-            SUM(i.${COLUMN_INCOME_AMOUNT}) AS total_amount 
-        FROM ${TABLE_INCOME_CATEGORIES} ic 
-        LEFT JOIN ${TABLE_INCOMES} i 
-            ON ic.${COLUMN_INCOME_CATEGORY_ID} = i.${COLUMN_INCOME_CATEGORY_ID}
-            ${if (startDate != null && endDate != null)
-            "AND i.${COLUMN_INCOME_DATE} BETWEEN ? AND ?" else ""}
-        GROUP BY ic.${COLUMN_INCOME_CATEGORY_ID}, ic.${COLUMN_INCOME_CATEGORY_NAME}
-        HAVING total_amount IS NOT NULL
-        ORDER BY total_amount DESC
-        LIMIT 1
-    """.trimIndent()
-
-        return db.rawQuery(sql, null).use { cursor ->
-            if (cursor.moveToFirst()) {
-                val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_CATEGORY_ID)))
-                val categoryName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_CATEGORY_NAME))
-                IncomeCategory(categoryId, categoryName)
-            } else {
-                null
-            }
-        }
-    }
-
     fun getIncomeCategoryByName(categoryName: String): IncomeCategory? {
         val selection = "$COLUMN_INCOME_CATEGORY_NAME = ?"
         val selectionArgs = arrayOf(categoryName)
