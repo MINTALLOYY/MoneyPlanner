@@ -5,16 +5,19 @@
         android:id="@+id/navigation_home"
         android:title="Home"
         android:icon="@drawable/ic_home"
+        android:color="@color/black"
         android:iconTint="@color/black" />
     <item
         android:id="@+id/navigation_categories"
         android:title="Categories"
         android:icon="@drawable/ic_expense"
+        android:color="@color/black"
         android:iconTint="@color/black" />
     <item
         android:id="@+id/navigation_income_categories"
         android:title="Income"
-        android:icon="@drawable/ic_income"
+        android:icon="@drawable/ic_income"        
+        android:color="@color/black"
         android:iconTint="@color/black" />
 <!--    <item-->
 <!--        android:id="@+id/navigation_pie_chart"-->
@@ -24,11 +27,13 @@
         android:id="@+id/navigation_trend"
         android:title="Trend"
         android:icon="@drawable/ic_trend"
+        android:color="@color/black"
         android:iconTint="@color/black" />
     <item
         android:id="@+id/navigation_chatbot"
         android:title="Help Bot"
         android:icon="@drawable/ic_ai"
+        android:color="@color/black"
         android:iconTint="@color/black" />
 <!--    <item-->
 <!--        android:id="@+id/navigation_camera_test"-->
