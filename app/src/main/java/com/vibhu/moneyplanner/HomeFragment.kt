@@ -2,50 +2,36 @@ package com.vibhu.moneyplanner
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
 import java.util.Calendar
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.compose.foundation.layout.add
-import androidx.compose.ui.tooling.data.position
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.add
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vibhu.moneyplanner.categoryexpense.ExpenseData
 import com.vibhu.moneyplanner.databinding.FragmentHomeBinding
-import com.vibhu.moneyplanner.models.InitialBalance
 import com.vibhu.moneyplanner.models.Transaction
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import java.util.UUID
-import kotlin.text.format
-import kotlin.text.toFloat
-import kotlin.text.withIndex
 import androidx.core.view.isVisible
 import com.vibhu.moneyplanner.categoryexpense.CategoryData
 
 class HomeFragment: Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    internal val binding get() = _binding!!
     private lateinit var incomeData: IncomeData
     private lateinit var incomeCategoryData: IncomeCategoryData
     private lateinit var expenseData: ExpenseData
@@ -108,12 +94,9 @@ class HomeFragment: Fragment() {
 
         initialBalance = 0.0 + balance
 
-        var sharedPreferences = (requireActivity() as MainActivity).sharedPreferences
-        var userId = UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null))
-
         getCurrentBalance()
-        binding.currentBalance.text = currentBalance.toString()
         Log.d("currentBalance", "" + currentBalance)
+        updateInfoCards()
 
         getTransactionHistory()
 
@@ -141,7 +124,7 @@ class HomeFragment: Fragment() {
         setupSearch()
         setupFiltering()
 
-        setFragment(WeeklyFragment())
+        setGraphFragment(WeeklyFragment())
         binding.weeklyMonthlyChanger.setOnClickListener{
             changeFragment()
         }
@@ -151,11 +134,32 @@ class HomeFragment: Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         }
 
-        val bigIncomeCategory = incomeCategoryData.getBiggestIncomeCategory(Date(2025, Calendar.JANUARY, 1))
-        Log.d("Biggest Income Source", bigIncomeCategory?.incomeCategoryName ?: "No income category found")
+        binding.minimapChart.setOnClickListener {
+            scrollToBottom()
+        }
 
-        val bigExpenseCategory = expenseCategoryData.getBiggestExpenseCategory()
-        Log.d("Biggest Expense Category", bigExpenseCategory?.categoryName ?: "No expense category found")
+        val listOfDays = mutableListOf(
+            "All Time",
+            "Last 7 Days",
+            "Last 30 Days",
+            "Last 365 Days"
+        )
+        binding.infoCardsTimeChanger.setOnClickListener {
+            val currentIndex = listOfDays.indexOf(binding.infoCardsTimeChanger.text)
+            val nextIndex = (currentIndex + 1) % listOfDays.size
+            binding.infoCardsTimeChanger.text = listOfDays[nextIndex]
+            updateInfoCards(
+                daysAgo = when (listOfDays[nextIndex]) {
+                    "Last 7 Days" -> 7
+                    "Last 30 Days" -> 30
+                    "Last 365 Days" -> 365
+                    else -> {
+                        null
+                    }
+                }
+            )
+        }
+
     }
 
     private fun setupSearch() {
@@ -327,7 +331,7 @@ class HomeFragment: Fragment() {
 
     }
 
-    private fun setFragment(graphFragment: Fragment){
+    private fun setGraphFragment(graphFragment: Fragment){
         val fragmentManager = requireActivity().supportFragmentManager
         val transaction: FragmentTransaction = fragmentManager.beginTransaction()
         transaction.replace(binding.balanceChart.id, graphFragment)
@@ -337,11 +341,11 @@ class HomeFragment: Fragment() {
 
     private fun changeFragment(){
         if(binding.weeklyMonthlyChanger.text == "Change to Monthly"){
-            setFragment(MonthlyFragment())
+            setGraphFragment(MonthlyFragment())
             binding.weeklyMonthlyChanger.text = "Change to Weekly"
         }
         else{
-            setFragment(WeeklyFragment())
+            setGraphFragment(WeeklyFragment())
             binding.weeklyMonthlyChanger.text = "Change to Monthly"
         }
     }
@@ -389,6 +393,14 @@ class HomeFragment: Fragment() {
         return allTransactions
     }
 
+    private fun scrollToBottom(){
+        binding.rootLayout.post {
+            // Find the ScrollView parent
+            val scrollView = binding.rootLayout.parent as? ScrollView
+            scrollView?.smoothScrollTo(0, binding.balanceChart.bottom)
+        }
+    }
+
     private fun navigateToTransactionDetails(transaction: Transaction){
         val bundle = Bundle()
         bundle.putString("transaction_id", transaction.id.toString())
@@ -402,6 +414,35 @@ class HomeFragment: Fragment() {
         fragmentTransaction.replace(R.id.fragment_container, transactionDetailsFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
+    }
+
+    private fun updateInfoCards(daysAgo: Int? = null){
+
+        var lastDate: Date? = null
+        if (daysAgo != null) {
+            val cal = Calendar.getInstance()
+            cal.add(Calendar.DAY_OF_WEEK, -daysAgo)
+            lastDate = cal.time
+            Log.d("Date", lastDate.toString())
+            Log.d("Date", Date().toString())
+        }
+
+        val biggestCategory = expenseCategoryData.getBiggestExpenseCategory(startDate=Date(), endDate=lastDate)
+        val biggestIncomeSource = incomeCategoryData.getBiggestIncomeCategory(startDate=Date(), endDate=lastDate)
+        Log.d("Biggest Categories", "Biggest Category: ${biggestCategory?.categoryName}, Biggest Income Source: ${biggestIncomeSource?.incomeCategoryName}")
+
+        binding.currentBalance.text = "$${currentBalance}"
+        if (currentBalance < 0.0) binding.currentBalance.text = "-$${currentBalance}"
+
+        binding.expenseCategoryName.text = "${biggestCategory?.categoryName}"
+        binding.expenseCategoryAmount.text = "-$${expenseData.getTotalSpentInCategory(biggestCategory?.categoryId, lastDate)}"
+
+        binding.incomeSourceName.text = "${biggestIncomeSource?.incomeCategoryName}"
+        binding.incomeSourceAmount.text = "+$${incomeData.getTotalEarnedInSource(biggestIncomeSource?.incomeCategoryId, lastDate)}"
+
+        binding.totalSpent.text = "-$${expenseData.getTotalExpenseAmount(lastDate)}"
+        binding.totalEarned.text = "+$${incomeData.getTotalIncomeAmount(lastDate)}"
+
     }
 
     override fun onDestroy() {

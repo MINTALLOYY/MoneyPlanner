@@ -103,24 +103,38 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All Time"
+            android:id="@+id/infoCardsTimeChanger"
+            style="@style/buttons"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/informationCards"
+            app:layout_constraintTop_toBottomOf="@id/searchTransaction"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/informationCards"
-            android:layout_margin="16dp"
-            android:padding="8dp"
+            android:layout_marginHorizontal="16dp"
+            android:padding="16dp"
             android:background="@drawable/white_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchTransaction" >
+            app:layout_constraintTop_toBottomOf="@+id/infoCardsTimeChanger">
 
             <TextView
+                android:id="@+id/titleBalance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/titleBalance"
                 android:text="Current Balance"
+                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -134,12 +148,13 @@
                 android:background="@drawable/gold_container"
                 android:textColor="@color/dark_gold" />
 
-            <com.github.mikephil.charting.charts.BarChart
+            <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/minimapChart"
                 android:layout_width="180dp"
                 android:layout_height="0dp"
                 android:layout_weight="0.2"
                 android:layout_marginTop="8dp"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="@+id/currentBalance"/>
@@ -165,14 +180,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Spent"
+                        android:layout_marginBottom="4dp"
                         android:textColor="@color/light_grey"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/totalSpent"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="- $ 34,454.00"
-                        android:textColor="@color/white"/>
+                        android:text="-$ 34,454.00"
+                        style="@style/redTextCard"/>
 
                 </LinearLayout>
 
@@ -194,14 +211,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Earned"
+                        android:layout_marginBottom="4dp"
                         android:textColor="@color/light_grey"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/totalEarned"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="+ $ 36,794.75"
-                        android:textColor="@color/white"/>
+                        android:text="+$ 36,794.75"
+                        style="@style/greenTextCard" />
 
                 </LinearLayout>
 
@@ -236,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="16dp"
+                        android:padding="8dp"
                         android:gravity="center">
 
                         <TextView
@@ -248,9 +267,17 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/expenseCategoryName"
+                            android:text="Groceries"
+                            style="@style/darkCardText"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/expenseCategoryAmount"
+                            android:text="-$ 2,349,454.00"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:text="- $ 34,454.00"
-                            android:textColor="@color/white"/>
+                            style="@style/redTextCard"/>
 
                     </LinearLayout>
 
@@ -265,21 +292,28 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="16dp"
+                        android:padding="8dp"
                         android:gravity="center">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Earned"
+                            android:text="Income Sources"
                             android:textColor="@color/light_grey"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/incomeSourceName"
+                            style="@style/darkCardText"
+                            android:text="McDonald's Job" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/incomeSourceAmount"
+                            android:text="+$ 2,336,794.75"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:text="+ $ 36,794.75"
-                            android:textColor="@color/white"/>
+                            style="@style/greenTextCard" />
 
                     </LinearLayout>
 
@@ -294,7 +328,9 @@
             android:id="@+id/transactionHistory"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="32dp"
+            android:padding="16dp"
+            android:scrollIndicators="right"
             android:background="@drawable/white_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -304,10 +340,10 @@
             android:id="@+id/weeklyMonthlyChanger"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
             android:layout_marginEnd="64dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginVertical="16dp"
             android:text="Change to Monthly"
+            style="@style/buttons"
             app:layout_constraintBottom_toTopOf="@+id/balanceChart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/transactionHistory" />
@@ -319,8 +355,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weeklyMonthlyChanger"
-            tools:layout_editor_absoluteY="500dp" />
+            app:layout_constraintTop_toBottomOf="@+id/weeklyMonthlyChanger" />
 
         <!-- Add this as the LAST child in your ConstraintLayout -->
         <androidx.recyclerview.widget.RecyclerView

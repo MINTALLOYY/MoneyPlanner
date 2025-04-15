@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.ui.tooling.data.position
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -33,6 +34,7 @@ import java.util.Locale
 import java.util.UUID
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.round
 
 class WeeklyFragment : Fragment() {
 
@@ -58,7 +60,7 @@ class WeeklyFragment : Fragment() {
         val userId = UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null))
 
         val balanceEntries = calculateBalanceEntries(userId)
-        setupChart(balanceEntries)
+        setupChartWithMinimap(balanceEntries)
     }
 
     private fun calculateBalanceEntries(userId: UUID): List<Pair<Date, Double>> {
@@ -146,7 +148,95 @@ class WeeklyFragment : Fragment() {
         return weeklyBalances.distinctBy { it.first }
     }
 
-    // Helper function to normalize dates to midnight
+
+    private fun setupChartWithMinimap(balanceEntries: List<Pair<Date, Double>>) {
+
+        Log.e("WeeklyFragment", "Set Up Main Chart")
+
+        // Set up normal chart
+        setupChart(balanceEntries)
+
+        Log.e("WeeklyFragment", "Retrieving Minimap")
+        // Retrieve the minimap chart from the HomeFragment
+        val homeFragment = parentFragmentManager.findFragmentById(R.id.fragment_container) as? HomeFragment
+        val minimapChart = homeFragment?.binding?.minimapChart
+
+        // Test if minimap exists (REMOVE BEFORE PRESENTATION)
+        if (minimapChart == null) {
+            Log.e("WeeklyFragment", "Minimap chart not found in HomeFragment")
+            return
+        }
+
+        // Entries for minimap (same data, different formatting)
+        val sortedEntries = balanceEntries.sortedBy { it.first }
+        val entries = sortedEntries.mapIndexed { index, (_, balance) ->
+            Entry(index.toFloat(), balance.toFloat())
+        }
+
+        // Dataset creation
+        val minimapDataSet = LineDataSet(entries, "").apply {
+            color = ContextCompat.getColor(requireContext(), R.color.metallic_gold)
+            lineWidth = 1.5f
+            setDrawCircles(false)
+            setDrawValues(false)
+        }
+
+        // Minimap configuration
+        configureMinimap(minimapChart, minimapDataSet, entries)
+
+        // Refresh minimap
+        minimapChart.invalidate()
+
+
+    }
+
+    private fun configureMinimap(chart: LineChart, dataSet: LineDataSet, entries: List<Entry>) {
+        // Minimap specific configuration
+        chart.apply {
+            data = LineData(dataSet)
+            description.isEnabled = false
+            legend.isEnabled = false
+            setDrawGridBackground(false)
+            setScaleEnabled(false)
+            setPinchZoom(false)
+            isDoubleTapToZoomEnabled = false
+
+            // Hide all the details on the minimap
+            xAxis.apply {
+                setDrawLabels(false)
+                setDrawGridLines(false)
+                setDrawAxisLine(true)
+                textColor = Color.TRANSPARENT
+            }
+
+            axisLeft.apply {
+                setDrawLabels(false)
+                setDrawGridLines(false)
+                setDrawAxisLine(true)
+                textColor = Color.TRANSPARENT
+            }
+
+            axisRight.isEnabled = false
+
+            dataSet.apply {
+                setDrawCircles(true)
+                setDrawCircleHole(false)
+                circleRadius = 4f
+                circleColors = List(entries.size - 1) { Color.TRANSPARENT } + listOf(
+                    ContextCompat.getColor(requireContext(), R.color.metallic_gold)
+                )
+                highLightColor = Color.TRANSPARENT
+            }
+
+            // Make it more compact
+            setViewPortOffsets(0f, 0f, 16f, 0f)
+
+            // No animations for the minimap
+            animateXY(500,500)
+        }
+    }
+
+    // Normalize dates to midnight
     private fun normalizeDate(date: Date): Date {
         return Calendar.getInstance().apply {
             time = date
@@ -157,7 +247,7 @@ class WeeklyFragment : Fragment() {
         }.time
     }
 
-    // Helper function for full date logging
+    // Full date logging
     private fun formatDateFull(date: Date): String {
         return SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault()).format(date)
     }
@@ -175,19 +265,21 @@ class WeeklyFragment : Fragment() {
         }
 
         val dataSet = LineDataSet(entries, "Weekly Balance").apply {
-            color = Color.BLUE
-            lineWidth = 2.5f
+            color = ContextCompat.getColor(requireContext(), R.color.metallic_gold)
+            lineWidth = 3f
             setDrawCircles(true)
-            circleRadius = 4f
+            circleRadius = 6f
             setDrawValues(false)
+            setDrawCircleHole(false)
+            circleColors = mutableListOf(ContextCompat.getColor(requireContext(), R.color.metallic_gold))
         }
 
         binding.balanceWeekly.apply {
 
             // 2. Set data and viewport
             data = LineData(dataSet)
-            setViewPortOffsets(50f, 20f, 50f, 50f)
-            setBackgroundColor(Color.WHITE)
+            setViewPortOffsets(50f, 20f, 50f, 150f)
+            setBackgroundColor(Color.TRANSPARENT)
 
             // 3. Force proper initial layout
             post {
@@ -223,6 +315,19 @@ class WeeklyFragment : Fragment() {
                 axisMinimum = balanceEntries.minOfOrNull { it.second }?.toFloat()?.minus(100) ?: 0f
                 axisMaximum = balanceEntries.maxOfOrNull { it.second }?.toFloat()?.plus(100) ?: 0f
                 granularity = 100f
+
+                // Formatting for large numbers
+                valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return when {
+                            value >= 1000000 -> "${(value/1000000).toString().take(3)}M"
+                            value >= 1000 -> "${round(value / 1000).toString().take(3)}k"
+                            value <= -1000000 -> "-${(-value/1000000).toString().take(3)}M"
+                            value <= -1000 -> "-${(-value / 1000).toString().take(3)}k"
+                            else -> value.toInt().toString()
+                        }
+                    }
+                }
             }
 
             // X-Axis (Bottom)
@@ -248,16 +353,17 @@ class WeeklyFragment : Fragment() {
 
             // Legend
             legend.apply {
-                verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-                horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                verticalAlignment = Legend.LegendVerticalAlignment.TOP
+                horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
                 orientation = Legend.LegendOrientation.HORIZONTAL
-                yOffset = 25f
                 xOffset = 0f
+                setDrawInside(false) // Ensure legend is drawn outside the chart
+                yOffset = 10f // Add some space between x-axis labels and legend
             }
 
             // General Chart Settings
             setExtraLeftOffset(20f)
-            setViewPortOffsets(70f, 30f, 50f, 70f)  // left, top, right, bottom
+            setViewPortOffsets(70f, 60f, 50f, 70f)  // left, top, right, bottom
             description.isEnabled = false
             setDrawGridBackground(false)
             invalidate()
