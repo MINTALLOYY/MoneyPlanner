@@ -319,11 +319,11 @@ class MonthlyFragment : Fragment() {
 
             // Legend
             legend.apply {
-                verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-                horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                verticalAlignment = Legend.LegendVerticalAlignment.TOP
+                horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
                 orientation = Legend.LegendOrientation.HORIZONTAL
-                yOffset = 25f
-                xOffset = 0f
+                setDrawInside(false) // Ensure legend is drawn outside the chart
+                yOffset = 10f // Add some space between x-axis labels and legend                xOffset = 0f
             }
 
             // General Chart Settings
