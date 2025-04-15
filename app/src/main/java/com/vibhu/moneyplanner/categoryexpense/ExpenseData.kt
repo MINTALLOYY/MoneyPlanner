@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vibhu.moneyplanner.DatabaseHelper
 import com.vibhu.moneyplanner.Expense
-import com.vibhu.moneyplanner.models.Category
 import java.util.Date
 import java.util.UUID
 
@@ -57,7 +56,7 @@ class ExpenseData(context: Context) {
         return null // Return null if no matching expense is found
     }
 
-    fun getExpensesByCategoryId(categoryId: UUID): List<Expense> {
+    fun getExpensesByCategoryId(categoryId: UUID?): List<Expense> {
         val expenses = mutableListOf<Expense>()
         val selection = "$COLUMN_CATEGORY_ID =?"
         val selectionArgs = arrayOf(categoryId.toString())
@@ -102,14 +101,10 @@ class ExpenseData(context: Context) {
         return expenses
     }
 
-    fun getTotalExpenseAmount(): Double {
+    fun getTotalExpenseAmount(dateFromToday: Date? = null): Double {
         val expenses = getAllExpenses()
-        var expenseAmount = 0.0
-
-        for (expense: Expense in expenses){
-            expenseAmount += expense.amount
-        }
-        return expenseAmount
+        if(dateFromToday == null) return expenses.sumOf { it.amount }
+        return expenses.filter { it.expenseDate >= dateFromToday }.sumOf { it.amount }
     }
 
     fun getExpensesInDateRange(startDate: Date, endDate: Date): List<Expense> {
@@ -141,5 +136,11 @@ class ExpenseData(context: Context) {
 
     fun close() {
         dbHelper.close()
+    }
+
+    fun getTotalSpentInCategory(categoryId: UUID?, dateFromToday: Date? = null): Double {
+        val expenses = getExpensesByCategoryId(categoryId)
+        if(dateFromToday == null) return expenses.sumOf { it.amount }
+        return expenses.filter { it.expenseDate >= dateFromToday }.sumOf { it.amount }
     }
 }

@@ -5,9 +5,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_CATEGORY_ID
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.TABLE_INCOME_CATEGORIES
-import com.vibhu.moneyplanner.categoryexpense.ExpenseData.Companion.COLUMN_EXPENSE_DATE
 import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.*
@@ -108,7 +105,7 @@ class IncomeData(context: Context) {
         return Income(id, amount, categoryId, receivedDate, name)
     }
 
-    fun getIncomesByCategoryId(incomeCategoryId: UUID): List<Income> {
+    fun getIncomesByCategoryId(incomeCategoryId: UUID?): List<Income> {
         val incomes = mutableListOf<Income>()
         val cursor = db.query(
             TABLE_INCOMES,
@@ -149,14 +146,16 @@ class IncomeData(context: Context) {
         return null // Return null if no income is found
     }
 
-    fun getTotalIncomeAmount(): Double{
+    fun getTotalIncomeAmount(dateFromToday: Date?): Double{
         val incomes = getAllIncomes()
-        var incomeAmount = 0.0
+        if(dateFromToday == null) return incomes.sumOf { it.amount }
+        return incomes.filter { it.receivedDate >= dateFromToday }.sumOf { it.amount }
+    }
 
-        for(income: Income in incomes){
-            incomeAmount += income.amount
-        }
-        return incomeAmount
+    fun getTotalEarnedInSource(incomeCategoryId: UUID?, dateFromToday: Date? = null): Double{
+        val incomes = getIncomesByCategoryId(incomeCategoryId)
+        if (dateFromToday == null) return incomes.sumOf { it.amount }
+        return incomes.filter { it.receivedDate >= dateFromToday }.sumOf { it.amount }
     }
 
     fun getSizeOfIncomesInCategory(incomeCategoryId: UUID): Int {

@@ -4,7 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.vibhu.moneyplanner.models.IncomeCategory
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import java.util.UUID
 
 class IncomeCategoryData(context: Context) {
@@ -74,8 +76,7 @@ class IncomeCategoryData(context: Context) {
     }
 
     fun getBiggestIncomeCategory(startDate: Date? = null, endDate: Date? = null): IncomeCategory? {
-
-        // Construct the SQL query with optional date range filtering with protection against SQL injections
+        // Construct the SQL query with optional date range filtering
         val sql = """
         SELECT 
             ic.${COLUMN_INCOME_CATEGORY_ID}, 
@@ -85,14 +86,22 @@ class IncomeCategoryData(context: Context) {
         LEFT JOIN ${TABLE_INCOMES} i 
             ON ic.${COLUMN_INCOME_CATEGORY_ID} = i.${COLUMN_INCOME_CATEGORY_ID}
             ${if (startDate != null && endDate != null)
-            "AND i.${COLUMN_INCOME_DATE} BETWEEN ? AND ?" else ""}
+            "WHERE i.${COLUMN_INCOME_DATE} BETWEEN ? AND ?" else ""}
         GROUP BY ic.${COLUMN_INCOME_CATEGORY_ID}, ic.${COLUMN_INCOME_CATEGORY_NAME}
         HAVING total_amount IS NOT NULL
         ORDER BY total_amount DESC
         LIMIT 1
     """.trimIndent()
 
-        return db.rawQuery(sql, null).use { cursor ->
+        // Prepare query arguments for date range
+        val selectionArgs = if (startDate != null && endDate != null) {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            arrayOf(sdf.format(startDate), sdf.format(endDate))
+        } else {
+            null
+        }
+
+        return db.rawQuery(sql, selectionArgs).use { cursor ->
             if (cursor.moveToFirst()) {
                 val categoryId = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_CATEGORY_ID)))
                 val categoryName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_INCOME_CATEGORY_NAME))
