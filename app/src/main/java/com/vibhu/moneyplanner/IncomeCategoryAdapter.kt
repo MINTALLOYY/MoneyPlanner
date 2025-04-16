@@ -21,6 +21,7 @@ class IncomeCategoryAdapter(
         val nameTextView: TextView = itemView.findViewById(R.id.textViewIncomeCategoryName)
         val editButton: ImageButton = itemView.findViewById(R.id.buttonEditIncomeCategory)
         val deleteButton: ImageButton = itemView.findViewById(R.id.buttonDeleteIncomeCategory)
+        val earnedTextView: TextView = itemView.findViewById(R.id.textViewEarned)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IncomeCategoryViewHolder {
@@ -32,6 +33,10 @@ class IncomeCategoryAdapter(
         val incomeCategory = incomeCategories[position]
 
         holder.nameTextView.text = incomeCategory.incomeCategoryName
+
+        val incomeData = IncomeData(context)
+        holder.earnedTextView.text = NumberFormat.getCurrencyInstance(Locale.US).format(roundingTwoDecimals(incomeData.getTotalEarnedInSource(incomeCategory.incomeCategoryId, null)))
+
 
         holder.itemView.setOnClickListener {
             onItemClick(incomeCategory) // Item click

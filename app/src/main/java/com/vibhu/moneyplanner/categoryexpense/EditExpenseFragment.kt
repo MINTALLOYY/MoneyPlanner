@@ -48,7 +48,7 @@ class EditExpenseFragment: Fragment() {
             val expense = expenseData.getExpenseById(expenseId)
             if (expense!= null) {
                 binding.editTextExpenseName.setText(expense.name)
-                binding.editTextExpenseAmount.setText(expense.amount.toString())
+                binding.editTextExpenseAmount.setText(roundingTwoDecimals(expense.amount).toString())
 
                 // Set date picker to the date of when the expense was recorded
                 val calendar = Calendar.getInstance()
@@ -77,9 +77,12 @@ class EditExpenseFragment: Fragment() {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // Stop further execution
             }
+            if (newName.length > 16){
+                Toast.makeText(requireContext(), "No more than 16 characters in the name fields")
+            }
 
             try {
-                val newAmount = newAmountStr.toDouble()
+                val newAmount = roundingTwoDecimals(newAmountStr.toDouble())
 
                 val calendar = Calendar.getInstance()
                 calendar.set(newDateInfo.year, newDateInfo.month, newDateInfo.dayOfMonth)

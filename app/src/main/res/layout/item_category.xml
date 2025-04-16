@@ -35,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/textViewBudget"
+        android:id="@+id/textViewSpent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Budget"

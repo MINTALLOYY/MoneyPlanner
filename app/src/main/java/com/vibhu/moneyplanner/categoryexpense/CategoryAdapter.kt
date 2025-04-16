@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.vibhu.moneyplanner.R // Import your R file
+import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.models.Category
 import java.text.NumberFormat
 import java.util.Locale
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class CategoryAdapter(
     private var categories: List<Category>,
@@ -22,13 +23,13 @@ class CategoryAdapter(
 
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.textViewCategoryName)
-        val budgetTextView: TextView = itemView.findViewById(R.id.textViewBudget)
+        val spentTextView: TextView = itemView.findViewById(R.id.textViewSpent)
         val editButton: ImageButton = itemView.findViewById(R.id.buttonEditCategory) // Correct ID
         val deleteButton: ImageButton = itemView.findViewById(R.id.buttonDeleteCategory) // Correct ID
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false) // Replace with your item layout
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false) 
         return CategoryViewHolder(view)
     }
 
@@ -36,8 +37,10 @@ class CategoryAdapter(
         val category = categories[position]
 
         holder.nameTextView.text = category.categoryName
-        val formattedBudget = NumberFormat.getCurrencyInstance(Locale.US).format(category.budget)
-        holder.budgetTextView.text = formattedBudget
+
+        val expenseData = ExpenseData(context)
+        val formattedSpent = NumberFormat.getCurrencyInstance(Locale.US).format(roundingTwoDecimals(expenseData.getTotalSpentInCategory(category.categoryId, null)))
+        holder.budgetTextView.text = formattedSpent
 
         holder.itemView.setOnClickListener {  // Click listener for the entire item
             onItemClick(category)

@@ -10,6 +10,7 @@ import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.ActivityEditCategoryBinding
 import com.vibhu.moneyplanner.models.Category
 import java.util.UUID
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class EditCategoryFragment : Fragment(){
 
@@ -61,7 +62,7 @@ class EditCategoryFragment : Fragment(){
 
             if (newName.isNotBlank() && newBudgetStr.isNotBlank()) {
                 try {
-                    val newBudget = newBudgetStr.toDouble()
+                    val newBudget = roundingTwoDecimals(newBudgetStr.toDouble())
                     val updatedCategory = Category(categoryId, newName, newBudget) // Use existing ID
 
                     categoryData.updateCategory(updatedCategory)

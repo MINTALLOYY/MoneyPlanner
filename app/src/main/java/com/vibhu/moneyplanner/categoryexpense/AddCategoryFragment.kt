@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.FragmentAddCategoryBinding
 import com.vibhu.moneyplanner.models.Category
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class AddCategoryFragment : Fragment() {
 
@@ -48,7 +49,7 @@ class AddCategoryFragment : Fragment() {
                         return@setOnClickListener
                     }
 
-                    val budget = budgetStr.toDouble()
+                    val budget = roundingTwoDecimals(budgetStr.toDouble())
                     val newCategory = Category(categoryName = categoryName, budget = budget)
                     categoryData.addCategory(newCategory)
 

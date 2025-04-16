@@ -47,7 +47,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/filterButton"
             app:layout_constraintTop_toBottomOf="@id/filterButton"
             app:cardElevation="32dp">

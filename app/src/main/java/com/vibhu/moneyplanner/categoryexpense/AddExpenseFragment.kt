@@ -14,6 +14,7 @@ import com.vibhu.moneyplanner.databinding.FragmentAddExpenseBinding
 import java.util.Calendar
 import java.util.UUID
 import kotlin.math.exp
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class AddExpenseFragment: Fragment() {
 
@@ -65,7 +66,7 @@ class AddExpenseFragment: Fragment() {
                             return@setOnClickListener
                         }
 
-                        val amount = amountStr.toDouble()
+                        val amount = roundingTwoDecimals(amountStr.toDouble())
                         val calendar = Calendar.getInstance()
                         calendar.set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
                         val date = calendar.time // Get the Date object from the DatePicker
