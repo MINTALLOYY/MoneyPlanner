@@ -57,8 +57,8 @@ class PieChartExpenseFragment : Fragment() {
         val entries = mutableListOf<PieEntry>()
         val colorsAvailable = mutableListOf<Int>(
             ContextCompat.getColor(requireContext(), R.color.dark_grey),  // Convert color resource to color integer
-            ContextCompat.getColor(requireContext(), R.color.green_text),
-            ContextCompat.getColor(requireContext(), R.color.off_white),
+            ContextCompat.getColor(requireContext(), R.color.red_text),
+            ContextCompat.getColor(requireContext(), R.color.grey),
             ContextCompat.getColor(requireContext(), R.color.metallic_gold),
             ContextCompat.getColor(requireContext(), R.color.red),
         )
@@ -121,11 +121,11 @@ class PieChartExpenseFragment : Fragment() {
 
         binding.pieChart.apply {
             setDrawEntryLabels(true)
-            setEntryLabelColor(Color.WHITE)
+            setEntryLabelColor(Color.BLACK)
             clipToOutline = true
 
             description.isEnabled = true
-            description.textColor = Color.WHITE
+            description.textColor = Color.BLACK
             if (numberOfDays != Int.MAX_VALUE) description.text = "Last ${numberOfDays} Days"
             else description.text = "All Time"
 

@@ -26,7 +26,7 @@
         android:layout_marginStart="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
-        android:fontFamily="@font/lexend_peta_variable_font_wght"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintBottom_toTopOf="@+id/textViewIncomeDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

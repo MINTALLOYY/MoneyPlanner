@@ -88,7 +88,7 @@ class IncomeTrendsFragment : Fragment() {
         val dataSetLabel = if (timePeriod == "Yearly") "Yearly Income" else "Monthly Income"
         val dataSet = BarDataSet(entries, dataSetLabel)
         dataSet.color = ContextCompat.getColor(requireContext(), R.color.green_text)
-        dataSet.valueTextColor = Color.WHITE
+        dataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.black)
         dataSet.valueTextSize = 12f
 
         val barData = BarData(dataSet)
@@ -112,13 +112,13 @@ class IncomeTrendsFragment : Fragment() {
         xAxis.position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
         xAxis.valueFormatter = IndexAxisValueFormatter(labels)
         xAxis.labelCount = labels.size
-        xAxis.textColor = Color.WHITE
+        xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.black)
         xAxis.granularity = 1f
         xAxis.textSize = 12f
 
         // Y-axis (Left) - Auto-scaling with 10% margin
         val yAxisLeft = chart.axisLeft.apply {
-            textColor = Color.WHITE
+            textColor = ContextCompat.getColor(requireContext(), R.color.black)
             setDrawGridLines(true)
 
             axisMinimum = 0f
@@ -152,7 +152,7 @@ class IncomeTrendsFragment : Fragment() {
         yAxisRight.isEnabled = false
 
         // Additional chart settings
-        chart.legend.textColor = Color.WHITE
+        chart.legend.textColor = ContextCompat.getColor(requireContext(), R.color.black)
         chart.setExtraOffsets(0f, 0f, 0f, 10f) // Add padding if needed
         chart.animateY(1000) // Smooth animation
     }

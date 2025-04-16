@@ -29,7 +29,7 @@
         android:layout_marginLeft="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
-        android:fontFamily="@font/lexend_peta_variable_font_wght"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
