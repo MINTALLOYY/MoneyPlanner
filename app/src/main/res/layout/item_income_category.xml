@@ -24,10 +24,22 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_marginStart="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayoutIncomeCategoryButtons"
+        android:fontFamily="@font/lexend_peta_variable_font_wght"
+        android:text="McDonald's Job"
+        app:layout_constraintEnd_toStartOf="@+id/textViewEarned"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:id="@+id/textViewEarned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Budget"
+        android:gravity="end"
+        android:fontFamily="@font/questrial_regular"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayoutIncomeCategoryButtons"
+        app:layout_constraintStart_toEndOf="@id/textViewIncomeCategoryName"
+        app:layout_constraintTop_toTopOf="@id/textViewIncomeCategoryName" />
 
     <LinearLayout
         android:id="@+id/linearLayoutIncomeCategoryButtons"

@@ -29,6 +29,8 @@
         android:layout_marginStart="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
+        android:text="McDonald's Job"
+        android:fontFamily="@font/lexend_peta_variable_font_wght"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,6 +41,8 @@
         android:layout_alignParentEnd="true"
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
+        android:text="+ $125.85"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,6 +54,8 @@
         android:layout_below="@id/textViewTransactionName"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="2dp"
+        android:text="2025-04-15"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textViewTransactionName"
         app:layout_constraintTop_toBottomOf="@+id/textViewTransactionName" />

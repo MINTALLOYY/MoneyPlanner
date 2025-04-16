@@ -29,6 +29,7 @@
         android:layout_marginLeft="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
+        android:fontFamily="@font/lexend_peta_variable_font_wght"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,10 +40,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/questrial_regular"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintBottom_toBottomOf="@id/textViewExpenseDate"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayoutExpenseButtons"
-/>
+        app:layout_constraintEnd_toStartOf="@+id/linearLayoutExpenseButtons" />
 
     <TextView
         android:id="@+id/textViewExpenseDate"
@@ -51,6 +52,7 @@
         android:layout_below="@id/textViewExpenseName"
         android:layout_marginTop="2dp"
         android:textColor="@color/grey"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintStart_toStartOf="@+id/textViewExpenseName"
         app:layout_constraintTop_toBottomOf="@+id/textViewExpenseName" />
 

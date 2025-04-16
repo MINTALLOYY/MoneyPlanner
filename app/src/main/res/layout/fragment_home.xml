@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/rootLayout"
         android:background="@color/off_white"
-        android:paddingTop="?attr/actionBarSize"
         android:clickable="true">
 
             <SearchView
@@ -112,6 +111,7 @@
             android:id="@+id/infoCardsTimeChanger"
             style="@style/buttons"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/informationCards"
             app:layout_constraintTop_toBottomOf="@id/searchTransaction"/>
@@ -133,6 +133,7 @@
                 android:layout_height="wrap_content"
                 android:text="Current Balance"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/lexend_peta_variable_font_wght"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -142,12 +143,11 @@
                 android:id="@+id/currentBalance"
                 android:text="$2,340.75"
                 android:layout_margin="16dp"
-                android:padding="8dp"
                 app:layout_constraintTop_toBottomOf="@id/titleBalance"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/minimapChart"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:background="@drawable/gold_container"
-                android:textColor="@color/dark_gold" />
+                style="@style/goldTextCard" />
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/minimapChart"
@@ -182,7 +182,8 @@
                         android:layout_height="wrap_content"
                         android:text="Total Spent"
                         android:layout_marginBottom="4dp"
-                        android:textColor="@color/off_white"/>
+                        android:textColor="@color/off_white"
+                        android:fontFamily="@font/questrial_regular"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -213,7 +214,8 @@
                         android:layout_height="wrap_content"
                         android:text="Total Earned"
                         android:layout_marginBottom="4dp"
-                        android:textColor="@color/off_white"/>
+                        android:textColor="@color/off_white"
+                        android:fontFamily="@font/questrial_regular"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -243,7 +245,8 @@
                     android:layout_marginTop="8dp"
                     android:text="Biggest Transactions"
                     android:textColor="@color/off_white"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:fontFamily="@font/lexend_peta_variable_font_wght" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -263,7 +266,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Expense Category"
-                            android:textColor="@color/off_white"/>
+                            android:textColor="@color/off_white"
+                            android:fontFamily="@font/questrial_regular"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -300,7 +304,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Income Sources"
-                            android:textColor="@color/off_white"/>
+                            android:textColor="@color/off_white"
+                            android:fontFamily="@font/questrial_regular"/>
 
                         <TextView
                             android:layout_width="wrap_content"

@@ -26,6 +26,7 @@
         android:layout_marginStart="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
+        android:fontFamily="@font/lexend_peta_variable_font_wght"
         app:layout_constraintBottom_toTopOf="@+id/textViewIncomeDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,6 +38,7 @@
         android:layout_weight="1"
         android:layout_marginTop="2dp"
         android:textColor="@color/grey"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintEnd_toEndOf="@+id/textViewIncomeName"
         app:layout_constraintStart_toStartOf="@id/textViewIncomeName"
         app:layout_constraintTop_toBottomOf="@+id/textViewIncomeName" />
@@ -48,6 +50,7 @@
         android:gravity="end"
         android:textStyle="bold"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintBottom_toBottomOf="@+id/textViewIncomeDate"
         app:layout_constraintEnd_toStartOf="@+id/linearLayoutIncomeButtons" />
 

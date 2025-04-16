@@ -17,6 +17,7 @@
         android:lineSpacingExtra="4dp"
         android:maxWidth="280dp"
         android:textColor="@color/black"
+        android:fontFamily="@font/barlow_semi_condensed_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>

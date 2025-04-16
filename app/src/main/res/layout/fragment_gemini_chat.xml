@@ -10,8 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/title"
-        android:text="MoneyPlanner's AI Helper"
+        android:text="MoneyPlanner's Navigation Helper"
         style="@style/pageHeaders"
+        android:elevation="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,6 +39,7 @@
         android:background="@drawable/search_border"
         android:padding="8dp"
         style="@style/editText"
+        android:fontFamily="@font/barlow_semi_condensed_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -31,14 +31,16 @@
         app:layout_constraintEnd_toStartOf="@+id/textViewBudget"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/lexend_peta_variable_font_wght"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/textViewBudget"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Budget"
         android:gravity="end"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintStart_toEndOf="@id/textViewCategoryName"
         app:layout_constraintTop_toTopOf="@id/textViewCategoryName" />
