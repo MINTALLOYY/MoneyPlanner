@@ -9,6 +9,7 @@ import com.vibhu.moneyplanner.Expense
 import com.vibhu.moneyplanner.models.Category
 import java.util.Date
 import java.util.UUID
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class ExpenseData(context: Context) {
 
@@ -29,7 +30,7 @@ class ExpenseData(context: Context) {
         val values = ContentValues().apply {
             put(COLUMN_EXPENSE_ID, expense.expenseId.toString())
             put(COLUMN_EXPENSE_NAME, expense.name)
-            put(COLUMN_AMOUNT, expense.amount)
+            put(COLUMN_AMOUNT, roundingTwoDecimals(expense.amount))
             put(COLUMN_CATEGORY_ID, expense.categoryId.toString())
             put(COLUMN_EXPENSE_DATE, expense.expenseDate.time)
         }

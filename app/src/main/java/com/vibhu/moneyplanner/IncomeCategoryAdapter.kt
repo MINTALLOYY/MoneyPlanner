@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.vibhu.moneyplanner.models.IncomeCategory
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class IncomeCategoryAdapter(
     private var incomeCategories: List<IncomeCategory>,

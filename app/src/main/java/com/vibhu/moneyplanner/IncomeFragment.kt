@@ -22,6 +22,7 @@ class IncomeFragment : Fragment() {
     private lateinit var incomeData: IncomeData
     private lateinit var incomeAdapter: IncomeAdapter
     private lateinit var incomeCategoryId: UUID
+    private lateinit var incomeCategoryData: IncomeCategoryData
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,10 +48,12 @@ class IncomeFragment : Fragment() {
         }
 
         incomeData = IncomeData(requireContext())
+        incomeCategoryData = IncomeCategoryData(requireContext())
 
         val incomeCategoryIdString = arguments?.getString("incomeCategoryId")
         if (incomeCategoryIdString != null) {
             incomeCategoryId = UUID.fromString(incomeCategoryIdString)
+            binding.incomeTitleName.text = "${incomeCategoryData.getIncomeCategoryById(incomeCategoryId).incomeCategoryName}'s INCOME LOG"
         } else {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

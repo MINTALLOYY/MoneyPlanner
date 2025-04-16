@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class Expense(
     val expenseId: UUID = UUID.randomUUID(),
-    val name: String, // Added expense name
+    val name: String, 
     val amount: Double,
     val categoryId: UUID,
     val expenseDate: Date

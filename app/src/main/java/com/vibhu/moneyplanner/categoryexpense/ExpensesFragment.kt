@@ -25,6 +25,7 @@ class ExpensesFragment: Fragment() {
     private lateinit var expenseData: ExpenseData
     private lateinit var expenseAdapter: ExpenseAdapter
     private lateinit var categoryId: UUID
+    private lateinit var categoryData: CategoryData
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +39,7 @@ class ExpensesFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         expenseData = ExpenseData(requireContext())
+        categoryData = CategoryData(requireContext())
 
         // Get the category ID from the arguments
         val categoryIdString = arguments?.getString("categoryId")
@@ -50,6 +52,8 @@ class ExpensesFragment: Fragment() {
             }
 
             binding.recyclerViewExpenses.layoutManager = LinearLayoutManager(requireContext())
+            
+            binding.expensesTitleName.text = "${categoryData.getCategoryById(categoryId).categoryName}'s EXPENSES"
 
             expenseAdapter = ExpenseAdapter(
                 expenseData.getExpensesByCategoryId(categoryId),

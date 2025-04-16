@@ -5,12 +5,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_CATEGORY_ID
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.TABLE_INCOME_CATEGORIES
-import com.vibhu.moneyplanner.categoryexpense.ExpenseData.Companion.COLUMN_EXPENSE_DATE
 import com.vibhu.moneyplanner.models.Income
 import java.text.SimpleDateFormat
 import java.util.*
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class IncomeData(context: Context) {
 
@@ -66,7 +64,7 @@ class IncomeData(context: Context) {
     fun addIncome(income: Income) {
         val values = ContentValues().apply {
             put("income_id", income.incomeId.toString())
-            put("amount", income.amount)
+            put("amount", roundingTwoDecimals(income.amount))
             put("income_category_id", income.incomeCategoryId.toString())
             put("received_date", income.receivedDate.time)
             put("income_name", income.incomeLogName)

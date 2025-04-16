@@ -12,6 +12,7 @@ import com.vibhu.moneyplanner.R
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
+import com.vibhu.moneyplanner.roundingTwoDecimals
 
 class ExpenseAdapter(
     private var expenses: List<Expense>,
@@ -37,7 +38,7 @@ class ExpenseAdapter(
         val expense = expenses[position]
 
         holder.nameTextView.text = expense.name
-        val formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(expense.amount)
+        val formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(roundingTwoDecimals(expense.amount))
         holder.amountTextView.text = formattedAmount
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
