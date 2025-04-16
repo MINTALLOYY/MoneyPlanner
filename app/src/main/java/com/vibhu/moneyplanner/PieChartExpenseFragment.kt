@@ -58,7 +58,7 @@ class PieChartExpenseFragment : Fragment() {
         val colorsAvailable = mutableListOf<Int>(
             ContextCompat.getColor(requireContext(), R.color.dark_grey),  // Convert color resource to color integer
             ContextCompat.getColor(requireContext(), R.color.green_text),
-            ContextCompat.getColor(requireContext(), R.color.light_grey),
+            ContextCompat.getColor(requireContext(), R.color.off_white),
             ContextCompat.getColor(requireContext(), R.color.metallic_gold),
             ContextCompat.getColor(requireContext(), R.color.red),
         )

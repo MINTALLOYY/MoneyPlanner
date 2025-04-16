@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/light_grey">
+    android:background="@color/off_white">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -14,7 +14,7 @@
         app:tabMode="fixed"
         app:tabTextColor="@color/dark_grey"
         app:tabIndicatorAnimationMode="linear"
-        android:background="@color/light_grey"
+        android:background="@color/off_white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

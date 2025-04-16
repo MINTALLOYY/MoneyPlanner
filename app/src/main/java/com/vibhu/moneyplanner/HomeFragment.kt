@@ -427,22 +427,21 @@ class HomeFragment: Fragment() {
             Log.d("Date", Date().toString())
         }
 
-        val biggestCategory = expenseCategoryData.getBiggestExpenseCategory(startDate=Date(), endDate=lastDate)
-        val biggestIncomeSource = incomeCategoryData.getBiggestIncomeCategory(startDate=Date(), endDate=lastDate)
+        val biggestCategory = expenseData.getBiggestCategoryOutOfCategories(expenseCategoryData.getAllCategories(), lastDate)
+        val biggestIncomeSource = incomeData.getBiggestIncomeSourceOutOfSources(incomeCategoryData.getAllIncomeCategories(), lastDate)
         Log.d("Biggest Categories", "Biggest Category: ${biggestCategory?.categoryName}, Biggest Income Source: ${biggestIncomeSource?.incomeCategoryName}")
 
         binding.currentBalance.text = "$${currentBalance}"
         if (currentBalance < 0.0) binding.currentBalance.text = "-$${currentBalance}"
 
-        binding.expenseCategoryName.text = "${biggestCategory?.categoryName}"
-        binding.expenseCategoryAmount.text = "-$${expenseData.getTotalSpentInCategory(biggestCategory?.categoryId, lastDate)}"
+        binding.expenseCategoryName.text = "${biggestCategory.categoryName}"
+        binding.expenseCategoryAmount.text = "-$${expenseData.getTotalSpentInCategory(biggestCategory.categoryId, lastDate)}"
 
-        binding.incomeSourceName.text = "${biggestIncomeSource?.incomeCategoryName}"
-        binding.incomeSourceAmount.text = "+$${incomeData.getTotalEarnedInSource(biggestIncomeSource?.incomeCategoryId, lastDate)}"
+        binding.incomeSourceName.text = "${biggestIncomeSource.incomeCategoryName}"
+        binding.incomeSourceAmount.text = "+$${incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate)}"
 
         binding.totalSpent.text = "-$${expenseData.getTotalExpenseAmount(lastDate)}"
         binding.totalEarned.text = "+$${incomeData.getTotalIncomeAmount(lastDate)}"
-
     }
 
     override fun onDestroy() {

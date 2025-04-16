@@ -18,21 +18,21 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@color/light_grey</item>
+        <item name="android:windowBackground">@color/off_white</item>
     </style>
 
     <style name="buttons" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/white</item>
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textColor">@color/black</item>
-        <item name="rippleColor">@color/light_grey</item>
+        <item name="rippleColor">@color/off_white</item>
         <item name="android:tint">@color/black</item>
         <item name="tint">@color/black</item>
         <item name="cornerRadius">4dp</item>
     </style>
     <style name="secondaryButtons" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/light_grey</item>
-        <item name="android:backgroundTint">@color/light_grey</item>
+        <item name="backgroundTint">@color/off_white</item>
+        <item name="android:backgroundTint">@color/off_white</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:tint">@color/black</item>
         <item name="rippleColor">@color/white</item>
@@ -53,7 +53,7 @@
         <item name="android:calendarViewShown">false</item>
     </style>
     <style name="darkCardText">
-        <item name="android:textColor">@color/light_grey</item>
+        <item name="android:textColor">@color/off_white</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
     </style>
     <style name="recyclerView">
@@ -61,16 +61,19 @@
         <item name="android:paddingBottom">64dp</item>
     </style>
     <style name="greenTextCard">
-        <item name="background">@drawable/green_container</item>
+        <item name="android:background">@drawable/green_container</item>
         <item name="android:textColor">@color/green_text</item>
+        <item name="android:padding">8dp</item>
     </style>
     <style name="redTextCard">
-        <item name="background">@drawable/red_container</item>
+        <item name="android:background">@drawable/red_container</item>
         <item name="android:textColor">@color/red_text</item>
+        <item name="android:padding">8dp</item>
     </style>
     <style name="goldTextCard">
-        <item name="background">@drawable/gold_container</item>
+        <item name="android:background">@drawable/gold_container</item>
         <item name="android:textColor">@color/dark_gold</item>
+        <item name="android:padding">8dp</item>
     </style>
     <style name="horizontalDividerSetUp">
         <item name="android:layout_height">2dp</item>

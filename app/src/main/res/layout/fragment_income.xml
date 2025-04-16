@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".IncomeFragment"
     android:paddingTop="?attr/actionBarSize"
-    android:background="@color/light_grey">
+    android:background="@color/off_white">
 
     <TextView
         android:id="@+id/IncomeTitleName"

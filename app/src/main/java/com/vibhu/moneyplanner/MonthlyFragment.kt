@@ -244,7 +244,7 @@ class MonthlyFragment : Fragment() {
             // 2. Set data and viewport
             data = LineData(dataSet)
             setViewPortOffsets(50f, 20f, 50f, 150f)
-            setBackgroundColor(Color.TRANSPARENT)
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.white_container)
 
             // 3. Force proper initial layout
             post {

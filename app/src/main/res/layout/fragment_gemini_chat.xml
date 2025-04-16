@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/light_grey"
+    android:background="@color/off_white"
     android:paddingTop="?attr/actionBarSize">
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="64dp"
         android:hint="How to get to..."
-        android:textColorHint="@color/light_grey"
+        android:textColorHint="@color/off_white"
         android:background="@drawable/search_border"
         android:padding="8dp"
         style="@style/editText"

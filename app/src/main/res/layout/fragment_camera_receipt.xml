@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="8dp"
     android:paddingTop="?attr/actionBarSize"
-    android:background="@color/light_grey">
+    android:background="@color/off_white">
 
     <TextView
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             android:layout_height="1dp"
             android:layout_marginHorizontal="8dp"
             android:layout_marginVertical="16dp"
-            android:background="@color/light_grey"/>
+            android:background="@color/off_white"/>
 
         <TextView
             android:layout_width="wrap_content"

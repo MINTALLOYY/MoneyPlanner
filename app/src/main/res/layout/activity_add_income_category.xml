@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize"
-    android:background="@color/light_grey"
+    android:background="@color/off_white"
     android:paddingHorizontal="8dp">
 
     <TextView
