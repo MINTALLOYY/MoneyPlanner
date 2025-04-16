@@ -30,7 +30,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
         android:text="McDonald's Job"
-        android:fontFamily="@font/lexend_peta_variable_font_wght"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +42,8 @@
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
         android:text="+ $125.85"
-        android:fontFamily="@font/questrial_regular"
+        android:fontFamily="@font/barlow_semi_condensed_light"
+        style="@style/greenTextCard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

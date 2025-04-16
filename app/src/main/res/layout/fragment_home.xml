@@ -47,7 +47,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@id/filterButton"
             app:layout_constraintTop_toBottomOf="@id/filterButton"
             app:cardElevation="32dp">
@@ -74,32 +74,37 @@
                         android:id="@+id/filterAll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="All transactions"/>
+                        android:text="All transactions"
+                        android:buttonTint="@color/metallic_gold"/>
 
                     <RadioButton
                         android:id="@+id/filterIncome"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Income only"/>
+                        android:text="Income only"
+                        android:buttonTint="@color/metallic_gold"/>
 
                     <RadioButton
                         android:id="@+id/filterExpense"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Expense only"/>
+                        android:text="Expense only"
+                        android:buttonTint="@color/metallic_gold"/>
                 </RadioGroup>
 
                 <Button
                     android:id="@+id/btnDateRange"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Date range"/>
+                    android:text="Date range"
+                    style="@style/secondaryButtons"/>
 
                 <Button
                     android:id="@+id/btnApplyFilters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Apply"/>
+                    android:text="Apply"
+                    style="@style/secondaryButtons"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

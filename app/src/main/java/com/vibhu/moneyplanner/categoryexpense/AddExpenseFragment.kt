@@ -59,6 +59,12 @@ class AddExpenseFragment: Fragment() {
 
                 if (name.isNotBlank() && amountStr.isNotBlank()) {
                     try {
+
+                        if (name.length > 16) { // Double-check in code
+                            Toast.makeText(requireContext(), "Max 16 characters allowed", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+
                         val amount = amountStr.toDouble()
                         val calendar = Calendar.getInstance()
                         calendar.set(datePicker.year, datePicker.month, datePicker.dayOfMonth)

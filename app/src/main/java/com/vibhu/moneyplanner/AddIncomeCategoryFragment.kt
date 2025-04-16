@@ -38,6 +38,11 @@ class AddIncomeCategoryFragment: Fragment() {
                 return@setOnClickListener
             }
 
+            if (name.length > 16) { // Double-check in code
+                Toast.makeText(requireContext(), "Max 16 characters allowed", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val incomeCategory = IncomeCategory(incomeCategoryName = name)
             incomeCategoryData.addIncomeCategory(incomeCategory)
 

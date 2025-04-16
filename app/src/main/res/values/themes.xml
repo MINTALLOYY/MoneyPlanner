@@ -60,6 +60,7 @@
         <item name="android:textColor">@color/off_white</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:fontFamily">@font/barlow_semi_condensed_light</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="recyclerView">
         <item name="android:background">@drawable/white_container</item>
@@ -73,27 +74,37 @@
         <item name="android:textColor">@color/green_text</item>
         <item name="android:padding">8dp</item>
         <item name="android:fontFamily">@font/barlow_semi_condensed_light</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="redTextCard">
         <item name="android:background">@drawable/red_container</item>
         <item name="android:textColor">@color/red_text</item>
         <item name="android:padding">8dp</item>
         <item name="android:fontFamily">@font/barlow_semi_condensed_light</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="goldTextCard">
         <item name="android:background">@drawable/gold_container</item>
         <item name="android:textColor">@color/dark_gold</item>
         <item name="android:padding">8dp</item>
         <item name="android:fontFamily">@font/barlow_semi_condensed_light</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="horizontalDividerSetUp">
-        <item name="android:layout_height">3dp</item>
+        <item name="android:layout_height">1dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/grey</item>
         <item name="android:layout_marginHorizontal">8dp</item>
     </style>
     <style name="coloredDividerSetUp" parent="horizontalDividerSetUp">
         <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="datePickersCalendar" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="colorPrimary">@color/off_white</item>
+        <item name="colorAccent">@color/slightly_dark_grey</item>
+        <item name="android:textColorPrimary">@color/dark_gold</item>
+        <item name="buttonBarButtonStyle">@style/buttons</item>
     </style>
 
 </resources>

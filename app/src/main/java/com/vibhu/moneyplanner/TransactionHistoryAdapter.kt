@@ -23,6 +23,7 @@ class TransactionHistoryAdapter(
         val dateTextView: TextView = itemView.findViewById(R.id.textViewTransactionDate)
         val representationOfExpenseIncomeTop: View = itemView.findViewById(R.id.representationOfExpenseIncomeTop)
         val representationOfExpenseIncomeBottom: View = itemView.findViewById(R.id.representationOfExpenseIncomeBottom)
+        var amountView: TextView = itemView.findViewById(R.id.textViewTransactionAmount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -44,6 +45,8 @@ class TransactionHistoryAdapter(
             holder.amountTextView.text = "- $" + transaction.amount
             holder.representationOfExpenseIncomeTop.background = ContextCompat.getDrawable(context, R.color.red)
             holder.representationOfExpenseIncomeBottom.background = ContextCompat.getDrawable(context, R.color.red)
+            holder.amountView.background = ContextCompat.getDrawable(context, R.drawable.red_container)
+            holder.amountView.setTextColor(ContextCompat.getColor(context, R.color.red_text))
         }
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

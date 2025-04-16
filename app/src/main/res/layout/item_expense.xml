@@ -40,8 +40,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="16dp"
-        android:fontFamily="@font/questrial_regular"
+        android:fontFamily="@font/barlow_semi_condensed_light"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        style="@style/redTextCard"
+        android:padding="2dp"
         app:layout_constraintBottom_toBottomOf="@id/textViewExpenseDate"
         app:layout_constraintEnd_toStartOf="@+id/linearLayoutExpenseButtons" />
 
@@ -50,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewExpenseName"
-        android:layout_marginTop="2dp"
+        android:layout_marginVertical="2dp"
         android:textColor="@color/grey"
         android:fontFamily="@font/questrial_regular"
         app:layout_constraintStart_toStartOf="@+id/textViewExpenseName"

@@ -57,6 +57,12 @@ class AddIncomeFragment : Fragment() {
             }
             else{
                 try {
+
+                    if (incomeName.length > 16) { // Double-check in code
+                        Toast.makeText(requireContext(), "Max 16 characters allowed", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
                     val amount = amountStr.toDouble()
 
                     receivedDateCalendar = Calendar.getInstance()

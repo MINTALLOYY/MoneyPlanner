@@ -32,4 +32,13 @@
         android:layout_marginTop="16dp"
         android:text="Done"
         style="@style/secondaryButtons"/>
+
+    <Button
+        android:id="@+id/btnCancelDates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Cancel"
+        style="@style/secondaryButtons"/>
+
 </LinearLayout>

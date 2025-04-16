@@ -233,6 +233,7 @@ class HomeFragment: Fragment() {
         val btnStartDate = dialogView.findViewById<Button>(R.id.btnStartDate)
         val btnEndDate = dialogView.findViewById<Button>(R.id.btnEndDate)
         val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirmDates)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancelDates)
 
         val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).apply {
             timeZone = TimeZone.getDefault() // Add this for consistency
@@ -242,7 +243,10 @@ class HomeFragment: Fragment() {
         btnEndDate.text = endDate?.let { dateFormat.format(it) } ?: "Select end date"
 
         btnStartDate.setOnClickListener {
-            val datePicker = DatePickerDialog(requireContext(), { _, year, month, day ->
+            val datePicker = DatePickerDialog(
+                requireContext(),
+                R.style.datePickersCalendar,
+            { _, year, month, day ->
                 val cal = Calendar.getInstance().apply {
                     set(year, month, day)
                 }
@@ -254,7 +258,10 @@ class HomeFragment: Fragment() {
         }
 
         btnEndDate.setOnClickListener {
-            val datePicker = DatePickerDialog(requireContext(), { _, year, month, day ->
+            val datePicker = DatePickerDialog(
+                requireContext(),
+                R.style.datePickersCalendar,
+                { _, year, month, day ->
                 val cal = Calendar.getInstance().apply {
                     set(year, month, day)
                 }
@@ -266,6 +273,14 @@ class HomeFragment: Fragment() {
         }
 
         btnConfirm.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            startDate = null
+            endDate = null
+            btnStartDate.text = "Select start date"
+            btnEndDate.text = "Select end date"
             dialog.dismiss()
         }
 

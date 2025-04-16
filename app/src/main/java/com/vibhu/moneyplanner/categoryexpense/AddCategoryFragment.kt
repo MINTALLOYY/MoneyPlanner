@@ -42,6 +42,12 @@ class AddCategoryFragment : Fragment() {
 
             if (categoryName.isNotBlank() && budgetStr.isNotBlank()) {
                 try {
+
+                    if (categoryName.length > 16) { // Double-check in code
+                        Toast.makeText(requireContext(), "Max 16 characters allowed", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
                     val budget = budgetStr.toDouble()
                     val newCategory = Category(categoryName = categoryName, budget = budget)
                     categoryData.addCategory(newCategory)
