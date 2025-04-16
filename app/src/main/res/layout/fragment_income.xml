@@ -22,13 +22,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewIncomes"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         style="@style/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/IncomeTitleName"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/fabAddIncome"/>
 
     <Button
         android:id="@+id/fabAddIncome"

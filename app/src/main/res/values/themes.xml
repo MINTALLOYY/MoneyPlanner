@@ -57,8 +57,11 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
     </style>
     <style name="recyclerView">
-        <item name="android:scrollIndicators">right</item>
-        <item name="android:paddingBottom">64dp</item>
+        <item name="android:background">@drawable/white_container</item>
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="layout_constrainedHeight">true</item>
+        <item name="layout_constraintVertical_bias">0</item>
     </style>
     <style name="greenTextCard">
         <item name="android:background">@drawable/green_container</item>
@@ -76,10 +79,13 @@
         <item name="android:padding">8dp</item>
     </style>
     <style name="horizontalDividerSetUp">
-        <item name="android:layout_height">2dp</item>
+        <item name="android:layout_height">3dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/grey</item>
         <item name="android:layout_marginHorizontal">8dp</item>
+    </style>
+    <style name="coloredDividerSetUp" parent="horizontalDividerSetUp">
+        <item name="android:layout_height">1dp</item>
     </style>
 
 </resources>

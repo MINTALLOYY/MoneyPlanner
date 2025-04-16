@@ -5,7 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingTop="?android:actionBarSize"
     android:background="@color/off_white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STATISTICS"
+        style="@style/pageHeaders"
+        android:id="@+id/statisticsTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -13,9 +24,10 @@
         android:layout_height="wrap_content"
         app:tabMode="fixed"
         app:tabTextColor="@color/dark_grey"
+        android:layout_marginTop="8dp"
         app:tabIndicatorAnimationMode="linear"
         android:background="@color/off_white"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statisticsTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
