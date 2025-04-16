@@ -16,11 +16,14 @@ import com.amazonaws.services.textract.model.AnalyzeExpenseRequest
 import com.amazonaws.services.textract.model.BlockType
 import com.amazonaws.services.textract.model.ExpenseDocument
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.regex.Pattern
 
 class TextractManager(private val textractClient: AmazonTextract) {
 
-    fun analyzeDocument(imageFile: File, callback: (String?, Exception?) -> Unit) {
+    fun analyzeDocument(imageFile: File, callback: (String?, String?, String?, Exception?) -> Unit) {
         try {
             // 1. Convert File to ByteBuffer (for Textract)
             val bitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
@@ -37,15 +40,15 @@ class TextractManager(private val textractClient: AmazonTextract) {
             Thread { // Perform network operations on a background thread
                 try {
                     val result = textractClient.detectDocumentText(detectDocumentTextRequest)
-                    val extractedText = extractTextFromAnalysis(result) // Helper function (see below)
-                    callback(extractedText, null) // Success!
+                    val extractedTexts = extractTextFromAnalysis(result)
+                    callback(extractedTexts[0], extractedTexts[1], extractedTexts[2], null) // Success!
                 } catch (e: Exception) {
-                    callback(null, e) // Error!
+                    callback(null, null, null, e) // Error!
                 }
             }.start()
 
         } catch (e: Exception) {
-            callback(null, e)
+            callback(null, null, null, e)
         }
     }
     // New function to analyze receipts and extract total
@@ -75,7 +78,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
         }
     }
 
-    private fun extractTextFromAnalysis(result: com.amazonaws.services.textract.model.DetectDocumentTextResult): String? {
+    private fun extractTextFromAnalysis(result: com.amazonaws.services.textract.model.DetectDocumentTextResult): MutableList<String?> {
         val blocks = result.blocks ?: emptyList()
         val lines = mutableListOf<String>()
 
@@ -87,7 +90,14 @@ class TextractManager(private val textractClient: AmazonTextract) {
         }
         Log.d("lines", lines.toString())
 
+        return mutableListOf(
+            getNameFromReceipt(lines),
+            getDateFromReceipt(lines),
+            getTotalFromReceipt(lines)
+        )
+    }
 
+    private fun getTotalFromReceipt(lines: MutableList<String>) : String? {
         val totalKeywords = listOf("Total", "Amount Due", "Balance", "Grand Total", "Amount")
 
         // Check if Total is in a different block than the amount due
@@ -119,6 +129,29 @@ class TextractManager(private val textractClient: AmazonTextract) {
         }
         return null
     }
+
+    private fun getNameFromReceipt(lines: MutableList<String>) : String? {
+        return lines[0]
+    }
+
+    private fun getDateFromReceipt(lines: MutableList<String>) : String? {
+        val patterns = listOf(
+            // Match dates with possible prefixes/suffixes
+            Pattern.compile(".*?(\\d{2}/\\d{2}/\\d{4}).*?"),
+            Pattern.compile(".*?(\\d{4}/\\d{2}/\\d{2}).*?")
+        )
+
+        for (line in lines) {
+            patterns.forEach { pattern ->
+                val matcher = pattern.matcher(line)
+                if (matcher.matches()) {
+                    return matcher.group(1)?.trim()
+                }
+            }
+        }
+        return null
+    }
+
 
     private fun extractDocumentFromAnalysis(result: com.amazonaws.services.textract.model.DetectDocumentTextResult): String {
         val blocks = result.blocks

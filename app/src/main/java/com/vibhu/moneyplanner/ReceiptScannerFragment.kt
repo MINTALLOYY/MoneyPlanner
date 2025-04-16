@@ -34,6 +34,8 @@ class ReceiptScannerFragment : Fragment() {
     private lateinit var textractManager: TextractManager
     private lateinit var categoryId: UUID
     private var total: Float = 0.0F
+    private lateinit var name: String
+    private lateinit var dateStr: String
     private lateinit var filePath: String
     private lateinit var photoUri: Uri
 
@@ -80,12 +82,16 @@ class ReceiptScannerFragment : Fragment() {
 
         val tempFile = File(filePath)
 
-        textractManager.analyzeDocument(tempFile) { extractedText, error ->
-            if (extractedText != null) {
+        textractManager.analyzeDocument(tempFile) { extractedName, extractedDate, extractedTotal , error ->
+
+            if (extractedTotal != null ) {
                 requireActivity().runOnUiThread { // Switch to main thread
-                    Log.d("Textract Result", extractedText)
-                    resultTextView.text = extractedText
-                    total = getRidOfCurrencySymbol(extractedText)
+                    Log.d("Textract Result", "Total: $extractedTotal, Name: $extractedName, Date: $extractedDate")
+                    resultTextView.text = extractedTotal
+                    total = getRidOfCurrencySymbol(extractedTotal)
+                    if(extractedName != null) name = extractedName
+                    if(extractedDate != null) dateStr = extractedDate
+
                     enableAddingExpense()
                 }
             } else if (error != null) {
@@ -115,6 +121,8 @@ class ReceiptScannerFragment : Fragment() {
         val bundle = Bundle()
         bundle.putString("categoryId", categoryId.toString()) // Pass categoryId
         bundle.putString("total", total.toString())
+        if(name != null) bundle.putString("name", name) else bundle.putString("nameError", "Expense Name Not Found")
+        if(dateStr != null) bundle.putString("date", dateStr) else bundle.putString("dateError", "Date Not Found")
 
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
