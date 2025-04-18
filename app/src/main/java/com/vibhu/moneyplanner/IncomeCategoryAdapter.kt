@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.vibhu.moneyplanner.models.IncomeCategory
 import com.vibhu.moneyplanner.roundingTwoDecimals
+import java.text.NumberFormat
+import java.util.Locale
 
 class IncomeCategoryAdapter(
     private var incomeCategories: List<IncomeCategory>,

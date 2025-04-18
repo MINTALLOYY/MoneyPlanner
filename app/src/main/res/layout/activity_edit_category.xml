@@ -39,17 +39,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextBudget"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Budget"
-        android:inputType="numberDecimal"
-        style="@style/editText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextCategoryName" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button

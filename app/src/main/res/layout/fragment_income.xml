@@ -27,7 +27,7 @@
         style="@style/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/IncomeTitleName"
+        app:layout_constraintTop_toBottomOf="@+id/incomeTitleName"
         app:layout_constraintBottom_toTopOf="@id/fabAddIncome"/>
 
     <Button

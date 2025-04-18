@@ -106,12 +106,13 @@ class IncomeData(context: Context) {
         return Income(id, amount, categoryId, receivedDate, name)
     }
 
-    fun getBiggestIncomeSourceOutOfSources(incomeCategories: List<IncomeCategory>, dateFromToday: Date? = null): IncomeCategory{
+    fun getBiggestIncomeSourceOutOfSources(incomeCategories: List<IncomeCategory>, dateFromToday: Date? = null): IncomeCategory?{
         var listOfEarningsPerCategory = mutableListOf<Double>()
         for(incomeCategory in incomeCategories){
             if(dateFromToday == null) listOfEarningsPerCategory.add(getIncomesByCategoryId(incomeCategory.incomeCategoryId).sumOf{ it.amount })
             else listOfEarningsPerCategory.add(getIncomesByCategoryId(incomeCategory.incomeCategoryId).filter{ it.receivedDate >= dateFromToday }.sumOf{ it.amount })
         }
+        if(listOfEarningsPerCategory.isEmpty()) return null
         return incomeCategories[listOfEarningsPerCategory.indexOf(listOfEarningsPerCategory.max())]
     }
 

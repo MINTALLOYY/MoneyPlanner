@@ -48,7 +48,6 @@ class EditCategoryFragment : Fragment(){
             val category = categoryData.getAllCategories().find { it.categoryId == categoryId }
             if (category != null) {
                 binding.editTextCategoryName.setText(category.categoryName)
-                binding.editTextBudget.setText(category.budget.toString())
             } else {
                 goBackToHomePage("Category Not Found") // Close the activity if the category isn't found
             }
@@ -58,17 +57,15 @@ class EditCategoryFragment : Fragment(){
 
         binding.buttonSaveCategory.setOnClickListener {
             val newName = binding.editTextCategoryName.text.toString()
-            val newBudgetStr = binding.editTextBudget.text.toString()
 
-            if (newName.isNotBlank() && newBudgetStr.isNotBlank()) {
+            if (newName.isNotBlank()) {
                 try {
-                    val newBudget = roundingTwoDecimals(newBudgetStr.toDouble())
-                    val updatedCategory = Category(categoryId, newName, newBudget) // Use existing ID
+                    val updatedCategory = Category(categoryId, newName) // Use existing ID
 
                     categoryData.updateCategory(updatedCategory)
                     goBackToHomePage("Category Updated")
-                } catch (e: NumberFormatException) {
-                    Toast.makeText(requireContext(), "Invalid budget", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Error Saving Try Again", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()

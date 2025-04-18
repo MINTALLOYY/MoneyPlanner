@@ -446,17 +446,24 @@ class HomeFragment: Fragment() {
         val biggestIncomeSource = incomeData.getBiggestIncomeSourceOutOfSources(incomeCategoryData.getAllIncomeCategories(), lastDate)
         Log.d("Biggest Categories", "Biggest Category: ${biggestCategory?.categoryName}, Biggest Income Source: ${biggestIncomeSource?.incomeCategoryName}")
 
-        binding.currentBalance.text = "$${currentBalance}"
-        if (currentBalance < 0.0) binding.currentBalance.text = "-$${currentBalance}"
+        binding.currentBalance.text = doubleToMoneyString(currentBalance)
+        if (currentBalance < 0.0) binding.currentBalance.text = "-${doubleToMoneyString(currentBalance)}"
 
-        binding.expenseCategoryName.text = "${biggestCategory.categoryName}"
-        binding.expenseCategoryAmount.text = "-$${expenseData.getTotalSpentInCategory(biggestCategory.categoryId, lastDate)}"
+        if (biggestCategory == null || biggestIncomeSource == null) {
+            binding.expenseCategoryName.text = "No Expenses"
+            binding.expenseCategoryAmount.text = "-$0.00"
+            binding.incomeSourceName.text = "No Income"
+            binding.incomeSourceAmount.text = "+$0.00"
+        }
+        else{
+            binding.expenseCategoryName.text = "${biggestCategory.categoryName}"
+            binding.expenseCategoryAmount.text = "-${doubleToMoneyString(expenseData.getTotalSpentInCategory(biggestCategory.categoryId, lastDate))}"
 
-        binding.incomeSourceName.text = "${biggestIncomeSource.incomeCategoryName}"
-        binding.incomeSourceAmount.text = "+$${incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate)}"
-
-        binding.totalSpent.text = "-$${expenseData.getTotalExpenseAmount(lastDate)}"
-        binding.totalEarned.text = "+$${incomeData.getTotalIncomeAmount(lastDate)}"
+            binding.incomeSourceName.text = "${biggestIncomeSource.incomeCategoryName}"
+            binding.incomeSourceAmount.text = "+${doubleToMoneyString(incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate))}"
+        }
+        binding.totalSpent.text = "-${doubleToMoneyString(expenseData.getTotalExpenseAmount(lastDate))}"
+        binding.totalEarned.text = "+${doubleToMoneyString(incomeData.getTotalIncomeAmount(lastDate))}"
     }
 
     override fun onDestroy() {

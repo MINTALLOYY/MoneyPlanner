@@ -10,6 +10,7 @@ import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.ActivityEditExpenseBinding
+import com.vibhu.moneyplanner.roundingTwoDecimals
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -78,7 +79,7 @@ class EditExpenseFragment: Fragment() {
                 return@setOnClickListener // Stop further execution
             }
             if (newName.length > 16){
-                Toast.makeText(requireContext(), "No more than 16 characters in the name fields")
+                Toast.makeText(requireContext(), "No more than 16 characters in the name fields", Toast.LENGTH_SHORT)
             }
 
             try {

@@ -53,7 +53,7 @@ class IncomeFragment : Fragment() {
         val incomeCategoryIdString = arguments?.getString("incomeCategoryId")
         if (incomeCategoryIdString != null) {
             incomeCategoryId = UUID.fromString(incomeCategoryIdString)
-            binding.incomeTitleName.text = "${incomeCategoryData.getIncomeCategoryById(incomeCategoryId).incomeCategoryName}'s INCOME LOG"
+            binding.incomeTitleName.text = "${incomeCategoryData.getIncomeCategoryById(incomeCategoryId)?.incomeCategoryName}'s INCOME LOG"
         } else {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

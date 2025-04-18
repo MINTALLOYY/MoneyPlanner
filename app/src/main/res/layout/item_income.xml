@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="2dp"
         android:fontFamily="@font/barlow_semi_condensed_light"
         style="@style/greenTextCard"
         android:padding="2dp"

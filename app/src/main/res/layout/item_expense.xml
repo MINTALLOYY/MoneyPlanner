@@ -44,6 +44,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         style="@style/redTextCard"
         android:padding="2dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="@id/textViewExpenseDate"
         app:layout_constraintEnd_toStartOf="@+id/linearLayoutExpenseButtons" />
 

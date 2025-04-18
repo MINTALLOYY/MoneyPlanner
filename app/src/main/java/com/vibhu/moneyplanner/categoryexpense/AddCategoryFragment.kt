@@ -39,9 +39,7 @@ class AddCategoryFragment : Fragment() {
 
         binding.buttonSaveCategory.setOnClickListener {
             val categoryName = binding.editTextCategoryName.text.toString()
-            val budgetStr = binding.editTextCategoryBudget.text.toString()
-
-            if (categoryName.isNotBlank() && budgetStr.isNotBlank()) {
+            if (categoryName.isNotBlank()) {
                 try {
 
                     if (categoryName.length > 16) { // Double-check in code
@@ -49,14 +47,11 @@ class AddCategoryFragment : Fragment() {
                         return@setOnClickListener
                     }
 
-                    val budget = roundingTwoDecimals(budgetStr.toDouble())
-                    val newCategory = Category(categoryName = categoryName, budget = budget)
+                    val newCategory = Category(categoryName = categoryName)
                     categoryData.addCategory(newCategory)
 
                     goBackToHomePage("Category Added")
 
-                } catch (e: NumberFormatException) {
-                    Toast.makeText(requireContext(), "Invalid budget", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     Toast.makeText(requireContext(), "Error adding category: ${e.message}", Toast.LENGTH_SHORT).show()
                 }

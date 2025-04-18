@@ -21,8 +21,6 @@ class TransactionHistoryAdapter(
         val nameTextView: TextView = itemView.findViewById(R.id.textViewTransactionName)
         val amountTextView: TextView = itemView.findViewById(R.id.textViewTransactionAmount)
         val dateTextView: TextView = itemView.findViewById(R.id.textViewTransactionDate)
-        val representationOfExpenseIncomeTop: View = itemView.findViewById(R.id.representationOfExpenseIncomeTop)
-        val representationOfExpenseIncomeBottom: View = itemView.findViewById(R.id.representationOfExpenseIncomeBottom)
         var amountView: TextView = itemView.findViewById(R.id.textViewTransactionAmount)
     }
 
@@ -38,13 +36,9 @@ class TransactionHistoryAdapter(
 
         if(transaction.isIncome){
             holder.amountTextView.text = "+ $" + transaction.amount
-            holder.representationOfExpenseIncomeTop.background = ContextCompat.getDrawable(context, R.color.green_text)
-            holder.representationOfExpenseIncomeBottom.background = ContextCompat.getDrawable(context, R.color.green_text)
         }
         else{
             holder.amountTextView.text = "- $" + transaction.amount
-            holder.representationOfExpenseIncomeTop.background = ContextCompat.getDrawable(context, R.color.red)
-            holder.representationOfExpenseIncomeBottom.background = ContextCompat.getDrawable(context, R.color.red)
             holder.amountView.background = ContextCompat.getDrawable(context, R.drawable.red_container)
             holder.amountView.setTextColor(ContextCompat.getColor(context, R.color.red_text))
         }

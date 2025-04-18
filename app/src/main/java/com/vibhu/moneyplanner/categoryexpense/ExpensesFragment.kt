@@ -53,7 +53,7 @@ class ExpensesFragment: Fragment() {
 
             binding.recyclerViewExpenses.layoutManager = LinearLayoutManager(requireContext())
             
-            binding.expensesTitleName.text = "${categoryData.getCategoryById(categoryId).categoryName}'s EXPENSES"
+            binding.expensesTitleName.text = "${categoryData.getCategoryById(categoryId)?.categoryName}'s EXPENSES"
 
             expenseAdapter = ExpenseAdapter(
                 expenseData.getExpensesByCategoryId(categoryId),

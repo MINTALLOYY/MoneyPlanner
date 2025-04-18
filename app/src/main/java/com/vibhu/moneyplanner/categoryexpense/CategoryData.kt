@@ -5,15 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.vibhu.moneyplanner.DatabaseHelper
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_AMOUNT
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_CATEGORY_ID
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_CATEGORY_NAME
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.COLUMN_INCOME_DATE
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.TABLE_INCOMES
-import com.vibhu.moneyplanner.IncomeCategoryData.Companion.TABLE_INCOME_CATEGORIES
 import com.vibhu.moneyplanner.models.Category
-import com.vibhu.moneyplanner.models.IncomeCategory
-import java.util.Date
 import java.util.UUID
 
 class CategoryData(context: Context) {
@@ -22,14 +14,6 @@ class CategoryData(context: Context) {
         const val TABLE_CATEGORIES = "categories"
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"
-        const val COLUMN_BUDGET = "budget"
-
-        const val TABLE_EXPENSES = "expenses"
-        const val COLUMN_EXPENSE_ID = "id"
-        const val COLUMN_EXPENSE_NAME = "expense_name"
-        const val COLUMN_AMOUNT = "expense_amount"
-        const val COLUMN_CATEGORY_ID = "category_id"
-        const val COLUMN_EXPENSE_DATE = "expense_date"
     }
 
     private val dbHelper = DatabaseHelper(context)
@@ -39,7 +23,6 @@ class CategoryData(context: Context) {
         val values = ContentValues().apply {
             put(COLUMN_ID, category.categoryId.toString())
             put(COLUMN_NAME, category.categoryName)
-            put(COLUMN_BUDGET, category.budget)
         }
         db.insert(TABLE_CATEGORIES, null, values)
     }
@@ -62,14 +45,12 @@ class CategoryData(context: Context) {
     private fun getCategoryFromCursor(cursor: Cursor): Category {
         val id = UUID.fromString(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ID)))
         val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
-        val budget = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_BUDGET))
-        return Category(id, name, budget)
+        return Category(id, name)
     }
 
     fun updateCategory(category: Category) {
         val values = ContentValues().apply {
             put(COLUMN_NAME, category.categoryName)
-            put(COLUMN_BUDGET, category.budget)
         }
         val whereClause = "$COLUMN_ID =?"
         val whereArgs = arrayOf(category.categoryId.toString())

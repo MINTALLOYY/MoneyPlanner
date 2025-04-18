@@ -80,10 +80,8 @@ class AddExpenseFragment: Fragment() {
 
                         goBackToExpensesPage("Expense Added")
 
-                    } catch (e: NumberFormatException) {
-                        Toast.makeText(requireContext(), "Invalid budget", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
-                        Toast.makeText(requireContext(), "Error adding category: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Error adding expense: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()

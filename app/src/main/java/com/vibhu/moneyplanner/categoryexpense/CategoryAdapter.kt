@@ -40,7 +40,7 @@ class CategoryAdapter(
 
         val expenseData = ExpenseData(context)
         val formattedSpent = NumberFormat.getCurrencyInstance(Locale.US).format(roundingTwoDecimals(expenseData.getTotalSpentInCategory(category.categoryId, null)))
-        holder.budgetTextView.text = formattedSpent
+        holder.spentTextView.text = formattedSpent
 
         holder.itemView.setOnClickListener {  // Click listener for the entire item
             onItemClick(category)

@@ -106,7 +106,7 @@ class ExpenseData(context: Context) {
     fun getTotalExpenseAmount(dateFromToday: Date? = null): Double {
         val expenses = getAllExpenses()
         if (dateFromToday == null) return expenses.sumOf { it.amount }
-        return expenses.filter{ it.expenseDate >= dateFromToday }.sumOf{ it.amount}
+        return expenses.filter{ it.expenseDate >= dateFromToday }.sumOf{ it.amount }
     }
 
     fun getTotalSpentInCategory(categoryId: UUID, dateFromToday: Date? = null): Double {
@@ -115,12 +115,13 @@ class ExpenseData(context: Context) {
         return expenses.filter { it.expenseDate >= dateFromToday }.sumOf { it.amount }
     }
 
-    fun getBiggestCategoryOutOfCategories(categories: List<Category>, dateFromToday: Date? = null): Category {
+    fun getBiggestCategoryOutOfCategories(categories: List<Category>, dateFromToday: Date? = null): Category? {
         var listOfExpensesPerCategory = mutableListOf<Double>()
         for (category in categories) {
             if (dateFromToday == null) listOfExpensesPerCategory.add(getTotalSpentInCategory(category.categoryId))
             else listOfExpensesPerCategory.add(getTotalSpentInCategory(category.categoryId, dateFromToday))
         }
+        if(listOfExpensesPerCategory.isEmpty()) return null
         return categories[listOfExpensesPerCategory.indexOf(listOfExpensesPerCategory.max())]
     }
 
