@@ -67,69 +67,81 @@ class MonthlyFragment : Fragment() {
 
     private fun calculateMonthlyBalances(userId: UUID): List<Pair<Date, Double>> {
         val monthlyBalances = mutableListOf<Pair<Date, Double>>()
-        var runningBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
+        val initialBalance = initialBalanceData.fetchInitialBalance(userId) ?: 0.0
 
-        // Get all transactions sorted by date
+        // Get all transactions for this user
         val allTransactions = transactionData.getAllTransaction()
 
-        // Find the first day of month for initial date
-        val firstDate = allTransactions.firstOrNull()?.date
-            ?: initialBalanceData.fetchInitialDate(userId)
-            ?: Date()
+        // If no transactions, just return initial balance
+        if (allTransactions.isEmpty()) {
+            val today = Calendar.getInstance().time
+            return listOf(today to initialBalance)
+        }
 
-        // Get first day of month using Calendar
-        val calendar = Calendar.getInstance().apply {
+        // Find earliest and latest dates to cover
+        val firstDate = (allTransactions.minByOrNull { it.date }?.date
+            ?: initialBalanceData.fetchInitialDate(userId)
+            ?: Date())
+
+        // Make sure we include current month
+        val lastDate = Calendar.getInstance().apply {
+            // Add one month to ensure we include current month
+            add(Calendar.MONTH, 1)
+        }.time
+
+        // Get date representing first day of month for earliest transaction
+        val startCalendar = Calendar.getInstance().apply {
             time = firstDate
-            set(Calendar.DAY_OF_MONTH, 1) // Set to first day of month
+            set(Calendar.DAY_OF_MONTH, 1)
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
-        var currentMonthStart = calendar.time
 
-        // Process until current month + 1
-        val endDate = Calendar.getInstance().apply {
-            time = Date()
-            add(Calendar.MONTH, 1)
-            set(Calendar.DAY_OF_MONTH, 1)
-        }.time
+        // Create monthly points between first and last dates
+        var runningBalance = initialBalance
+        var currentDate = startCalendar.time
 
-        // Add initial balance point
-        monthlyBalances.add(currentMonthStart to runningBalance)
-        Log.d("Balance", "Initial ${currentMonthStart}: $runningBalance")
+        while (currentDate.before(lastDate)) {
+            // Get the last day of current month
+            val monthEndCalendar = Calendar.getInstance().apply {
+                time = currentDate
+                set(Calendar.DAY_OF_MONTH, getActualMaximum(Calendar.DAY_OF_MONTH))
+                set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 59)
+                set(Calendar.SECOND, 59)
+            }
+            val monthEnd = monthEndCalendar.time
 
-        while (currentMonthStart.before(endDate)) {
-            // Get last day of current month
-            calendar.time = currentMonthStart
-            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
-            val currentMonthEnd = calendar.time
+            // Calculate month's transactions
+            val monthTransactions = allTransactions.filter {
+                !it.date.before(currentDate) && !it.date.after(monthEnd)
+            }
 
-            // Calculate net change for THIS MONTH ONLY
-            val monthlyChange = allTransactions
-                .filter {
-                    it.date.after(currentMonthStart) &&
-                            it.date.before(currentMonthEnd) ||
-                            it.date == currentMonthStart ||
-                            it.date == currentMonthEnd
-                }
-                .sumOf { if(it.isIncome) it.amount else -it.amount }
+            val monthlyChange = monthTransactions.sumOf {
+                if (it.isIncome) it.amount else -it.amount
+            }
 
+            // Update running balance with this month's transactions
             runningBalance += monthlyChange
 
-            // Add balance at END of month
-            monthlyBalances.add(currentMonthEnd to runningBalance)
-            Log.d("Balance", "Month ${currentMonthStart} to $currentMonthEnd: Change=$monthlyChange, New Balance=$runningBalance")
+            // Create a data point using the middle of the month (better for display)
+            val displayDate = Calendar.getInstance().apply {
+                time = currentDate
+                set(Calendar.DAY_OF_MONTH, 15)  // Middle of month for display
+            }.time
 
-            // Move to next month
-            calendar.time = currentMonthStart
-            calendar.add(Calendar.MONTH, 1)
-            currentMonthStart = calendar.time
+            // Add this month's final balance
+            monthlyBalances.add(displayDate to runningBalance)
+
+            // Move to first day of next month
+            startCalendar.add(Calendar.MONTH, 1)
+            currentDate = startCalendar.time
         }
 
         return monthlyBalances
     }
-
     private fun setupChartWithMinimap(balanceEntries: List<Pair<Date, Double>>) {
 
         Log.e("MonthlyFragment", "Set Up Main Chart")

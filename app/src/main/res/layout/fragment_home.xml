@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:scrollbarAlwaysDrawVerticalTrack="true"
-    android:paddingBottom="32dp">
+    android:paddingBottom="32dp"
+    android:paddingTop="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
