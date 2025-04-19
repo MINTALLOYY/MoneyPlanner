@@ -278,14 +278,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/expenseCategoryName"
-                            android:text="Groceries"
+                            android:text="No Expenses"
                             style="@style/darkCardText"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/expenseCategoryAmount"
-                            android:text="-$ 2,349,454.00"
+                            android:text="-$ 0.00"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             style="@style/redTextCard"/>
 
@@ -317,12 +317,12 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/incomeSourceName"
                             style="@style/darkCardText"
-                            android:text="McDonald's Job" />
+                            android:text="No Income Sources" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/incomeSourceAmount"
-                            android:text="+$ 2,336,794.75"
+                            android:text="+$ 0.00"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             style="@style/greenTextCard" />
 

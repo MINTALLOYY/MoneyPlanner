@@ -366,31 +366,16 @@ class HomeFragment: Fragment() {
     }
 
     private fun getCurrentBalance(): Double{
-        val cal = Calendar.getInstance()
-        cal.add(Calendar.DAY_OF_WEEK, -7)
-        val lastWeek = cal.time
-
         // val initial = initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
 
-        val incomeBalanceList = incomeData.getIncomesInDateRange(lastWeek, Date())
-        val expenseBalanceList = expenseData.getExpensesInDateRange(lastWeek, Date())
+        val incomeBalance = incomeData.getTotalIncomeAmount()
+        val expenseBalance = expenseData.getTotalExpenseAmount()
 
-        var incomeBalance = 0.0
-        var expenseBalance = 0.0
-        if(incomeBalanceList.isNotEmpty() && expenseBalanceList.isNotEmpty()){
-            for(income in incomeBalanceList){
-                incomeBalance += income.amount
-            }
-            for(expense in expenseBalanceList){
-                expenseBalance += expense.amount
-            }
-            Log.d("expenseBalance", expenseBalance.toString())
-            Log.d("incomeBalance", incomeBalance.toString())
-            currentBalance = incomeBalance - expenseBalance + initialBalance!!
-        }
-        else{
-            currentBalance = 0.0 + initialBalance!!
-        }
+        Log.d("expenseBalance", expenseBalance.toString())
+        Log.d("incomeBalance", incomeBalance.toString())
+        currentBalance = incomeBalance - expenseBalance + initialBalance!!
+        currentBalance = 0.0 + initialBalance!!
+
         return currentBalance
 
     }
@@ -449,19 +434,15 @@ class HomeFragment: Fragment() {
         binding.currentBalance.text = doubleToMoneyString(currentBalance)
         if (currentBalance < 0.0) binding.currentBalance.text = "-${doubleToMoneyString(currentBalance)}"
 
-        if (biggestCategory == null || biggestIncomeSource == null) {
-            binding.expenseCategoryName.text = "No Expenses"
-            binding.expenseCategoryAmount.text = "-$0.00"
-            binding.incomeSourceName.text = "No Income"
-            binding.incomeSourceAmount.text = "+$0.00"
-        }
-        else{
+        if(biggestCategory != null){
             binding.expenseCategoryName.text = "${biggestCategory.categoryName}"
             binding.expenseCategoryAmount.text = "-${doubleToMoneyString(expenseData.getTotalSpentInCategory(biggestCategory.categoryId, lastDate))}"
-
+        }
+        if(biggestIncomeSource != null){
             binding.incomeSourceName.text = "${biggestIncomeSource.incomeCategoryName}"
             binding.incomeSourceAmount.text = "+${doubleToMoneyString(incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate))}"
         }
+
         binding.totalSpent.text = "-${doubleToMoneyString(expenseData.getTotalExpenseAmount(lastDate))}"
         binding.totalEarned.text = "+${doubleToMoneyString(incomeData.getTotalIncomeAmount(lastDate))}"
     }

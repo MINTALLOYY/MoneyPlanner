@@ -21,8 +21,8 @@ class SearchListAdapter (
         val nameTextView: TextView = itemView.findViewById(R.id.textViewTransactionName)
         val amountTextView: TextView = itemView.findViewById(R.id.textViewTransactionAmount)
         val dateTextView: TextView = itemView.findViewById(R.id.textViewTransactionDate)
-        val isIncomeIndicatorTop: View = itemView.findViewById(R.id.representationOfExpenseIncomeTop)
-        val isIncomeIndicatorBottom: View = itemView.findViewById(R.id.representationOfExpenseIncomeBottom)
+//        val isIncomeIndicatorTop: View = itemView.findViewById(R.id.representationOfExpenseIncomeTop)
+//        val isIncomeIndicatorBottom: View = itemView.findViewById(R.id.representationOfExpenseIncomeBottom)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionListViewHolder {
@@ -40,8 +40,8 @@ class SearchListAdapter (
         }
         else{
             holder.amountTextView.text = "- $" + transaction.amount
-            holder.isIncomeIndicatorBottom.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
-            holder.isIncomeIndicatorTop.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+//            holder.isIncomeIndicatorBottom.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+//            holder.isIncomeIndicatorTop.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
         }
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

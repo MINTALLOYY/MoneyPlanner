@@ -229,7 +229,7 @@ class MonthlyFragment : Fragment() {
             Entry(index.toFloat(), balance.toFloat())
         }
 
-        val dataSet = LineDataSet(entries, "Weekly Balance").apply {
+        val dataSet = LineDataSet(entries, "Monthly Balance").apply {
             color = ContextCompat.getColor(requireContext(), R.color.metallic_gold)
             lineWidth = 3f
             setDrawCircles(true)
