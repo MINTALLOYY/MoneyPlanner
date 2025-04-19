@@ -366,15 +366,12 @@ class HomeFragment: Fragment() {
     }
 
     private fun getCurrentBalance(): Double{
-        // val initial = initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
-
         val incomeBalance = incomeData.getTotalIncomeAmount()
         val expenseBalance = expenseData.getTotalExpenseAmount()
 
         Log.d("expenseBalance", expenseBalance.toString())
         Log.d("incomeBalance", incomeBalance.toString())
         currentBalance = incomeBalance - expenseBalance + initialBalance!!
-        currentBalance = 0.0 + initialBalance!!
 
         return currentBalance
 
