@@ -146,7 +146,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
             // Find dates within text (MM/DD/YYYY)
             Pattern.compile(".*?(\\d{1,2}/\\d{1,2}/\\d{4}).*?"),
 
-            // Find dates with shortened year (MM/D/YY) - like your "11/8/24" example
+            // Find dates with shortened year (MM/D/YY)
             Pattern.compile(".*?(\\d{1,2}/\\d{1,2}/\\d{2}).*?"),
 
             // Find dates with different separators (M-D-YY or M-D-YYYY)
@@ -156,7 +156,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
         for (line in lines) {
             for (pattern in patterns) {
                 val matcher = pattern.matcher(line)
-                // Changed from matcher.matches() to matcher.find() to locate dates within text
+                // Matcher.find() to locate dates within line
                 if (matcher.find()) {
                     val dateStr = matcher.group(1)?.trim() ?: continue
 
@@ -173,7 +173,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
                                 return "$month/$day/$year"
                             }
 
-                            // Handle MM/D/YY format (like 11/8/24)
+                            // Handle MM/D/YY format
                             parts[2].length == 2 -> {
                                 val month = parts[0].padStart(2, '0')
                                 val day = parts[1].padStart(2, '0')
