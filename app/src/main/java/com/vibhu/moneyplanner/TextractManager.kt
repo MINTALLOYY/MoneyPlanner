@@ -144,13 +144,13 @@ class TextractManager(private val textractClient: AmazonTextract) {
     private fun getDateFromReceipt(lines: MutableList<String>): String? {
         val patterns = listOf(
             // Find dates within text (MM/DD/YYYY)
-            Pattern.compile(".*?(\\d{1,2}/\\d{1,2}/\\d{4}).*?"),
+            Pattern.compile("(\\d{1,2}/\\d{1,2}/\\d{4})"),
 
             // Find dates with shortened year (MM/D/YY)
-            Pattern.compile(".*?(\\d{1,2}/\\d{1,2}/\\d{2}).*?"),
+            Pattern.compile("(\\d{1,2}/\\d{1,2}/\\d{2}) "),
 
             // Find dates with different separators (M-D-YY or M-D-YYYY)
-            Pattern.compile(".*?(\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}).*?")
+            Pattern.compile("(\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4})")
         )
 
         for (line in lines) {

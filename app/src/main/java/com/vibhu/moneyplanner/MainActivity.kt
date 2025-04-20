@@ -180,8 +180,8 @@ class MainActivity : AppCompatActivity() {
         }
         textractManager = TextractManager(textractClient)
 
-        val inputStream: InputStream = assets.open("receipt.jpg")
-        val tempFile = File.createTempFile("receipt", ".jpg", cacheDir)
+        val inputStream: InputStream = assets.open("costcoReceipt.jpg")
+        val tempFile = File.createTempFile("costcoReceipt", ".jpg", cacheDir)
         FileOutputStream(tempFile).use { outputStream ->
             inputStream.copyTo(outputStream)
         }

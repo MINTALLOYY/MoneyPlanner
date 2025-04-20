@@ -55,7 +55,9 @@ class AddExpenseFragment: Fragment() {
                 if(nameAutofill == null) Toast.makeText(requireContext(), arguments?.getString("nameError"), Toast.LENGTH_SHORT).show()
                 else binding.editTextExpenseName.setText(nameAutofill)
                 if(dateAutofill == null) Toast.makeText(requireContext(), arguments?.getString("dateError"), Toast.LENGTH_SHORT).show()
-                else autofillDatePicker(dateAutofill)
+                else {
+                    autofillDatePicker(dateAutofill)
+                }
             }
 
             binding.buttonAddExpense.setOnClickListener {
@@ -100,12 +102,12 @@ class AddExpenseFragment: Fragment() {
         var year = 0
         var month = 0
         var day = 0
-        if(dateParts[0].toInt() == 4) {
+        if(dateParts[0].length == 4) {
             year = dateParts[0].toInt()
             month = dateParts[1].toInt() - 1 // Month is zero-based
             day = dateParts[2].toInt()
         }
-        else if(dateParts[0].toInt() == 2) {
+        else if(dateParts[0].length == 2) {
             month = dateParts[0].toInt() - 1 // Month is zero-based
             day = dateParts[1].toInt()
             year = dateParts[2].toInt()
