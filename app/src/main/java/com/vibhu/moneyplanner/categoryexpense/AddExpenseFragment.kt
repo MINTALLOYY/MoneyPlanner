@@ -45,12 +45,20 @@ class AddExpenseFragment: Fragment() {
         // Get the categoryId from the intent
         val categoryIdStr = arguments?.getString("categoryId")
         val totalAutofill = arguments?.getString("total")
+        val nameAutofill = arguments?.getString("name")
+        val dateAutofill = arguments?.getString("date")
         if (categoryIdStr != null) {
             categoryId = UUID.fromString(categoryIdStr)
 
             if(totalAutofill != null){
                 binding.editTextExpenseAmount.setText(totalAutofill)
                 Log.d("Total", totalAutofill)
+                if(nameAutofill == null) Toast.makeText(requireContext(), arguments?.getString("nameError"), Toast.LENGTH_SHORT).show()
+                else binding.editTextExpenseName.setText(nameAutofill)
+                if(dateAutofill == null) Toast.makeText(requireContext(), arguments?.getString("dateError"), Toast.LENGTH_SHORT).show()
+                else {
+                    autofillDatePicker(dateAutofill)
+                }
             }
 
             binding.buttonAddExpense.setOnClickListener {
@@ -91,6 +99,28 @@ class AddExpenseFragment: Fragment() {
             goBackToExpensesPage("Category Id is Missing")
         }
 
+    }
+
+    private fun autofillDatePicker(string: String) {
+        val dateParts = string.split("/")
+
+        var year = 0
+        var month = 0
+        var day = 0
+        if(dateParts[0].length == 4) {
+            year = dateParts[0].toInt()
+            month = dateParts[1].toInt() - 1 // Month is zero-based
+            day = dateParts[2].toInt()
+        }
+        else if(dateParts[0].length == 2) {
+            month = dateParts[0].toInt() - 1 // Month is zero-based
+            day = dateParts[1].toInt()
+            year = dateParts[2].toInt()
+        }
+        else {
+            return
+        }
+        binding.datePickerExpense.updateDate(year, month, day)
     }
 
     fun goBackToExpensesPage(message: String? = null){
