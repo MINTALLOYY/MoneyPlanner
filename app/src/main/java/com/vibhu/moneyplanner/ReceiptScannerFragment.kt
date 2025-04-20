@@ -24,6 +24,8 @@ import java.io.InputStream
 import java.net.URI
 import java.util.UUID
 import androidx.core.net.toUri
+import com.vibhu.moneyplanner.categoryexpense.ExpensesFragment
+import kotlin.math.exp
 
 
 class ReceiptScannerFragment : Fragment() {
@@ -73,7 +75,7 @@ class ReceiptScannerFragment : Fragment() {
             Log.d("CameraActivity", "Photo URI: $photoUri")
             imageView.load(photoUri)
         } else{
-            goToHomePage("No File Found")
+            goToExpensesPage("No File Found")
         }
         if (categoryIdString!= null) {
             categoryId = UUID.fromString(categoryIdString)
@@ -96,10 +98,11 @@ class ReceiptScannerFragment : Fragment() {
                 }
             } else if (error != null) {
                 Log.e("Textract Error", error.message.toString())
+                goToExpensesPage("Cannot Find Total of Receipt")
                 // Handle error
             } else {
                 Log.e("Textract Error", "Cannot find total or receipt is invalid")
-                goToHomePage("Cannot Find Total of Receipt")
+                goToExpensesPage("Cannot Find Total of Receipt")
             }
             Log.d("Analyzing Over", "ANALYZING IS OVER")
         }
@@ -135,17 +138,17 @@ class ReceiptScannerFragment : Fragment() {
         fragmentTransaction.commit()
     }
 
-    fun goToHomePage(message: String){
+    fun goToExpensesPage(message: String){
         val bundle = Bundle()
         bundle.putString("message", message)
 
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val homeFragment = HomeFragment()
-        homeFragment.arguments = bundle
+        val expensesFragment = ExpensesFragment()
+        expensesFragment.arguments = bundle
 
-        fragmentTransaction.replace(R.id.fragment_container, homeFragment)
+        fragmentTransaction.replace(R.id.fragment_container, expensesFragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
