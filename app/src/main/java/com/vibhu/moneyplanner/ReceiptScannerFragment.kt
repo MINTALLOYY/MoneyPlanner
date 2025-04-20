@@ -42,8 +42,8 @@ class ReceiptScannerFragment : Fragment() {
     private val textractClient: AmazonTextract by lazy {
         val credentialsProvider = CognitoCachingCredentialsProvider(
             context,
-            "us-east-1:250834a1-31f1-4bff-a8ac-adfd1484a595", // Replace with your Identity Pool ID
-            Regions.US_EAST_1 // Replace with your region (e.g., Regions.US_EAST_1)
+            "us-east-1:250834a1-31f1-4bff-a8ac-adfd1484a595", // Identity Pool ID
+            Regions.US_EAST_1
         )
         AmazonTextractClient(credentialsProvider)
     }
