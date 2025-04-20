@@ -96,7 +96,7 @@ class HomeFragment: Fragment() {
 
         getCurrentBalance()
         Log.d("currentBalance", "" + currentBalance)
-//        updateInfoCards()
+        updateInfoCards()
 
         getTransactionHistory()
 
@@ -148,16 +148,16 @@ class HomeFragment: Fragment() {
             val currentIndex = listOfDays.indexOf(binding.infoCardsTimeChanger.text)
             val nextIndex = (currentIndex + 1) % listOfDays.size
             binding.infoCardsTimeChanger.text = listOfDays[nextIndex]
-//            updateInfoCards(
-//                daysAgo = when (listOfDays[nextIndex]) {
-//                    "Last 7 Days" -> 7
-//                    "Last 30 Days" -> 30
-//                    "Last 365 Days" -> 365
-//                    else -> {
-//                        null
-//                    }
-//                }
-//            )
+            updateInfoCards(
+                daysAgo = when (listOfDays[nextIndex]) {
+                    "Last 7 Days" -> 7
+                    "Last 30 Days" -> 30
+                    "Last 365 Days" -> 365
+                    else -> {
+                        null
+                    }
+                }
+            )
         }
 
     }
@@ -233,6 +233,7 @@ class HomeFragment: Fragment() {
         val btnStartDate = dialogView.findViewById<Button>(R.id.btnStartDate)
         val btnEndDate = dialogView.findViewById<Button>(R.id.btnEndDate)
         val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirmDates)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancelDates)
 
         val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).apply {
             timeZone = TimeZone.getDefault() // Add this for consistency
@@ -242,7 +243,10 @@ class HomeFragment: Fragment() {
         btnEndDate.text = endDate?.let { dateFormat.format(it) } ?: "Select end date"
 
         btnStartDate.setOnClickListener {
-            val datePicker = DatePickerDialog(requireContext(), { _, year, month, day ->
+            val datePicker = DatePickerDialog(
+                requireContext(),
+                R.style.datePickersCalendar,
+            { _, year, month, day ->
                 val cal = Calendar.getInstance().apply {
                     set(year, month, day)
                 }
@@ -254,7 +258,10 @@ class HomeFragment: Fragment() {
         }
 
         btnEndDate.setOnClickListener {
-            val datePicker = DatePickerDialog(requireContext(), { _, year, month, day ->
+            val datePicker = DatePickerDialog(
+                requireContext(),
+                R.style.datePickersCalendar,
+                { _, year, month, day ->
                 val cal = Calendar.getInstance().apply {
                     set(year, month, day)
                 }
@@ -266,6 +273,14 @@ class HomeFragment: Fragment() {
         }
 
         btnConfirm.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            startDate = null
+            endDate = null
+            btnStartDate.text = "Select start date"
+            btnEndDate.text = "Select end date"
             dialog.dismiss()
         }
 
@@ -351,31 +366,13 @@ class HomeFragment: Fragment() {
     }
 
     private fun getCurrentBalance(): Double{
-        val cal = Calendar.getInstance()
-        cal.add(Calendar.DAY_OF_WEEK, -7)
-        val lastWeek = cal.time
+        val incomeBalance = incomeData.getTotalIncomeAmount()
+        val expenseBalance = expenseData.getTotalExpenseAmount()
 
-        // val initial = initialBalanceData.fetchInitialDate(UUID.fromString((requireActivity() as MainActivity).sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
+        Log.d("expenseBalance", expenseBalance.toString())
+        Log.d("incomeBalance", incomeBalance.toString())
+        currentBalance = incomeBalance - expenseBalance + initialBalance!!
 
-        val incomeBalanceList = incomeData.getIncomesInDateRange(lastWeek, Date())
-        val expenseBalanceList = expenseData.getExpensesInDateRange(lastWeek, Date())
-
-        var incomeBalance = 0.0
-        var expenseBalance = 0.0
-        if(incomeBalanceList.isNotEmpty() && expenseBalanceList.isNotEmpty()){
-            for(income in incomeBalanceList){
-                incomeBalance += income.amount
-            }
-            for(expense in expenseBalanceList){
-                expenseBalance += expense.amount
-            }
-            Log.d("expenseBalance", expenseBalance.toString())
-            Log.d("incomeBalance", incomeBalance.toString())
-            currentBalance = incomeBalance - expenseBalance + initialBalance!!
-        }
-        else{
-            currentBalance = 0.0 + initialBalance!!
-        }
         return currentBalance
 
     }
@@ -431,17 +428,20 @@ class HomeFragment: Fragment() {
         val biggestIncomeSource = incomeData.getBiggestIncomeSourceOutOfSources(incomeCategoryData.getAllIncomeCategories(), lastDate)
         Log.d("Biggest Categories", "Biggest Category: ${biggestCategory?.categoryName}, Biggest Income Source: ${biggestIncomeSource?.incomeCategoryName}")
 
-        binding.currentBalance.text = "$${currentBalance}"
-        if (currentBalance < 0.0) binding.currentBalance.text = "-$${currentBalance}"
+        binding.currentBalance.text = doubleToMoneyString(currentBalance)
+        if (currentBalance < 0.0) binding.currentBalance.text = "-${doubleToMoneyString(currentBalance)}"
 
-        binding.expenseCategoryName.text = "${biggestCategory.categoryName}"
-        binding.expenseCategoryAmount.text = "-$${expenseData.getTotalSpentInCategory(biggestCategory.categoryId, lastDate)}"
+        if(biggestCategory != null){
+            binding.expenseCategoryName.text = "${biggestCategory.categoryName}"
+            binding.expenseCategoryAmount.text = "-${doubleToMoneyString(expenseData.getTotalSpentInCategory(biggestCategory.categoryId, lastDate))}"
+        }
+        if(biggestIncomeSource != null){
+            binding.incomeSourceName.text = "${biggestIncomeSource.incomeCategoryName}"
+            binding.incomeSourceAmount.text = "+${doubleToMoneyString(incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate))}"
+        }
 
-        binding.incomeSourceName.text = "${biggestIncomeSource.incomeCategoryName}"
-        binding.incomeSourceAmount.text = "+$${incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate)}"
-
-        binding.totalSpent.text = "-$${expenseData.getTotalExpenseAmount(lastDate)}"
-        binding.totalEarned.text = "+$${incomeData.getTotalIncomeAmount(lastDate)}"
+        binding.totalSpent.text = "-${doubleToMoneyString(expenseData.getTotalExpenseAmount(lastDate))}"
+        binding.totalEarned.text = "+${doubleToMoneyString(incomeData.getTotalIncomeAmount(lastDate))}"
     }
 
     override fun onDestroy() {
