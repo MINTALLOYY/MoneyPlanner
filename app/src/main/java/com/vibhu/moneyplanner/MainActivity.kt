@@ -8,6 +8,10 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import com.amazonaws.auth.CognitoCachingCredentialsProvider
+import com.amazonaws.regions.Regions
+import com.amazonaws.services.textract.AmazonTextract
+import com.amazonaws.services.textract.AmazonTextractClient
 import com.vibhu.moneyplanner.categoryexpense.CategoriesFragment
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
 import com.vibhu.moneyplanner.models.InitialBalance
@@ -51,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("Initial Date", initialBalance.initialDate.toString())
 
         }
+        testTextractWithLocalFile()
     }
 
     fun setUpBottomNavigation(){
@@ -165,23 +170,33 @@ class MainActivity : AppCompatActivity() {
 
     private fun testTextractWithLocalFile() {
 
+        val textractClient: AmazonTextract by lazy {
+            val credentialsProvider = CognitoCachingCredentialsProvider(
+                this,
+                "us-east-1:250834a1-31f1-4bff-a8ac-adfd1484a595", // Identity Pool ID
+                Regions.US_EAST_1
+            )
+            AmazonTextractClient(credentialsProvider)
+        }
+        textractManager = TextractManager(textractClient)
+
         val inputStream: InputStream = assets.open("receipt.jpg")
         val tempFile = File.createTempFile("receipt", ".jpg", cacheDir)
         FileOutputStream(tempFile).use { outputStream ->
             inputStream.copyTo(outputStream)
         }
 
-//        textractManager.analyzeDocument(tempFile) { extractedText, error ->
-//            if (extractedText != null) {
-//                Log.d("Textract Result", extractedText)
-//                Log.d("TESTING", "TESTING TESTING TESTING")
-//                // Display text in your UI
-//            } else if (error != null) {
-//                Log.e("Textract Error", error.message.toString())
-//                // Handle error
-//            }
-//            Log.d("Analyzing Over", "ANALYZING IS OVER")
-//        }
+        textractManager.analyzeDocument(tempFile) { extractedName, extractedDate, extractedTotal, error ->
+            if (extractedTotal != null) {
+                Log.d("Textract Result", "Extracted Total: $extractedTotal" + " Extracted Name: $extractedName" + " Extracted Date: $extractedDate")
+                Log.d("TESTING", "TESTING TESTING TESTING")
+                // Display text in your UI
+            } else if (error != null) {
+                Log.e("Textract Error", error.message.toString())
+                // Handle error
+            }
+            Log.d("Analyzing Over", "ANALYZING IS OVER")
+        }
     }
 
     override fun onDestroy() {

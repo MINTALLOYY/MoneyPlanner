@@ -91,10 +91,16 @@ class TextractManager(private val textractClient: AmazonTextract) {
         }
         Log.d("lines", lines.toString())
 
+        val extractedTotal = getTotalFromReceipt(lines)
+        val extractedName = getNameFromReceipt(lines)
+        val extractedDate = getDateFromReceipt(lines)
+
+        Log.d("Textract Result", "Extracted Total: $extractedTotal" + " Extracted Name: $extractedName" + " Extracted Date: $extractedDate")
+
         return mutableListOf(
-            getNameFromReceipt(lines),
-            getDateFromReceipt(lines),
-            getTotalFromReceipt(lines)
+            extractedName,
+            extractedDate,
+            extractedTotal
         )
     }
 
@@ -135,24 +141,64 @@ class TextractManager(private val textractClient: AmazonTextract) {
         return lines[0]
     }
 
-    private fun getDateFromReceipt(lines: MutableList<String>) : String? {
+    private fun getDateFromReceipt(lines: MutableList<String>): String? {
         val patterns = listOf(
-            // Match dates with possible prefixes/suffixes
-            Pattern.compile(".*?(\\d{2}/\\d{2}/\\d{4}).*?"),
-            Pattern.compile(".*?(\\d{4}/\\d{2}/\\d{2}).*?")
+            // Find dates within text (MM/DD/YYYY)
+            Pattern.compile(".*?(\\d{1,2}/\\d{1,2}/\\d{4}).*?"),
+
+            // Find dates with shortened year (MM/D/YY)
+            Pattern.compile(".*?(\\d{1,2}/\\d{1,2}/\\d{2}).*?"),
+
+            // Find dates with different separators (M-D-YY or M-D-YYYY)
+            Pattern.compile(".*?(\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}).*?")
         )
 
         for (line in lines) {
-            patterns.forEach { pattern ->
+            for (pattern in patterns) {
                 val matcher = pattern.matcher(line)
-                if (matcher.matches()) {
-                    return matcher.group(1)?.trim()
+                // Matcher.find() to locate dates within line
+                if (matcher.find()) {
+                    val dateStr = matcher.group(1)?.trim() ?: continue
+
+                    try {
+                        // Parse the date and standardize the format
+                        val parts = dateStr.split("[/-]".toRegex())
+
+                        when {
+                            // Handle YYYY/MM/DD format
+                            parts[0].length == 4 -> {
+                                val year = parts[0]
+                                val month = parts[1].padStart(2, '0')
+                                val day = parts[2].padStart(2, '0')
+                                return "$month/$day/$year"
+                            }
+
+                            // Handle MM/D/YY format
+                            parts[2].length == 2 -> {
+                                val month = parts[0].padStart(2, '0')
+                                val day = parts[1].padStart(2, '0')
+                                // Convert 2-digit year to 4-digit (assuming 20xx for years after 2000)
+                                val year = "20${parts[2]}"
+                                return "$month/$day/$year"
+                            }
+
+                            // Handle MM/DD/YYYY format
+                            else -> {
+                                val month = parts[0].padStart(2, '0')
+                                val day = parts[1].padStart(2, '0')
+                                val year = parts[2]
+                                return "$month/$day/$year"
+                            }
+                        }
+                    } catch (e: Exception) {
+                        // If parsing fails, continue to the next match
+                        continue
+                    }
                 }
             }
         }
         return null
     }
-
 
     private fun extractDocumentFromAnalysis(result: com.amazonaws.services.textract.model.DetectDocumentTextResult): String {
         val blocks = result.blocks
