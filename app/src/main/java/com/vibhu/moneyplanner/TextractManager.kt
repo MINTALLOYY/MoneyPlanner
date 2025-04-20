@@ -41,6 +41,7 @@ class TextractManager(private val textractClient: AmazonTextract) {
                 try {
                     val result = textractClient.detectDocumentText(detectDocumentTextRequest)
                     val extractedTexts = extractTextFromAnalysis(result)
+                    Log.d("extractedTexts", extractedTexts.toString())
                     callback(extractedTexts[0], extractedTexts[1], extractedTexts[2], null) // Success!
                 } catch (e: Exception) {
                     callback(null, null, null, e) // Error!

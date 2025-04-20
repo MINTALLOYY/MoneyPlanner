@@ -96,7 +96,7 @@ class HomeFragment: Fragment() {
 
         getCurrentBalance()
         Log.d("currentBalance", "" + currentBalance)
-        updateInfoCards()
+//        updateInfoCards()
 
         getTransactionHistory()
 
@@ -148,16 +148,16 @@ class HomeFragment: Fragment() {
             val currentIndex = listOfDays.indexOf(binding.infoCardsTimeChanger.text)
             val nextIndex = (currentIndex + 1) % listOfDays.size
             binding.infoCardsTimeChanger.text = listOfDays[nextIndex]
-            updateInfoCards(
-                daysAgo = when (listOfDays[nextIndex]) {
-                    "Last 7 Days" -> 7
-                    "Last 30 Days" -> 30
-                    "Last 365 Days" -> 365
-                    else -> {
-                        null
-                    }
-                }
-            )
+//            updateInfoCards(
+//                daysAgo = when (listOfDays[nextIndex]) {
+//                    "Last 7 Days" -> 7
+//                    "Last 30 Days" -> 30
+//                    "Last 365 Days" -> 365
+//                    else -> {
+//                        null
+//                    }
+//                }
+//            )
         }
 
     }

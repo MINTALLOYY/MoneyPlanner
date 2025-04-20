@@ -171,17 +171,17 @@ class MainActivity : AppCompatActivity() {
             inputStream.copyTo(outputStream)
         }
 
-        textractManager.analyzeDocument(tempFile) { extractedText, error ->
-            if (extractedText != null) {
-                Log.d("Textract Result", extractedText)
-                Log.d("TESTING", "TESTING TESTING TESTING")
-                // Display text in your UI
-            } else if (error != null) {
-                Log.e("Textract Error", error.message.toString())
-                // Handle error
-            }
-            Log.d("Analyzing Over", "ANALYZING IS OVER")
-        }
+//        textractManager.analyzeDocument(tempFile) { extractedText, error ->
+//            if (extractedText != null) {
+//                Log.d("Textract Result", extractedText)
+//                Log.d("TESTING", "TESTING TESTING TESTING")
+//                // Display text in your UI
+//            } else if (error != null) {
+//                Log.e("Textract Error", error.message.toString())
+//                // Handle error
+//            }
+//            Log.d("Analyzing Over", "ANALYZING IS OVER")
+//        }
     }
 
     override fun onDestroy() {
