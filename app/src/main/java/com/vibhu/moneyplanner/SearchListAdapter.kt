@@ -37,9 +37,13 @@ class SearchListAdapter (
 
         if(transaction.isIncome){
             holder.amountTextView.text = "+ $" + transaction.amount
+            holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.green_text))
+            holder.amountTextView.background = ContextCompat.getDrawable(context, R.drawable.green_container)
         }
         else{
             holder.amountTextView.text = "- $" + transaction.amount
+            holder.amountTextView.setTextColor(ContextCompat.getColor(context, R.color.red_text))
+            holder.amountTextView.background = ContextCompat.getDrawable(context, R.drawable.red_container)
 //            holder.isIncomeIndicatorBottom.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
 //            holder.isIncomeIndicatorTop.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
         }

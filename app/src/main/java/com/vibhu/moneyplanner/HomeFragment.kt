@@ -99,18 +99,7 @@ class HomeFragment: Fragment() {
         Log.d("currentBalance", "" + currentBalance)
         updateInfoCards()
 
-        getTransactionHistory()
-
-        transactionAdapter = TransactionHistoryAdapter(
-            transactionHistoryList,
-            requireContext(),
-            { transaction ->
-                navigateToTransactionDetails(transaction)
-            }
-        )
-
-        binding.transactionHistory.adapter = transactionAdapter
-        transactionAdapter.updateItems(transactionData.getAllTransaction())
+        setUpTransactionHistory()
 
         searchListAdapter = SearchListAdapter(
             emptyList(),
@@ -141,6 +130,25 @@ class HomeFragment: Fragment() {
 
         setInfoCardsTimeChanger()
 
+    }
+
+    private fun setUpTransactionHistory() {
+        // Get the Transaction History
+        getTransactionHistory()
+
+        // Set up the adapter for the transaction history list
+        transactionAdapter = TransactionHistoryAdapter(
+            transactionHistoryList,
+            requireContext(),
+            { transaction ->
+                // Make it transition to Transaction Details
+                navigateToTransactionDetails(transaction)
+            }
+        )
+        binding.transactionHistory.adapter = transactionAdapter
+
+        // Update the transaction history with all transactions
+        transactionAdapter.updateItems(transactionData.getAllTransaction())
     }
 
     private fun setInfoCardsTimeChanger(){
@@ -192,7 +200,6 @@ class HomeFragment: Fragment() {
         binding.searchTransaction.setOnQueryTextFocusChangeListener { _, hasFocus ->
             binding.filterButton.visibility = if (hasFocus) View.VISIBLE else View.GONE
         }
-
         // Toggle filter dropdown
         binding.filterButton.setOnClickListener {
             if (binding.filterDropdown.visibility == View.VISIBLE) {
@@ -207,7 +214,6 @@ class HomeFragment: Fragment() {
                 }
             }
         }
-
         // Handle filter type selection
         binding.filterTypeGroup.setOnCheckedChangeListener { _, checkedId ->
             currentFilterType = when (checkedId) {
@@ -216,12 +222,10 @@ class HomeFragment: Fragment() {
                 else -> FilterType.ALL
             }
         }
-
         // Date range picker
         binding.btnDateRange.setOnClickListener {
             showDateRangePicker()
         }
-
         // Apply filters
         binding.btnApplyFilters.setOnClickListener {
             applyFilters()
@@ -295,6 +299,7 @@ class HomeFragment: Fragment() {
     private fun applyFilters() {
         val query = binding.searchTransaction.query.toString()
         val filtered = transactionData.getAllTransaction().filter { transaction ->
+
             // Apply search query filter
             val matchesQuery = query.isEmpty() ||
                     transaction.transactionName.contains(query, ignoreCase = true)
@@ -314,9 +319,11 @@ class HomeFragment: Fragment() {
                 else -> transaction.date <= endDate!!
             }
 
+            // Filter filtered by these filters
             matchesQuery && matchesType && matchesDate
         }
 
+        // Update the SearchList with filtered items
         searchListAdapter.updateItems(filtered)
     }
 
@@ -420,31 +427,36 @@ class HomeFragment: Fragment() {
 
     private fun updateInfoCards(daysAgo: Int? = null){
 
+        // Get the date from the button
         var lastDate: Date? = null
         if (daysAgo != null) {
             val cal = Calendar.getInstance()
             cal.add(Calendar.DAY_OF_WEEK, -daysAgo)
             lastDate = cal.time
-            Log.d("Date", lastDate.toString())
-            Log.d("Date", Date().toString())
         }
 
-        val biggestCategory = expenseData.getBiggestCategoryOutOfCategories(expenseCategoryData.getAllCategories(), lastDate)
-        val biggestIncomeSource = incomeData.getBiggestIncomeSourceOutOfSources(incomeCategoryData.getAllIncomeCategories(), lastDate)
-        Log.d("Biggest Categories", "Biggest Category: ${biggestCategory?.categoryName}, Biggest Income Source: ${biggestIncomeSource?.incomeCategoryName}")
+        // The information presented will only be during the date range from lastDate - Present Date
 
+        // Get the biggest category from the expense and income database classes
+        val biggestExpenseCategory = expenseData.getBiggestCategoryOutOfCategories(expenseCategoryData.getAllCategories(), lastDate)
+        val biggestIncomeSource = incomeData.getBiggestIncomeSourceOutOfSources(incomeCategoryData.getAllIncomeCategories(), lastDate)
+
+        // Set the current balance info card based on how much the current balance is
         binding.currentBalance.text = doubleToMoneyString(currentBalance)
         if (currentBalance < 0.0) binding.currentBalance.text = "-${doubleToMoneyString(abs(currentBalance))}"
 
-        if(biggestCategory != null){
-            binding.expenseCategoryName.text = "${biggestCategory.categoryName}"
-            binding.expenseCategoryAmount.text = "-${doubleToMoneyString(expenseData.getTotalSpentInCategory(biggestCategory.categoryId, lastDate))}"
+        if(biggestExpenseCategory != null){ // Set the biggest expense category information card
+            binding.expenseCategoryName.text = "${biggestExpenseCategory.categoryName}"
+            val expenseAmount = doubleToMoneyString(expenseData.getTotalSpentInCategory(biggestExpenseCategory.categoryId, lastDate))
+            binding.expenseCategoryAmount.text = "-${expenseAmount}"
         }
-        if(biggestIncomeSource != null){
+        if(biggestIncomeSource != null){ // Set the biggest income source information card
             binding.incomeSourceName.text = "${biggestIncomeSource.incomeCategoryName}"
-            binding.incomeSourceAmount.text = "+${doubleToMoneyString(incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate))}"
+            val incomeAmount = doubleToMoneyString(incomeData.getTotalEarnedInSource(biggestIncomeSource.incomeCategoryId, lastDate))
+            binding.incomeSourceAmount.text = "+${incomeAmount}"
         }
 
+        // Set the total spent and total earned information cards
         binding.totalSpent.text = "-${doubleToMoneyString(expenseData.getTotalExpenseAmount(lastDate))}"
         binding.totalEarned.text = "+${doubleToMoneyString(incomeData.getTotalIncomeAmount(lastDate))}"
     }

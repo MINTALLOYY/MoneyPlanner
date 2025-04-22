@@ -31,16 +31,18 @@ class TrendFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val tabLayout = binding.tabLayout // Assuming you have a TabLayout in your layout (see XML below)
+        val expenseIncomeTabLayout = binding.tabLayout
 
-        tabLayout.addTab(tabLayout.newTab().setText("Expenses"))
-        tabLayout.addTab(tabLayout.newTab().setText("Income"))
+        // Set the text fo the Tab Layout
+        expenseIncomeTabLayout.addTab(expenseIncomeTabLayout.newTab().setText("Expenses"))
+        expenseIncomeTabLayout.addTab(expenseIncomeTabLayout.newTab().setText("Income"))
 
-        // Set a default tab (optional - you could just show the Expenses tab first in the XML)
+        // Set a default tab
         showExpensesFragment()
 
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        // Setup up the Tab for switching in between expenses and incomes
+        expenseIncomeTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
                     showExpensesFragment()
@@ -53,10 +55,12 @@ class TrendFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
+        // Set the button and the list of possible values
         val pieTimeButton: Button = binding.pieTimeChanger
         val listOfDays = mutableListOf("Last 7 days", "Last 30 days", "Last 365 days", "All Time")
 
 
+        // Update the Pie Charts based on the time displayed on the text
         pieTimeButton.setOnClickListener {
             val currentText = pieTimeButton.text.toString()
             val currentIndex = listOfDays.indexOf(currentText)
@@ -72,11 +76,14 @@ class TrendFragment : Fragment() {
             updatePieChart(numberOfDays, tabIsOnIncome())
         }
 
+        // Set the button and the list of possible values
         val trendsTimeButton: Button = binding.trendsTimeChanger
         val listOfTimePeriods = mutableListOf("Monthly", "Yearly")
 
+        // Default to Monthly
         trendsTimeButton.text = listOfTimePeriods[0]
 
+        // Update the bar charts based on the time displayed on the text
         trendsTimeButton.setOnClickListener {
             val currentText = trendsTimeButton.text.toString()
             val currentIndex = listOfTimePeriods.indexOf(currentText)

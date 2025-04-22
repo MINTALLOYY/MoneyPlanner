@@ -37,7 +37,7 @@ class ChatBotQAFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Initialize your view here
+
         _binding = FragmentGeminiChatBinding.inflate(inflater, container, false)
 
 
@@ -47,9 +47,10 @@ class ChatBotQAFragment : Fragment() {
             apiKey = ApiKeyHolder.apiKey,
         )
 
+        // Start the chat and give the AI instructions on what to talk about
         chat = generativeModel.startChat(
             history = listOf(
-                // 1. Hidden instructions (user role)
+                // Hidden instructions (user role)
                 content(role = "user") {
                     text("""
                 [SYSTEM INSTRUCTIONS]
@@ -96,52 +97,15 @@ class ChatBotQAFragment : Fragment() {
             """.trimIndent())
                 },
 
-                // 2. Fake acknowledgment (model role)
+                // Fake acknowledgment (model role)
                 content(role = "model") {
-                    text("Instructions received.") // Hidden from users
+                    // Fakes response to hide from users
+                    text("Instructions received.")
                 }
             )
         )
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        chatAdapter = ChatAdapter(requireContext(), listOf())
-        binding.chatBody.apply {
-            adapter = chatAdapter
-            layoutManager = LinearLayoutManager(requireContext()).apply {
-                stackFromEnd = true
-            }
-            setHasFixedSize(true)
-        }
-
-        setupViews()
-    }
-
-    private fun setupViews() {
-        // Setup RecyclerView for chat messages
-        val chatRecyclerView = binding.chatBody
-        chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // Setup send button
-        val sendButton = binding.sendButton
-        val inputEditText = binding.questionInput
-
-        sendButton.setOnClickListener {
-            val userMessage = inputEditText.text.toString()
-            if (userMessage.isNotEmpty()) {
-                // Add user message to chat
-                addMessageToChat(userMessage, true)
-                inputEditText.text.clear()
-
-                // Get response from Gemini
-                getGeminiResponse(userMessage)
-                Log.d("Message", userMessage)
-            }
-        }
     }
 
     private fun addMessageToChat(message: String, isUser: Boolean) {
@@ -189,14 +153,44 @@ class ChatBotQAFragment : Fragment() {
         }
     }
 
-    private fun giveContextToGemini(context: String) {
-        chatScope.launch {
-            try {
-                val response = generativeModel.generateContent(context)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        chatAdapter = ChatAdapter(requireContext(), listOf())
+        binding.chatBody.apply {
+            adapter = chatAdapter
+            layoutManager = LinearLayoutManager(requireContext()).apply {
+                stackFromEnd = true
             }
-            catch (e: Exception) {
-                Log.e("Gemini Error", "Error generating content", e)
+            setHasFixedSize(true)
+        }
+
+        setupViews()
+    }
+
+    private fun setupViews() {
+        // Setup RecyclerView for chat messages
+        val chatRecyclerView = binding.chatBody
+        chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Setup send button
+        val sendButton = binding.sendButton
+        val inputEditText = binding.questionInput
+
+        sendButton.setOnClickListener {
+            val userMessage = inputEditText.text.toString()
+            if (userMessage.isNotEmpty()) {
+                // Add user message to chat
+                addMessageToChat(userMessage, true)
+                inputEditText.text.clear()
+
+                // Get response from Gemini
+                getGeminiResponse(userMessage)
+                Log.d("Message", userMessage)
             }
         }
     }
+
+
+
 }
