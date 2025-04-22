@@ -36,8 +36,8 @@ class ReceiptScannerFragment : Fragment() {
     private lateinit var textractManager: TextractManager
     private lateinit var categoryId: UUID
     private var total: Float = 0.0F
-    private lateinit var name: String
-    private lateinit var dateStr: String
+    private var name: String? = null
+    private var dateStr: String? = null
     private lateinit var filePath: String
     private lateinit var photoUri: Uri
 

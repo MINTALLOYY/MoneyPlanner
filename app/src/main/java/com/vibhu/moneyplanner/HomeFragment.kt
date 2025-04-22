@@ -27,6 +27,7 @@ import java.util.TimeZone
 import java.util.UUID
 import androidx.core.view.isVisible
 import com.vibhu.moneyplanner.categoryexpense.CategoryData
+import kotlin.math.abs
 
 class HomeFragment: Fragment() {
 
@@ -429,7 +430,7 @@ class HomeFragment: Fragment() {
         Log.d("Biggest Categories", "Biggest Category: ${biggestCategory?.categoryName}, Biggest Income Source: ${biggestIncomeSource?.incomeCategoryName}")
 
         binding.currentBalance.text = doubleToMoneyString(currentBalance)
-        if (currentBalance < 0.0) binding.currentBalance.text = "-${doubleToMoneyString(currentBalance)}"
+        if (currentBalance < 0.0) binding.currentBalance.text = "-${doubleToMoneyString(abs(currentBalance))}"
 
         if(biggestCategory != null){
             binding.expenseCategoryName.text = "${biggestCategory.categoryName}"

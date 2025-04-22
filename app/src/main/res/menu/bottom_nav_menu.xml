@@ -25,7 +25,7 @@
 <!--        android:icon="@drawable/ic_pie_chart" />-->
     <item
         android:id="@+id/navigation_trend"
-        android:title="Trend"
+        android:title="Statistics"
         android:icon="@drawable/ic_trend"
         android:color="@color/black"
         android:iconTint="@color/black" />

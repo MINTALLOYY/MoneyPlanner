@@ -48,14 +48,19 @@ class MainActivity : AppCompatActivity() {
 
         if(isFirstRun()){
             showBalanceDialog()
-        } else {
-            setUpBottomNavigation()
-            setCurrentFragment(HomeFragment())
-            val initialBalance = initialBalanceData.fetchInitialBalanceObject(UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
-            Log.d("Initial Date", initialBalance.initialDate.toString())
+        }
+        else {
+            try{
+                val initialBalance = initialBalanceData.fetchInitialBalanceObject(UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
+                Log.d("Initial Date", initialBalance.initialDate.toString())
+                setUpBottomNavigation()
+                setCurrentFragment(HomeFragment())
+            } catch(e: NullPointerException){
+                showBalanceDialog()
+            }
 
         }
-        testTextractWithLocalFile()
+
     }
 
     fun setUpBottomNavigation(){
