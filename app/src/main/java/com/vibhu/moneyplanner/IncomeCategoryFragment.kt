@@ -21,6 +21,7 @@ class IncomeCategoryFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var incomeCategoryData: IncomeCategoryData
     private lateinit var incomeCategoryAdapter: IncomeCategoryAdapter
+    private lateinit var incomeData: IncomeData
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,6 +35,7 @@ class IncomeCategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         incomeCategoryData = IncomeCategoryData(requireContext())
+        incomeData = IncomeData(requireContext())
 
 
         val message = arguments?.getString("message")
@@ -66,6 +68,7 @@ class IncomeCategoryFragment : Fragment() {
                     .setMessage("Are you sure you want to delete this income category?")
                     .setPositiveButton("Delete") { _, _ ->
                         incomeCategoryData.deleteIncomeCategory(category.incomeCategoryId)
+                        incomeData.deleteAllIncomesInCategory(category.incomeCategoryId)
                         incomeCategoryAdapter.updateItems(incomeCategoryData.getAllIncomeCategories())
                     }
                     .setNegativeButton("Cancel", null)

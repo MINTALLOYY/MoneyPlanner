@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.vibhu.moneyplanner.Expense
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.FragmentCategoriesBinding
 
@@ -16,6 +17,7 @@ class CategoriesFragment: Fragment() {
     private val binding get() = _binding!!
     private lateinit var categoryData: CategoryData
     private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var expenseData: ExpenseData
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +31,7 @@ class CategoriesFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         categoryData = CategoryData(requireContext())
+        expenseData = ExpenseData(requireContext())
         binding.recyclerViewCategories.layoutManager = LinearLayoutManager(requireContext())
 
         categoryAdapter = CategoryAdapter(
@@ -68,6 +71,7 @@ class CategoriesFragment: Fragment() {
                     .setMessage("Are you sure you want to delete this category?")
                     .setPositiveButton("Delete") { _, _ ->
                         categoryData.deleteCategory(category.categoryId)
+                        expenseData.deleteAllExpensesInCategoryId(category.categoryId)
                         categoryAdapter.updateItems(categoryData.getAllCategories())
                     }
                     .setNegativeButton("Cancel", null)

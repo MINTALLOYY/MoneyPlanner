@@ -155,4 +155,11 @@ class ExpenseData(context: Context) {
     fun close() {
         dbHelper.close()
     }
+
+    fun deleteAllExpensesInCategoryId(categoryId: UUID) {
+        val listOfDeletingExpenses = getExpensesByCategoryId(categoryId)
+        listOfDeletingExpenses.forEach { expense ->
+            deleteExpense(expense.expenseId)
+        }
+    }
 }

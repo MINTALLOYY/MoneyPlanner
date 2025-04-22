@@ -173,6 +173,13 @@ class IncomeData(context: Context) {
         return getIncomesByCategoryId(incomeCategoryId).size
     }
 
+    fun deleteAllIncomesInCategory(incomeCategoryId: UUID){
+        val listOfDeletingIncomes = getIncomesByCategoryId(incomeCategoryId)
+        listOfDeletingIncomes.forEach{ income ->
+            deleteIncome(income.incomeId)
+        }
+    }
+
     fun close() {
         dbHelper.close()
     }
