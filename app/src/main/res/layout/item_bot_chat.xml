@@ -18,6 +18,7 @@
         android:textColor="@color/dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
         android:fontFamily="@font/barlow_semi_condensed_light"
         app:layout_constraintTop_toTopOf="parent" />
 
