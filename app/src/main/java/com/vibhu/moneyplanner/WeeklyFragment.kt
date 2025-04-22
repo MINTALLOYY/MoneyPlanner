@@ -321,7 +321,7 @@ class WeeklyFragment : Fragment() {
                     override fun getFormattedValue(value: Float): String {
                         return when {
                             value >= 1000000 -> "${(value/1000000).toString().take(3)}M"
-                            value >= 1000 -> "${round(value / 1000).toString().take(3)}k"
+                            value >= 1000 -> "${(value / 1000).toString().take(3)}k"
                             value <= -1000000 -> "-${(-value/1000000).toString().take(3)}M"
                             value <= -1000 -> "-${(-value / 1000).toString().take(3)}k"
                             else -> value.toInt().toString()

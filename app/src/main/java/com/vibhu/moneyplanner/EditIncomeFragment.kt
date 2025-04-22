@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
+import android.util.Log
 
 class EditIncomeFragment : Fragment() {
 
@@ -86,6 +87,8 @@ class EditIncomeFragment : Fragment() {
                     val calendar = Calendar.getInstance()
                     calendar.set(newDateInfo.year, newDateInfo.month, newDateInfo.dayOfMonth)
                     val newDate = calendar.time
+
+                    Log.d("Income Name", incomeName)
 
                     if (newDate != null) {
                         val updatedIncome = Income(

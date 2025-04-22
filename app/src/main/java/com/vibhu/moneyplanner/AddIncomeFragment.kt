@@ -58,8 +58,8 @@ class AddIncomeFragment : Fragment() {
             else{
                 try {
 
-                    if (incomeName.length > 16) { // Double-check in code
-                        Toast.makeText(requireContext(), "Max 16 characters allowed", Toast.LENGTH_SHORT).show()
+                    if (incomeName.length > 20) { // Double-check in code
+                        Toast.makeText(requireContext(), "Max 20 characters allowed", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
 
@@ -104,7 +104,6 @@ class AddIncomeFragment : Fragment() {
         incomeFragment.arguments = bundle // Set the bundle with categoryId
 
         fragmentTransaction.replace(R.id.fragment_container, incomeFragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 

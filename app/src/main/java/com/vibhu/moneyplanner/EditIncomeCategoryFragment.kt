@@ -78,7 +78,6 @@ class EditIncomeCategoryFragment : Fragment() {
         incomeCategoryFragment.arguments = bundle // Set the bundle with categoryId
 
         fragmentTransaction.replace(R.id.fragment_container, incomeCategoryFragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 

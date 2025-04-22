@@ -72,7 +72,6 @@ class AddCategoryFragment : Fragment() {
         categoriesFragment.arguments = bundle // Set the bundle with categoryId
 
         fragmentTransaction.replace(R.id.fragment_container, categoriesFragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 }

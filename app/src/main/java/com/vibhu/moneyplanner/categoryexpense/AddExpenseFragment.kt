@@ -69,8 +69,8 @@ class AddExpenseFragment: Fragment() {
                 if (name.isNotBlank() && amountStr.isNotBlank()) {
                     try {
 
-                        if (name.length > 16) { // Double-check in code
-                            Toast.makeText(requireContext(), "Max 16 characters allowed", Toast.LENGTH_SHORT).show()
+                        if (name.length > 20) { // Double-check in code
+                            Toast.makeText(requireContext(), "Max 20 characters allowed", Toast.LENGTH_SHORT).show()
                             return@setOnClickListener
                         }
 
@@ -137,7 +137,6 @@ class AddExpenseFragment: Fragment() {
         expenseData.close()
 
         fragmentTransaction.replace(R.id.fragment_container, expensesFragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 }

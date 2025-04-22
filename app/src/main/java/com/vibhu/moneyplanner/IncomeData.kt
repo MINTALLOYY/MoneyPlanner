@@ -77,6 +77,7 @@ class IncomeData(context: Context) {
             put(COLUMN_AMOUNT, income.amount)
             put(COLUMN_INCOME_DATE, income.receivedDate.time)
             put(COLUMN_INCOME_CATEGORY_ID, income.incomeCategoryId.toString())
+            put(COLUMN_INCOME_NAME, income.incomeLogName)
         }
 
         val selection = "${COLUMN_INCOME_ID} = ?"

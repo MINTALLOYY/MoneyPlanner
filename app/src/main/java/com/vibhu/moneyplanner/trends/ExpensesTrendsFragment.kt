@@ -134,10 +134,16 @@ class ExpensesTrendsFragment: Fragment() {
             val stepSize = calculateStepSize(axisMaximum)
             setLabelCount((axisMaximum / stepSize).toInt() + 1, true)
 
-            // Format labels without decimals
+            // Format labels
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return if (value % stepSize == 0f) String.format("%.0f", value) else ""
+                    return when {
+                        value >= 1000000 -> "${(value/1000000).toString().take(3)}M"
+                        value >= 1000 -> "${(value / 1000).toString().take(3)}k"
+                        value <= -1000000 -> "-${(-value/1000000).toString().take(3)}M"
+                        value <= -1000 -> "-${(-value / 1000).toString().take(3)}k"
+                        else -> value.toInt().toString()
+                    }
                 }
             }
         }

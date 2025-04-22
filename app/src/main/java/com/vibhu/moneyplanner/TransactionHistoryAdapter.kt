@@ -36,6 +36,8 @@ class TransactionHistoryAdapter(
 
         if(transaction.isIncome){
             holder.amountTextView.text = "+ $" + transaction.amount
+            holder.amountView.background = ContextCompat.getDrawable(context, R.drawable.green_container)
+            holder.amountView.setTextColor(ContextCompat.getColor(context, R.color.green_text))
         }
         else{
             holder.amountTextView.text = "- $" + transaction.amount

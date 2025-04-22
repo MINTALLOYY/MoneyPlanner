@@ -78,8 +78,8 @@ class EditExpenseFragment: Fragment() {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // Stop further execution
             }
-            if (newName.length > 16){
-                Toast.makeText(requireContext(), "No more than 16 characters in the name fields", Toast.LENGTH_SHORT)
+            if (newName.length > 20){
+                Toast.makeText(requireContext(), "No more than 20 characters in the name fields", Toast.LENGTH_SHORT)
             }
 
             try {
@@ -123,7 +123,6 @@ class EditExpenseFragment: Fragment() {
         expenseData.close()
 
         fragmentTransaction.replace(R.id.fragment_container, expensesFragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 
