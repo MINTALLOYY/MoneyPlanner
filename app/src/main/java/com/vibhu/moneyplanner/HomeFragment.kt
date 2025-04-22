@@ -139,6 +139,11 @@ class HomeFragment: Fragment() {
             scrollToBottom()
         }
 
+        setInfoCardsTimeChanger()
+
+    }
+
+    private fun setInfoCardsTimeChanger(){
         val listOfDays = mutableListOf(
             "All Time",
             "Last 7 Days",
@@ -160,7 +165,6 @@ class HomeFragment: Fragment() {
                 }
             )
         }
-
     }
 
     private fun setupSearch() {

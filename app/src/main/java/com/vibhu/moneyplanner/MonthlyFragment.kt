@@ -143,22 +143,12 @@ class MonthlyFragment : Fragment() {
         return monthlyBalances
     }
     private fun setupChartWithMinimap(balanceEntries: List<Pair<Date, Double>>) {
-
-        Log.e("MonthlyFragment", "Set Up Main Chart")
-
         // Set up normal chart
         setupChart(balanceEntries)
 
-        Log.e("MonthlyFragment", "Retrieving Minimap")
         // Retrieve the minimap chart from the HomeFragment
         val homeFragment = parentFragmentManager.findFragmentById(R.id.fragment_container) as? HomeFragment
-        val minimapChart = homeFragment?.binding?.minimapChart
-
-        // Test if minimap exists (REMOVE BEFORE PRESENTATION)
-        if (minimapChart == null) {
-            Log.e("MonthlyFragment", "Minimap chart not found in HomeFragment")
-            return
-        }
+        val minimapChart = homeFragment?.binding?.minimapChart ?: return
 
         // Entries for minimap (same data, different formatting)
         val sortedEntries = balanceEntries.sortedBy { it.first }
