@@ -28,7 +28,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold"
         android:text="McDonald's Job"
         android:fontFamily="@font/questrial_regular"
         app:layout_constraintStart_toStartOf="parent"

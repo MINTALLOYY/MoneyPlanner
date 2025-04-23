@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold"
         android:fontFamily="@font/questrial_regular"
         app:layout_constraintBottom_toTopOf="@+id/textViewIncomeDate"
         app:layout_constraintStart_toStartOf="parent"

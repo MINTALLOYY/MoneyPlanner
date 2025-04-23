@@ -28,7 +28,6 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="16dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold"
         android:fontFamily="@font/questrial_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,10 +40,9 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/barlow_semi_condensed_light"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         style="@style/redTextCard"
         android:padding="2dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintBottom_toBottomOf="@id/textViewExpenseDate"
         app:layout_constraintEnd_toStartOf="@+id/linearLayoutExpenseButtons" />
 
