@@ -141,6 +141,7 @@ class ReceiptScannerFragment : Fragment() {
     fun goToExpensesPage(message: String){
         val bundle = Bundle()
         bundle.putString("message", message)
+        bundle.putString("categoryId", categoryId.toString())
 
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -149,7 +150,6 @@ class ReceiptScannerFragment : Fragment() {
         expensesFragment.arguments = bundle
 
         fragmentTransaction.replace(R.id.fragment_container, expensesFragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 }
