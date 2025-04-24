@@ -13,6 +13,7 @@
   - Income sources (pie chart)
 - 🧾 **Receipt Scanner** – Automatically extract expenses from receipts using OCR.
 - 🧭 **Navigation Helper** – AI-assisted guidance through app functionality.
+- 💾 **SQLite** - Database for storing all user transactions and categories
 
 ## Technologies Used
 
