@@ -205,14 +205,14 @@ class WeeklyFragment : Fragment() {
             xAxis.apply {
                 setDrawLabels(false)
                 setDrawGridLines(false)
-                setDrawAxisLine(true)
+                setDrawAxisLine(false)
                 textColor = Color.TRANSPARENT
             }
 
             axisLeft.apply {
                 setDrawLabels(false)
                 setDrawGridLines(false)
-                setDrawAxisLine(true)
+                setDrawAxisLine(false)
                 textColor = Color.TRANSPARENT
             }
 
