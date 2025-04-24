@@ -34,12 +34,15 @@
    git clone https://github.com/MINTALLOYY/MoneyPlanner2.git
    ```
 2. **Open in Android Studio:**
-   - Open Android Studio.
-   - Select "Open an Existing Project" and choose the cloned repository.
+   
+- Open Android Studio.
+- Select "Open an Existing Project" and choose the cloned repository.
 
 4. **Setup Virtual Device:**
-   - Go to AVD Manager and create a new Virtual Device (e.g., Pixel 5, API 33).
+   
+- Go to AVD Manager and create a new Virtual Device (e.g., Pixel 5, API 33).
 
-5. **Build the Project:**
-   - Sync Gradle files.
-   - Click Run to launch the app on your emulator.
+6. **Build the Project:**
+   
+- Sync Gradle files.
+- Click Run to launch the app on your emulator.
