@@ -13,7 +13,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.vibhu.moneyplanner.IncomeData
+import com.vibhu.moneyplanner.database.IncomeData
 import com.vibhu.moneyplanner.R
 import com.vibhu.moneyplanner.databinding.FragmentBarChartTrendsBinding
 import com.vibhu.moneyplanner.models.Income

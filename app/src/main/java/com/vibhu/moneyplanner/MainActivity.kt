@@ -12,10 +12,18 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.textract.AmazonTextract
 import com.amazonaws.services.textract.AmazonTextractClient
-import com.vibhu.moneyplanner.categoryexpense.CategoriesFragment
+import com.vibhu.moneyplanner.constants.SharedPreferencesConstants
+import com.vibhu.moneyplanner.database.IncomeCategoryData
+import com.vibhu.moneyplanner.database.IncomeData
+import com.vibhu.moneyplanner.database.InitialBalanceData
+import com.vibhu.moneyplanner.uiFragments.CategoriesFragment
 import com.vibhu.moneyplanner.databinding.ActivityMainBinding
 import com.vibhu.moneyplanner.models.InitialBalance
-import com.vibhu.moneyplanner.trends.TrendFragment
+import com.vibhu.moneyplanner.trends.PieChartExpenseFragment
+import com.vibhu.moneyplanner.uiFragments.TrendFragment
+import com.vibhu.moneyplanner.uiFragments.ChatBotQAFragment
+import com.vibhu.moneyplanner.uiFragments.HomeFragment
+import com.vibhu.moneyplanner.uiFragments.IncomeCategoryFragment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -51,7 +59,8 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             try{
-                val initialBalance = initialBalanceData.fetchInitialBalanceObject(UUID.fromString(sharedPreferences.getString(SharedPreferencesConstants.USER_ID_PREF, null)))!!
+                val initialBalance = initialBalanceData.fetchInitialBalanceObject(UUID.fromString(sharedPreferences.getString(
+                    SharedPreferencesConstants.USER_ID_PREF, null)))!!
                 Log.d("Initial Date", initialBalance.initialDate.toString())
                 setUpBottomNavigation()
                 setCurrentFragment(HomeFragment())
