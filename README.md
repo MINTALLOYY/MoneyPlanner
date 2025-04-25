@@ -15,12 +15,13 @@
 - 🧭 **Navigation Helper** – AI-assisted guidance through app functionality.
 - 💾 **SQLite** – Database for storing all user transactions and categories
 
-## Technologies Used
+## Templates/Technologies Used
 
 - **Android SDK + Kotlin/Java**
 - **[MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)** – For displaying bar, line, and pie charts.
 - **AWS Textract (via API)** – OCR for extracting text from receipts.
 - **Gemini 2.0 Flash (via API)** – AI used for navigation and assistance.
+- **[Dribbble](https://dribbble.com/shots/25435642-Feenance-Finance-Mobile-App)** – Site for developers to post their app concepts, used for inspiration for UI
 
 ## Prerequisites
 
