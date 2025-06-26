@@ -106,7 +106,7 @@ class PieChartIncomeFragment : Fragment() {
         dataSet.selectionShift = 5f // Add shift to selected slice for emphasis
         dataSet.valueFormatter = object : ValueFormatter() {
             override fun getPieLabel(value: Float, pieEntry: PieEntry): String {
-                if (value < 10f) {
+                if (value < 20f) {
                     if(value < 5f){
                         return ""
                     }

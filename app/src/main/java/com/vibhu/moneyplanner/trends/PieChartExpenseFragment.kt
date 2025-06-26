@@ -52,7 +52,7 @@ class PieChartExpenseFragment : Fragment() {
 
         val endDate = Date()
         val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, -30)
+        calendar.add(Calendar.DAY_OF_YEAR, -numberOfDays)
         val startDate = calendar.time
 
         val expenses = expenseData.getExpensesInDateRange(startDate, endDate)
@@ -107,7 +107,7 @@ class PieChartExpenseFragment : Fragment() {
         dataSet.selectionShift = 5f // Add shift to selected slice for emphasis
         dataSet.valueFormatter = object : ValueFormatter() {
             override fun getPieLabel(value: Float, pieEntry: PieEntry): String {
-                if (value < 10f) {
+                if (value < 20f) {
                     if(value < 5f){
                         return ""
                     }
