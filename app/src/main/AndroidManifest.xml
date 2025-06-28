@@ -22,8 +22,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CameraReceiptActivity" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.vibhu.moneyplanner.fileprovider"

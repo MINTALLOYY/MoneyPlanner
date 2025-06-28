@@ -31,7 +31,8 @@
         app:layout_constraintEnd_toStartOf="@+id/textViewSpent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:fontFamily="@font/lexend_peta_variable_font_wght"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:fontFamily="@font/questrial_regular"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
